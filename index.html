@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LH LOADER — Architectural Authority</title>
+    <title>LH LOADER — Architectural Authority v139</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,6 +24,7 @@
             --text-body: oklch(70% 0.01 260);
             --glass-panel: oklch(100% 0 0 / 0.03);
             --glass-border: oklch(100% 0 0 / 0.08);
+            --glass-highlight: oklch(100% 0 0 / 0.12);
             --display-area-bg: rgba(0,0,0,0.25);
             --blob-opacity: 0.4;
             --btn-bg: oklch(100% 0 0);
@@ -42,7 +43,7 @@
             --btn-text: oklch(100% 0 0);
         }
 
-        /* VIEW TRANSITION CONFIG */
+        /* VIEW TRANSITION API */
         ::view-transition-group(root) { animation-duration: 0.8s; animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
         ::view-transition-new(root), ::view-transition-old(root) { animation: none; mix-blend-mode: normal; }
 
@@ -52,14 +53,14 @@
             --gl-swoosh-color: oklch(from oklch(var(--lh-color-base)) calc(l + 0.5) c h);
         }
 
-        body { background-color: var(--bg-page); color: var(--text-body); font-family: 'Inter Tight', sans-serif; margin: 0; overflow-x: hidden; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+        body { background-color: var(--bg-page); color: var(--text-body); font-family: 'Inter Tight', sans-serif; margin: 0; overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; transition: background-color 0.4s ease; }
         .cinematic-grain { position: fixed; inset: 0; pointer-events: none; z-index: 9000; opacity: 0.06; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-        .ambient-blob { position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: var(--blob-opacity); transition: background 2.5s ease; will-change: background; }
+        .ambient-blob { position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: var(--blob-opacity); transition: background 2.5s ease, opacity 1s ease; will-change: background; }
         .blob-1 { top: -15%; left: -10%; width: 75vw; height: 75vw; background: var(--accent-1); }
         .blob-2 { bottom: -15%; right: -5%; width: 65vw; height: 65vw; background: var(--accent-2); }
 
         /* ==========================================================================
-           2. ENGINE CORE (STABLE ARTIFACT)
+           2. ENGINE CORE STYLES
            ========================================================================== */
         .lh-loader-container { position: absolute; top: 0; left: 0; width: 100%; height: 3px; z-index: 10001; opacity: 0; transition: opacity 0.4s linear; pointer-events: none; overflow: visible; }
         .lh-loader-container--master { position: fixed; }
@@ -68,11 +69,9 @@
         .lh-loader__substrate { position: absolute; inset: 0; border-radius: 99px; overflow: hidden; z-index: 3; }
         .lh-loader__bg { width: 100%; height: 100%; background: linear-gradient(to right, oklch(var(--lh-color-base) / 0.2) 0%, oklch(var(--lh-color-base) / 0.5) 100%); }
         .lh-loader__tip { position: absolute; right: 0; top: 0; width: 25rem; max-width: 50%; height: 100%; background: linear-gradient(to right, transparent 0%, var(--gl-beam-high) 100%); }
-        
         .lh-loader__swoosh-beam { position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, oklch(from var(--gl-swoosh-color) l c h / 0.1) 30%, oklch(from var(--gl-swoosh-color) l c h / 0.9) 50%, oklch(from var(--gl-swoosh-color) l c h / 0.1) 70%, transparent 100%); animation: swoosh-move 1.8s infinite linear; mix-blend-mode: plus-lighter; }
         .lh-loader__glow { position: absolute; top: 50%; right: 0; width: 40rem; max-width: 90%; height: 100%; transform: translate3d(0, -50%, 0); animation: gl-glow-sync-absolute 1.8s infinite linear; z-index: 2; overflow: visible; will-change: opacity, filter; }
         .lh-loader__glow-layer { position: absolute; top: 50%; right: 0; width: 100%; height: 100%; border-radius: 9999px; transform: translateY(-50%); background: linear-gradient(to right, transparent 0%, var(--gl-glow-high) 100%); }
-        [data-theme="light"] .lh-loader__glow { mix-blend-mode: multiply; }
         
         @keyframes swoosh-move { 0% { transform: translateX(-105%); } 100% { transform: translateX(105%); } }
         @keyframes gl-glow-sync-absolute { 0%, 40%, 100% { opacity: var(--lh-glow-opacity); filter: brightness(1); } 75% { opacity: calc(var(--lh-glow-opacity) * 1.8); filter: brightness(1.6); } }
@@ -86,55 +85,66 @@
         .lh-loader__glow-layer--7 { right: -80px; height: 1600%; filter: blur(var(--lh-glow-spread)); opacity: 0.15; }
 
         /* ==========================================================================
-           3. UI CORE
+           3. KINETIC SPINNER
            ========================================================================== */
-        .nav { position: fixed; top: 0; width: 100%; height: 85px; display: flex; justify-content: space-between; align-items: center; padding: 0 6%; box-sizing: border-box; z-index: 100; backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); }
-        .brand { font-weight: 800; font-size: 0.85rem; letter-spacing: 5px; color: var(--text-headline); text-transform: uppercase; }
-        .github-link { color: var(--text-headline); opacity: 0.4; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; align-items: center; text-decoration: none; }
-        .github-link:hover { opacity: 1; transform: scale(1.1); }
+        .kinetic-spinner-svg { width: 42px; height: 42px; animation: spin 2s linear infinite; animation-play-state: paused; filter: drop-shadow(0 0 8px oklch(var(--lh-color-base) / 0.3)); will-change: transform, filter; }
+        .kinetic-spinner-svg.animate { animation-play-state: running; }
+        .kinetic-spinner-circle { fill: none; stroke: oklch(var(--lh-color-base)); stroke-width: 3.5; stroke-linecap: round; stroke-dasharray: 1, 150; stroke-dashoffset: 0; animation: dash 1.5s ease-in-out infinite; }
+        @keyframes dash { 0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; } 50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; stroke: var(--gl-swoosh-color); } 100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; stroke: oklch(var(--lh-color-base)); } }
+
+        /* ==========================================================================
+           4. UI FRAMEWORK
+           ========================================================================== */
+        .nav { position: fixed; top: 0; width: 100%; height: 85px; display: flex; justify-content: space-between; align-items: center; padding: 0 6%; box-sizing: border-box; z-index: 100; backdrop-filter: blur(30px); border-bottom: 1px solid var(--glass-border); }
+        .brand { font-weight: 800; font-size: 0.85rem; letter-spacing: 5px; color: var(--text-headline); text-transform: uppercase; cursor: default; }
+        .github-link { color: var(--text-headline); opacity: 0.4; transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; align-items: center; }
+        .github-link:hover { opacity: 1; transform: scale(1.1) rotate(5deg); }
 
         .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; }
-        h1 { font-size: clamp(3.2rem, 11vw, 7rem); font-weight: 800; letter-spacing: -0.06em; line-height: 0.95; margin: 0 0 30px 0; color: var(--text-headline); }
-        .tagline { font-size: clamp(1rem, 2.5vw, 1.25rem); max-width: 850px; margin-bottom: 50px; font-weight: 400; color: var(--text-body); opacity: 0.8; }
-        .btn-cta { background: var(--btn-bg); color: var(--btn-text); padding: 22px 52px; border-radius: 99px; font-size: 1.1rem; font-weight: 800; border: none; cursor: pointer; transition: 0.5s; }
+        h1 { font-size: clamp(3.2rem, 11vw, 7rem); font-weight: 800; letter-spacing: -0.06em; line-height: 0.9; margin: 0 0 25px 0; color: var(--text-headline); }
+        .tagline { font-size: clamp(1rem, 2.5vw, 1.25rem); max-width: 800px; margin-bottom: 45px; font-weight: 400; color: var(--text-body); opacity: 0.8; letter-spacing: -0.01em; }
+        .btn-cta { background: var(--btn-bg); color: var(--btn-text); padding: 22px 52px; border-radius: 100px; font-size: 1rem; font-weight: 800; border: none; cursor: pointer; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 10px 40px oklch(from var(--btn-bg) l c h / 0.2); }
+        .btn-cta:hover { transform: translateY(-3px) scale(1.02); filter: brightness(1.1); }
+        .btn-cta:active { transform: translateY(0) scale(0.98); }
         
-        .section-container { padding: 140px 6%; max-width: 1300px; margin: 0 auto; text-align: center; }
-        .section-title { font-size: 3.5rem; color: var(--text-headline); letter-spacing: -0.05em; margin-bottom: 1.5rem; }
-        .section-subtitle { opacity: 0.6; font-weight: 300; font-size: 1.25rem; margin-bottom: 4rem; max-width: 850px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+        .section-container { padding: 160px 6%; max-width: 1300px; margin: 0 auto; text-align: center; }
+        .section-title { font-size: 3.5rem; color: var(--text-headline); letter-spacing: -0.05em; margin-bottom: 1.2rem; }
+        .section-subtitle { opacity: 0.65; font-weight: 300; font-size: 1.15rem; margin-bottom: 4.5rem; max-width: 750px; margin-left: auto; margin-right: auto; line-height: 1.7; }
         
-        .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-top: 60px; text-align: left; }
-        .glass-card { background: var(--glass-panel); border: 1px solid var(--glass-border); border-radius: 40px; padding: 55px; display: flex; flex-direction: column; justify-content: space-between; min-height: 420px; transition: 0.4s; }
-        .loader-display-area { height: 120px; display: flex; align-items: center; justify-content: center; width: 100%; position: relative; overflow: hidden; border-radius: 20px; background: var(--display-area-bg); border: 1px solid var(--glass-border); margin-bottom: 30px; }
-        .mini-gl-viewport { position: absolute; top: 0; left: 0; width: 100%; height: 3px; overflow: visible; }
+        .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 32px; margin-top: 20px; text-align: left; }
+        .glass-card { background: var(--glass-panel); border: 1px solid var(--glass-border); border-radius: 40px; padding: 50px; display: flex; flex-direction: column; justify-content: space-between; min-height: 420px; transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .glass-card:hover { transform: translateY(-8px); background: oklch(from var(--glass-panel) l c h / 0.05); border-color: var(--glass-highlight); }
+        .loader-display-area { height: 130px; display: flex; align-items: center; justify-content: center; width: 100%; position: relative; overflow: hidden; border-radius: 24px; background: var(--display-area-bg); border: 1px solid var(--glass-border); margin-bottom: 35px; }
         
-        /* SPINNER STABLE */
-        .spinner { width: 32px; height: 32px; border: 3px solid var(--glass-border); border-top: 3px solid oklch(var(--lh-color-base)); border-radius: 50%; animation: spin 0.8s linear infinite; animation-play-state: paused; }
-        .spinner.animate { animation-play-state: running; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        .palette-container { display: flex; gap: 16px; padding: 18px; background: var(--glass-panel); border-radius: 100px; border: 1px solid var(--glass-border); backdrop-filter: blur(20px); justify-content: center; width: fit-content; margin: 40px auto; }
-        .color-dot { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: none; transition: 0.4s; position: relative; }
-        .color-dot.active::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; border: 2px solid var(--text-headline); opacity: 0.4; }
+        .palette-container { display: flex; gap: 14px; padding: 18px; background: var(--glass-panel); border-radius: 100px; border: 1px solid var(--glass-border); backdrop-filter: blur(20px); justify-content: center; width: fit-content; margin: 20px auto; }
+        .color-dot { width: 38px; height: 38px; border-radius: 50%; cursor: pointer; border: none; transition: 0.3s; position: relative; }
+        .color-dot:hover { transform: scale(1.15); }
+        .color-dot.active::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--text-headline); opacity: 0.5; animation: pulse-ring 2s infinite; }
+        @keyframes pulse-ring { 0% { transform: scale(0.9); opacity: 0.5; } 100% { transform: scale(1.2); opacity: 0; } }
         
-        .theme-fab { position: fixed; bottom: 40px; right: 40px; width: 65px; height: 65px; border-radius: 50%; background: var(--btn-bg); color: var(--btn-text); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2000; transition: 0.4s; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
-        .reveal { opacity: 0; transform: translateY(40px); transition: 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .theme-fab { position: fixed; bottom: 40px; right: 40px; width: 68px; height: 68px; border-radius: 50%; background: var(--btn-bg); color: var(--btn-text); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2000; transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 15px 45px rgba(0,0,0,0.3); }
+        .theme-fab:hover { transform: rotate(180deg) scale(1.1); }
+        
+        .reveal { opacity: 0; transform: translateY(30px); transition: 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
-        footer { padding: 120px 0; text-align: center; opacity: 0.25; font-size: 0.7rem; letter-spacing: 6px; font-weight: 700; text-transform: uppercase; }
+        footer { padding: 120px 0; text-align: center; opacity: 0.3; font-size: 0.75rem; letter-spacing: 5px; font-weight: 700; text-transform: uppercase; }
 
-        /* ANATOMY STACK */
-        .anatomy-stack { position: relative; height: 650px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: crosshair; perspective: 2500px; margin-top: 100px; }
-        .layer-container { position: relative; width: 380px; margin: 20px 0; transition: 1.2s cubic-bezier(0.1, 0.8, 0.2, 1); transform-style: preserve-3d; }
-        .layer-visual { width: 100%; height: 12px; border-radius: 99px; border: 1px solid var(--glass-border); opacity: 0.4; transition: 0.6s ease; will-change: transform, opacity; }
-        .layer-label { position: absolute; top: 50%; transform: translateY(-50%); font-size: 0.7rem; font-weight: 800; opacity: 0.3; transition: 0.8s; letter-spacing: 4px; text-transform: uppercase; color: var(--text-headline); white-space: nowrap; pointer-events: none; z-index: 200; }
-        .anatomy-stack:hover .layer-container { transform: rotateX(60deg) rotateZ(-20deg) translateY(var(--offset)); margin: 55px 0; }
-        .anatomy-stack:hover .layer-visual { opacity: 1; }
+        /* ==========================================================================
+           5. ANATOMY STACK
+           ========================================================================== */
+        .anatomy-stack { position: relative; height: 650px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: crosshair; perspective: 2500px; margin-top: 80px; }
+        .layer-container { position: relative; width: 400px; margin: 18px 0; transition: 1.2s cubic-bezier(0.1, 0.8, 0.2, 1); transform-style: preserve-3d; }
+        .layer-visual { width: 100%; height: 14px; border-radius: 99px; border: 1px solid var(--glass-border); opacity: 0.35; transition: 0.6s ease; will-change: transform, opacity; }
+        .layer-label { position: absolute; top: 50%; transform: translateY(-50%); font-size: 0.75rem; font-weight: 800; opacity: 0.25; transition: 0.8s; letter-spacing: 3px; text-transform: uppercase; color: var(--text-headline); white-space: nowrap; pointer-events: none; z-index: 200; }
+        .anatomy-stack:hover .layer-container { transform: rotateX(62deg) rotateZ(-18deg) translateY(var(--offset)); margin: 55px 0; }
+        .anatomy-stack:hover .layer-visual { opacity: 1; border-color: var(--glass-highlight); }
         .anatomy-stack:hover .layer-label { opacity: 1; filter: none !important; }
-        .lp-glow .layer-label, .lp-bg .layer-label { right: calc(100% + 85px); text-align: right; }
-        .lp-swoosh .layer-label, .lp-tip .layer-label { left: calc(100% + 85px); text-align: left; }
-        .lp-glow .layer-visual { background: linear-gradient(to right, transparent 0%, var(--gl-glow-high) 100%); filter: blur(15px); box-shadow: 0 0 var(--lh-glow-spread) var(--gl-glow-high); opacity: 0.6; }
+        .lp-glow .layer-label, .lp-bg .layer-label { right: calc(100% + 80px); text-align: right; }
+        .lp-swoosh .layer-label, .lp-tip .layer-label { left: calc(100% + 80px); text-align: left; }
+        .lp-glow .layer-visual { background: linear-gradient(to right, transparent 0%, var(--gl-glow-high) 100%); filter: blur(15px); box-shadow: 0 0 var(--lh-glow-spread) var(--gl-glow-high); opacity: 0.5; }
         .lp-bg .layer-visual { background: linear-gradient(90deg, oklch(var(--lh-color-base) / 0.2), oklch(var(--lh-color-base) / 0.5)); }
         .lp-swoosh .layer-visual { background: linear-gradient(90deg, transparent, var(--gl-swoosh-color), transparent); }
-        .lp-tip .layer-visual { background: linear-gradient(90deg, transparent, var(--gl-beam-high)); border-right: 2px solid var(--gl-beam-high); box-shadow: 2px 0 15px var(--gl-beam-high); }
+        .lp-tip .layer-visual { background: linear-gradient(90deg, transparent, var(--gl-beam-high)); border-right: 2px solid var(--gl-beam-high); box-shadow: 3px 0 15px var(--gl-beam-high); }
     </style>
 </head>
 <body>
@@ -145,8 +155,8 @@
 
     <nav class="nav reveal">
         <div class="brand">LH LOADER</div>
-        <a href="https://github.com/ledihildawan" target="_blank" class="github-link" aria-label="GitHub Repository">
-            <svg height="28" viewBox="0 0 16 16" width="28" fill="currentColor"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg>
+        <a href="https://github.com/ledihildawan" target="_blank" class="github-link" aria-label="GitHub Profile">
+            <svg height="26" viewBox="0 0 16 16" width="26" fill="currentColor"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg>
         </a>
     </nav>
 
@@ -154,8 +164,8 @@
 
     <section class="hero">
         <h1 class="reveal">The Art of<br>Performance.</h1>
-        <p class="tagline reveal">Elevate technical wait times into premium brand moments through cinematic physics and photonic precision.</p>
-        <button class="btn-cta reveal" onclick="triggerDemo()">Run Live Sequence</button>
+        <p class="tagline reveal">Transform technical latency into premium brand authority through cinematic physics and photonic precision.</p>
+        <button class="btn-cta reveal" onclick="triggerDemo()">Run System Sequence</button>
     </section>
 
     <section class="section-container reveal">
@@ -166,23 +176,25 @@
         
         <div class="bento-grid">
             <div class="glass-card observer-trigger">
-                <h4 style="letter-spacing: 3px; opacity: 0.3; font-size: 0.65rem; margin: 0; text-transform: uppercase;">Standard Logic</h4>
-                <div class="loader-display-area"><div id="std-spinner" class="spinner"></div></div>
+                <h4 style="letter-spacing: 3px; opacity: 0.3; font-size: 0.6rem; margin: 0; text-transform: uppercase;">Standard Logic</h4>
+                <div class="loader-display-area">
+                    <svg id="std-spinner" class="kinetic-spinner-svg" viewBox="0 0 50 50"><circle class="kinetic-spinner-circle" cx="25" cy="25" r="20" /></svg>
+                </div>
                 <div>
-                    <p style="font-size: 1.1rem; font-weight: 800; color: var(--text-headline); margin-bottom: 10px;">Mechanical Friction</p>
-                    <p style="font-size: 0.85rem; opacity: 0.6;">Linear animations often cause cognitive friction, making systems feel disconnected or frozen during complex background tasks.</p>
+                    <p style="font-size: 1.15rem; font-weight: 800; color: var(--text-headline); margin-bottom: 12px;">Mechanical Friction</p>
+                    <p style="font-size: 0.9rem; opacity: 0.6;">Predictable animations often cause cognitive friction, making systems feel disconnected during complex background tasks.</p>
                 </div>
             </div>
             
             <div class="glass-card observer-trigger">
-                <h4 style="letter-spacing: 3px; opacity: 0.3; font-size: 0.65rem; margin: 0; text-transform: uppercase;">Kinetic Engine</h4>
+                <h4 style="letter-spacing: 3px; opacity: 0.3; font-size: 0.6rem; margin: 0; text-transform: uppercase;">Kinetic Engine</h4>
                 <div class="loader-display-area">
                     <div id="lh-mini-target" class="mini-gl-viewport"></div>
-                    <p style="opacity: 0.08; font-weight: 900; font-size: 1.1rem; letter-spacing: 10px; text-transform: uppercase;">Synchronizing</p>
+                    <p style="opacity: 0.08; font-weight: 900; font-size: 1.1rem; letter-spacing: 12px; text-transform: uppercase;">Syncing</p>
                 </div>
                 <div>
-                    <p style="font-size: 1.1rem; font-weight: 800; color: var(--text-headline); margin-bottom: 10px;">Optimistic Feedback</p>
-                    <p style="font-size: 0.85rem; opacity: 0.6;">Our non-linear engine stalls and bursts to mirror real-time handshakes, reducing perceived wait times by up to 40%.</p>
+                    <p style="font-size: 1.15rem; font-weight: 800; color: var(--text-headline); margin-bottom: 12px;">Optimistic Feedback</p>
+                    <p style="font-size: 0.9rem; opacity: 0.6;">Our non-linear engine stalls and bursts to mirror real-time server handshakes, reducing perceived wait times by up to 40%.</p>
                 </div>
             </div>
         </div>
@@ -190,7 +202,7 @@
 
     <section class="section-container reveal">
         <h2 class="section-title">Optical Architecture.</h2>
-        <p class="section-subtitle">A precision-engineered composite of light and physics, designed to maintain visual authority across professional high-refresh rate displays.</p>
+        <p class="section-subtitle">A precision-engineered composite of light and physics, designed to maintain visual authority across professional high-refresh displays.</p>
         
         <div class="anatomy-stack">
             <div class="layer-container lp-glow" style="--offset: -200px;"><span class="layer-label">Atmospheric Halo</span><div class="layer-visual"></div></div>
@@ -200,9 +212,9 @@
         </div>
     </section>
 
-    <section class="section-container reveal" style="padding-bottom: 120px;">
+    <section class="section-container reveal" style="padding-bottom: 140px;">
         <h2 class="section-title">Visual Harmony.</h2>
-        <p class="section-subtitle">Consistent perceptual brightness powered by OKLCH mathematics ensure brand colors maintain flawless visual weight in any environment.</p>
+        <p class="section-subtitle">Adaptive OKLCH mathematics ensure brand colors maintain flawless visual weight regardless of environmental luminance.</p>
         <div class="palette-container">
             <div class="color-dot active" style="background: oklch(100% 0 0);" onclick="applyPreset('100% 0 0', 45, 0.65, this)"></div>
             <div class="color-dot" style="background: oklch(80% 0.2 200);" onclick="applyPreset('80% 0.2 200', 35, 0.55, this)"></div> 
@@ -220,10 +232,9 @@
 
     <script>
         /**
-         * LH LOADER ENGINE v137.0 (Production Artifact)
+         * LH LOADER ENGINE v139.0 (Final Deployment Build)
          */
         const LH = (() => {
-            const config = { masterId: 'lh-root', barId: 'lh-bar' };
             const buildHTML = (id, barId, isMaster = false) => `
                 <div id="${id}" class="lh-loader-container ${isMaster ? 'lh-loader-container--master' : ''}" aria-hidden="true">
                     <div id="${barId}" class="lh-loader__bar">
@@ -236,9 +247,9 @@
             return {
                 inject(targetId, customId, customBarId, isMaster = false) {
                     const target = document.getElementById(targetId);
-                    if (target) target.innerHTML = buildHTML(customId || config.masterId, customBarId || config.barId, isMaster);
+                    if (target) target.innerHTML = buildHTML(customId || 'lh-root', customBarId || 'lh-bar', isMaster);
                 },
-                getNodes(mId, bId) { return { root: document.getElementById(mId || config.masterId), bar: document.getElementById(bId || config.barId) }; },
+                getNodes(mId, bId) { return { root: document.getElementById(mId || 'lh-root'), bar: document.getElementById(bId || 'lh-bar') }; },
                 move(bar, to, dur) { if(!bar) return; bar.style.transition = `transform ${dur}ms cubic-bezier(.3,0,.05,1)`; bar.style.transform = `translateX(${to}%)`; state.p = to; },
                 reset() {
                     this.kill(); const { root, bar } = this.getNodes();
@@ -265,18 +276,18 @@
                 kill() { state.on = false; clearTimeout(state.tid); clearTimeout(state.doneTid); },
                 done() {
                     const { root, bar } = this.getNodes(); if(!root || !bar) return;
-                    this.kill(); this.move(bar, 0, 400);
+                    this.kill(); this.move(bar, 0, 450);
                     setTimeout(() => root.classList.remove('lh-loader--active'), 600);
                 }
             };
         })();
 
-        // Interaction Controllers
         let miniCycleActive = false;
         function cycleMini() {
             if (!miniCycleActive) return;
-            const bar = document.getElementById('lh-mini-bar'); if(!bar) return;
+            const bar = document.getElementById('lh-mini-bar'); 
             const root = document.getElementById('lh-mini-root');
+            if(!bar || !root) return;
             bar.style.transition = 'none'; bar.style.transform = 'translateX(-100%)'; void bar.offsetWidth;
             bar.style.transition = 'transform 1.8s linear'; bar.style.transform = 'translateX(5%)';
             setTimeout(() => {
@@ -313,7 +324,6 @@
             const x = rect.left + rect.width / 2;
             const y = rect.top + rect.height / 2;
             const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-
             if (!document.startViewTransition) { applyTheme(); return; }
             const transition = document.startViewTransition(() => applyTheme());
             transition.ready.then(() => {
@@ -325,8 +335,7 @@
         }
 
         function applyTheme() {
-            const root = document.documentElement;
-            root.setAttribute('data-theme', root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
             const activeDot = document.querySelector('.color-dot.active');
             if (activeDot) {
                 const args = activeDot.getAttribute('onclick').match(/'([^']+)',\s*(\d+),\s*([\d.]+)/);
@@ -355,7 +364,7 @@
             LH.inject('lh-mini-target', 'lh-mini-root', 'lh-mini-bar', false);
             LH.start(true, true); 
             initObservers();
-            document.querySelectorAll('.reveal').forEach((el, i) => setTimeout(() => el.classList.add('active'), i * 180 + 400));
+            document.querySelectorAll('.reveal').forEach((el, i) => setTimeout(() => el.classList.add('active'), i * 150 + 300));
         });
 
         function triggerDemo() { LH.start(true, false); }
