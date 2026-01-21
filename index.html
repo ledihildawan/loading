@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LH LOADER — Circular Reveal Authority v132</title>
+    <title>LH LOADER — Premium Performance Architecture</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,6 +24,7 @@
             --text-body: oklch(70% 0.01 260);
             --glass-panel: oklch(100% 0 0 / 0.03);
             --glass-border: oklch(100% 0 0 / 0.08);
+            --glass-highlight: oklch(100% 0 0 / 0.12);
             --btn-bg: oklch(100% 0 0);
             --btn-text: oklch(0% 0 0);
             --display-area-bg: rgba(0,0,0,0.25);
@@ -38,11 +39,11 @@
             --glass-border: oklch(0% 0 260 / 0.06);
             --btn-bg: oklch(20% 0.02 260);
             --btn-text: oklch(100% 0 0);
-            --display-area-bg: rgba(0,0,0,0.03);
+            --display-area-bg: oklch(0% 0 0 / 0.03);
             --blob-opacity: 0.25;
         }
 
-        /* CIRCULAR REVEAL OVERLAY */
+        /* VIEW TRANSITION API */
         ::view-transition-group(root) { animation-duration: 0.8s; animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
         ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
         ::view-transition-old(root) { animation: none; mix-blend-mode: normal; }
@@ -89,7 +90,7 @@
         .lh-loader__glow-layer--7 { right: -80px; height: 1600%; filter: blur(var(--lh-glow-spread)); opacity: 0.15; }
 
         /* ==========================================================================
-           3. UI SECTIONS
+           3. UI COMPONENTS
            ========================================================================== */
         .nav { position: fixed; top: 0; width: 100%; height: 85px; display: flex; justify-content: space-between; align-items: center; padding: 0 6%; box-sizing: border-box; z-index: 100; backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); }
         .brand { font-weight: 800; font-size: 0.85rem; letter-spacing: 5px; color: var(--text-headline); text-transform: uppercase; }
@@ -106,10 +107,20 @@
         .section-subtitle { opacity: 0.6; font-weight: 300; font-size: 1.25rem; margin-bottom: 4rem; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.6; }
         
         .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-top: 60px; text-align: left; }
-        .glass-card { background: var(--glass-panel); border: 1px solid var(--glass-border); border-radius: 40px; padding: 55px; display: flex; flex-direction: column; justify-content: space-between; min-height: 420px; }
+        .glass-card { background: var(--glass-panel); border: 1px solid var(--glass-border); border-radius: 40px; padding: 55px; display: flex; flex-direction: column; justify-content: space-between; min-height: 400px; }
         .loader-display-area { height: 120px; display: flex; align-items: center; justify-content: center; width: 100%; position: relative; overflow: hidden; border-radius: 20px; background: var(--display-area-bg); border: 1px solid var(--glass-border); margin-bottom: 30px; }
         .mini-gl-viewport { position: absolute; top: 0; left: 0; width: 100%; height: 3px; overflow: visible; }
         
+        /* SPINNER DYNAMIC COLOR */
+        .spinner { 
+            width: 32px; height: 32px; 
+            border: 3px solid var(--glass-border); 
+            border-top: 3px solid oklch(var(--lh-color-base)); 
+            border-radius: 50%; 
+            animation: spin 0.8s linear infinite; 
+        }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
         .palette-container { display: flex; gap: 16px; padding: 18px; background: var(--glass-panel); border-radius: 100px; border: 1px solid var(--glass-border); backdrop-filter: blur(20px); justify-content: center; width: fit-content; margin: 40px auto; }
         .color-dot { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: none; transition: 0.4s; position: relative; }
         .color-dot.active::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; border: 2px solid var(--text-headline); opacity: 0.4; }
@@ -119,7 +130,7 @@
         .reveal.active { opacity: 1; transform: translateY(0); }
         footer { padding: 120px 0; text-align: center; opacity: 0.25; font-size: 0.7rem; letter-spacing: 6px; font-weight: 700; text-transform: uppercase; }
 
-        /* ANATOMY STACK (ACCURATE) */
+        /* ANATOMY STACK */
         .anatomy-stack { position: relative; height: 650px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: crosshair; perspective: 2500px; margin-top: 100px; }
         .layer-container { position: relative; width: 380px; margin: 20px 0; transition: 1.2s cubic-bezier(0.1, 0.8, 0.2, 1); transform-style: preserve-3d; }
         .layer-visual { width: 100%; height: 12px; border-radius: 99px; border: 1px solid var(--glass-border); opacity: 0.4; transition: 0.6s ease; }
@@ -129,7 +140,6 @@
         .anatomy-stack:hover .layer-label { opacity: 1; filter: none !important; }
         .lp-glow .layer-label, .lp-bg .layer-label { right: calc(100% + 85px); text-align: right; }
         .lp-swoosh .layer-label, .lp-tip .layer-label { left: calc(100% + 85px); text-align: left; }
-
         .lp-glow .layer-visual { background: linear-gradient(to right, transparent 0%, var(--gl-glow-high) 100%); filter: blur(15px); box-shadow: 0 0 var(--lh-glow-spread) var(--gl-glow-high); opacity: 0.6; }
         .lp-bg .layer-visual { background: linear-gradient(90deg, oklch(var(--lh-color-base) / 0.2), oklch(var(--lh-color-base) / 0.5)); }
         .lp-swoosh .layer-visual { background: linear-gradient(90deg, transparent, var(--gl-swoosh-color), transparent); }
@@ -144,7 +154,7 @@
 
     <nav class="nav reveal">
         <div class="brand">LH LOADER</div>
-        <a href="https://github.com/ledihildawan" target="_blank" class="github-link">
+        <a href="https://github.com/ledihildawan" target="_blank" class="github-link" aria-label="GitHub Profile">
             <svg height="28" viewBox="0 0 16 16" width="28" fill="currentColor"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg>
         </a>
     </nav>
@@ -153,21 +163,23 @@
 
     <section class="hero">
         <h1 class="reveal">The Art of<br>Performance.</h1>
-        <p class="tagline reveal">Why just show progress when you can show authority? LH LOADER transforms technical wait times into premium brand moments through cinematic physics and photonic precision.</p>
+        <p class="tagline reveal">Transform technical latency into premium brand authority through cinematic physics and photonic precision.</p>
         <button class="btn-cta reveal" onclick="triggerDemo()">Explore Sequence</button>
     </section>
 
     <section class="section-container reveal">
         <h2 class="section-title">The Perception Gap.</h2>
-        <p class="section-subtitle">Technical latency is a reality, but user frustration is a design choice. LH LOADER bridges the gap between server response times and human psychology by mirroring organic rhythms.</p>
+        <p class="section-subtitle">
+            Rather than leaving users in uncertainty, we utilize <strong>Simulated Progress</strong>. We drive the bar optimistically to 90% for instant visual feedback. Once the module is ready, we burst the remaining progress to 100%.
+        </p>
         
         <div class="bento-grid">
             <div class="glass-card">
                 <h4 style="letter-spacing: 3px; opacity: 0.3; font-size: 0.65rem; margin: 0; text-transform: uppercase;">Standard Logic</h4>
-                <div class="loader-display-area"><div style="width:30px; height:30px; border:3px solid var(--glass-border); border-top-color:var(--text-headline); border-radius:50%; animation:s 1s linear infinite"></div></div>
+                <div class="loader-display-area"><div class="spinner"></div></div>
                 <div>
-                    <p style="font-size: 1.1rem; font-weight: 800; color: var(--text-headline); margin-bottom: 10px;">Mechanical Progress</p>
-                    <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.6;">Predictable, linear animations often lead to "cognitive friction," making users feel like the system is stuck or disconnected.</p>
+                    <p style="font-size: 1.1rem; font-weight: 800; color: var(--text-headline); margin-bottom: 10px;">Mechanical Friction</p>
+                    <p style="font-size: 0.85rem; opacity: 0.6;">Linear animations often cause cognitive friction, making systems feel disconnected or frozen during long tasks.</p>
                 </div>
             </div>
             
@@ -178,8 +190,8 @@
                     <p style="opacity: 0.08; font-weight: 900; font-size: 1.1rem; letter-spacing: 10px; text-transform: uppercase;">Synchronizing</p>
                 </div>
                 <div>
-                    <p style="font-size: 1.1rem; font-weight: 800; color: var(--text-headline); margin-bottom: 10px;">Living Physics</p>
-                    <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.6;">Our non-linear chaos engine stalls, bursts, and crawls—accurately mirroring real-time server handshakes to reduce perceived wait by 40%.</p>
+                    <p style="font-size: 1.1rem; font-weight: 800; color: var(--text-headline); margin-bottom: 10px;">Optimistic Feedback</p>
+                    <p style="font-size: 0.85rem; opacity: 0.6;">Our non-linear engine stalls and bursts to mirror real-time handshakes, reducing perceived wait times by up to 40%.</p>
                 </div>
             </div>
         </div>
@@ -187,18 +199,18 @@
 
     <section class="section-container reveal">
         <h2 class="section-title">Optical Stack.</h2>
-        <p class="section-subtitle">We deconstruct light to build trust. Every element is part of a four-layer photonic composite designed to maintain visual integrity across professional high-refresh rate displays.</p>
+        <p class="section-subtitle">Precision-engineered layers designed to maintain visual integrity across professional high-refresh rate displays.</p>
         <div class="anatomy-stack">
-            <div class="layer-container lp-glow" style="--offset: -200px;"><span class="layer-label">7-Layer Atmospheric Halo</span><div class="layer-visual"></div></div>
-            <div class="layer-container lp-bg" style="--offset: -70px;"><span class="layer-label">Physical Substrate Body</span><div class="layer-visual"></div></div>
-            <div class="layer-container lp-swoosh" style="--offset: 60px;"><span class="layer-label">Kinetic Swoosh Beam</span><div class="layer-visual"></div></div>
-            <div class="layer-container lp-tip" style="--offset: 190px;"><span class="layer-label">Photonic Leading Edge</span><div class="layer-visual"></div></div>
+            <div class="layer-container lp-glow" style="--offset: -200px;"><span class="layer-label">Atmospheric Halo</span><div class="layer-visual"></div></div>
+            <div class="layer-container lp-bg" style="--offset: -70px;"><span class="layer-label">Physical Substrate</span><div class="layer-visual"></div></div>
+            <div class="layer-container lp-swoosh" style="--offset: 60px;"><span class="layer-label">Kinetic Pulse</span><div class="layer-visual"></div></div>
+            <div class="layer-container lp-tip" style="--offset: 190px;"><span class="layer-label">Leading Edge</span><div class="layer-visual"></div></div>
         </div>
     </section>
 
     <section class="section-container reveal" style="padding-bottom: 120px;">
         <h2 class="section-title">Visual Harmony.</h2>
-        <p class="section-subtitle">Consistent perceptual brightness powered by OKLCH mathematics ensure brand colors maintain flawless visual weight regardless of the environment's luminance.</p>
+        <p class="section-subtitle">Adaptive OKLCH mathematics ensure brand colors maintain flawless visual weight regardless of environmental luminance.</p>
         <div class="palette-container">
             <div class="color-dot active" style="background: oklch(100% 0 0);" onclick="applyPreset('100% 0 0', 45, 0.65, this)"></div>
             <div class="color-dot" style="background: oklch(80% 0.2 200);" onclick="applyPreset('80% 0.2 200', 35, 0.55, this)"></div> 
@@ -281,20 +293,13 @@
         }
 
         async function toggleTheme(event) {
-            const root = document.documentElement;
             const toggle = document.getElementById('theme-toggle');
             const rect = toggle.getBoundingClientRect();
             const x = rect.left + rect.width / 2;
             const y = rect.top + rect.height / 2;
             const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-
-            if (!document.startViewTransition) {
-                switchTheme();
-                return;
-            }
-
+            if (!document.startViewTransition) { switchTheme(); return; }
             const transition = document.startViewTransition(() => switchTheme());
-            
             transition.ready.then(() => {
                 document.documentElement.animate(
                     { clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
@@ -304,16 +309,15 @@
         }
 
         function switchTheme() {
-            const root = document.documentElement;
-            root.setAttribute('data-theme', root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
             const activeDot = document.querySelector('.color-dot.active');
             if (activeDot) {
                 const args = activeDot.getAttribute('onclick').match(/'([^']+)',\s*(\d+),\s*([\d.]+)/);
-                applyPreset(args[1], args[2], args[3], activeDot, true);
+                applyPreset(args[1], args[2], args[3], activeDot);
             }
         }
 
-        function applyPreset(lch, spread, opacity, btn, skipBurst = false) {
+        function applyPreset(lch, spread, opacity, btn) {
             const root = document.documentElement;
             root.style.setProperty('--lh-color-base', lch);
             root.style.setProperty('--lh-glow-spread', spread + 'px');
@@ -326,8 +330,6 @@
             }
             document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
             if(btn) btn.classList.add('active');
-            
-            // Re-trigger Burst
             LH.start(true, true); 
         }
 
