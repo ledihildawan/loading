@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>LH LOADER — The Final Architectural Authority v150</title>
+    <title>LH LOADER — Architectural Authority v154</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,7 +13,7 @@
 
     <style>
         /* ==========================================================================
-           1. CORE DESIGN SYSTEM (OKLCH)
+           1. CORE DESIGN SYSTEM (OKLCH) — BASE CHECKPOINT v153
            ========================================================================== */
         :root {
             --lh-color-base: 100% 0 0; 
@@ -43,7 +45,7 @@
             --btn-text: oklch(100% 0 0);
         }
 
-        /* VIEW TRANSITION API */
+        /* VIEW TRANSITION ENGINE */
         ::view-transition-group(root) { animation-duration: 0.8s; animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
         ::view-transition-new(root), ::view-transition-old(root) { animation: none; mix-blend-mode: normal; }
 
@@ -53,24 +55,38 @@
             --gl-swoosh-color: oklch(from oklch(var(--lh-color-base)) calc(l + 0.5) c h);
         }
 
-        body { background-color: var(--bg-page); color: var(--text-body); font-family: 'Inter Tight', sans-serif; margin: 0; overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; transition: background-color 0.4s ease; }
+        /* RESET OVERRIDES FOR MODERN NORMALIZE SINK */
+        body { 
+            background-color: var(--bg-page); 
+            color: var(--text-body); 
+            font-family: 'Inter Tight', sans-serif; 
+            overflow-x: hidden; 
+            line-height: 1.6; 
+            -webkit-font-smoothing: antialiased; 
+            transition: background-color 0.4s ease;
+        }
+
         .cinematic-grain { position: fixed; inset: 0; pointer-events: none; z-index: 9000; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-        .ambient-blob { position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: var(--blob-opacity); transition: background 2.5s ease; will-change: background; }
+        
+        .ambient-blob { position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: var(--blob-opacity); transition: background 2.5s ease; will-change: transform; }
         .blob-1 { top: -15%; left: -10%; width: 75vw; height: 75vw; background: var(--accent-1); }
         .blob-2 { bottom: -15%; right: -5%; width: 65vw; height: 65vw; background: var(--accent-2); }
 
         /* ==========================================================================
-           2. BRAND IDENTITY
+           2. BRAND IDENTITY (MONOGRAM SVG)
            ========================================================================== */
         .brand-container { display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; }
         .lh-logo-svg { height: 34px; width: 34px; transition: filter 0.4s ease; }
-        .lh-logo-path { fill: none; stroke: oklch(var(--lh-color-base)); stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 100, 100; stroke-dashoffset: 0; transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .lh-logo-path { 
+            fill: none; stroke: oklch(var(--lh-color-base)); stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; 
+            stroke-dasharray: 100, 100; stroke-dashoffset: 0; transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); 
+        }
         .brand-container:hover .lh-logo-path { stroke-dasharray: 25, 100; stroke-dashoffset: -12; }
         .brand-container:hover .lh-logo-svg { filter: drop-shadow(0 0 10px oklch(var(--lh-color-base) / 0.6)); }
-        .brand-text { font-weight: 800; font-size: clamp(0.7rem, 2vw, 0.85rem); letter-spacing: 5px; color: var(--text-headline); text-transform: uppercase; }
+        .brand-text { font-weight: 800; font-size: clamp(0.7rem, 2vw, 0.85rem); letter-spacing: 5px; color: var(--text-headline); text-transform: uppercase; margin: 0; }
 
         /* ==========================================================================
-           3. LOADER ENGINE CORE
+           3. LOADER ENGINE CORE (7-LAYER GLOW)
            ========================================================================== */
         .lh-loader-container { position: absolute; top: 0; left: 0; width: 100%; height: 3px; z-index: 10001; opacity: 0; transition: opacity 0.4s linear; pointer-events: none; overflow: visible; }
         .lh-loader-container--master { position: fixed; }
@@ -80,6 +96,7 @@
         .lh-loader__bg { width: 100%; height: 100%; background: linear-gradient(to right, oklch(var(--lh-color-base) / 0.2) 0%, oklch(var(--lh-color-base) / 0.5) 100%); }
         .lh-loader__tip { position: absolute; right: 0; top: 0; width: clamp(8rem, 25vw, 25rem); height: 100%; background: linear-gradient(to right, transparent 0%, var(--gl-beam-high) 100%); }
         .lh-loader__swoosh-beam { position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, oklch(from var(--gl-swoosh-color) l c h / 0.1) 30%, oklch(from var(--gl-swoosh-color) l c h / 0.9) 50%, oklch(from var(--gl-swoosh-color) l c h / 0.1) 70%, transparent 100%); animation: swoosh-move 1.8s infinite linear; mix-blend-mode: plus-lighter; }
+        
         .lh-loader__glow { position: absolute; top: 50%; right: 0; width: clamp(15rem, 50vw, 40rem); height: 100%; transform: translate3d(0, -50%, 0); animation: gl-glow-sync-absolute 1.8s infinite linear; z-index: 2; overflow: visible; will-change: opacity, filter; }
         .lh-loader__glow-layer { position: absolute; top: 50%; right: 0; width: 100%; height: 100%; border-radius: 9999px; transform: translateY(-50%); background: linear-gradient(to right, transparent 0%, var(--gl-glow-high) 100%); }
         
@@ -102,7 +119,7 @@
         @keyframes dash { 0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; } 50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; stroke: var(--gl-swoosh-color); } 100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; stroke: oklch(var(--lh-color-base)); } }
 
         /* ==========================================================================
-           4. UI FRAMEWORK
+           4. UI FRAMEWORK (UNIVERSAL RESPONSIVE)
            ========================================================================== */
         .nav { position: fixed; top: 0; width: 100%; height: clamp(65px, 8vh, 85px); display: flex; justify-content: space-between; align-items: center; padding: 0 6%; box-sizing: border-box; z-index: 100; backdrop-filter: blur(40px) saturate(1.5); border-bottom: 1px solid var(--glass-border); box-shadow: inset 0 1px 0 var(--glass-highlight); }
         .nav-actions { display: flex; align-items: center; gap: clamp(12px, 3vw, 25px); }
@@ -118,7 +135,7 @@
         .section-title { font-size: clamp(2.2rem, 6vw, 3.8rem); color: var(--text-headline); letter-spacing: -0.06em; margin-bottom: 1.5rem; }
         .section-subtitle { opacity: 0.7; font-weight: 300; font-size: clamp(1rem, 2vw, 1.2rem); margin-bottom: clamp(3rem, 12vh, 5rem); max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.75; }
         
-        .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-top: 20px; text-align: left; }
+        .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; margin-top: 20px; text-align: left; }
         .glass-card { background: var(--glass-panel); border: 1px solid var(--glass-border); border-radius: 40px; padding: clamp(35px, 5vw, 55px); display: flex; flex-direction: column; justify-content: space-between; min-height: 420px; transition: 0.5s; }
         .loader-display-area { height: 130px; display: flex; align-items: center; justify-content: center; width: 100%; position: relative; overflow: hidden; border-radius: 24px; background: var(--display-area-bg); border: 1px solid var(--glass-border); margin-bottom: 35px; }
         
@@ -132,7 +149,7 @@
         footer { padding: 120px 0; text-align: center; opacity: 0.35; font-size: 0.75rem; letter-spacing: 6px; font-weight: 700; text-transform: uppercase; padding-bottom: 150px; }
 
         /* ==========================================================================
-           5. ANATOMY STACK
+           5. ANATOMY STACK (SPACED)
            ========================================================================== */
         .anatomy-stack { position: relative; height: clamp(550px, 95vh, 750px); display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: crosshair; perspective: 2500px; margin-top: 40px; width: 100%; padding: 40px 0; }
         .layer-container { position: relative; width: min(420px, 85vw); margin: 38px 0; transition: 1.3s cubic-bezier(0.1, 0.8, 0.2, 1); transform-style: preserve-3d; }
@@ -142,10 +159,8 @@
         .anatomy-stack:hover .layer-container { transform: rotateX(62deg) rotateZ(-18deg) translateY(var(--offset)); margin: 55px 0; }
         .anatomy-stack:hover .layer-visual { opacity: 1; border-color: var(--glass-highlight); }
         .anatomy-stack:hover .layer-label { opacity: 1; filter: none !important; }
-
         .lp-glow .layer-label, .lp-bg .layer-label { right: calc(100% + clamp(20px, 8vw, 100px)); text-align: right; }
         .lp-swoosh .layer-label, .lp-tip .layer-label { left: calc(100% + clamp(20px, 8vw, 100px)); text-align: left; }
-
         .lp-glow .layer-visual { background: linear-gradient(to right, transparent 0%, var(--gl-glow-high) 100%); filter: blur(14px); box-shadow: 0 0 var(--lh-glow-spread) var(--gl-glow-high); opacity: 0.45; }
         .lp-bg .layer-visual { background: linear-gradient(90deg, oklch(var(--lh-color-base) / 0.2), oklch(var(--lh-color-base) / 0.5)); }
         .lp-swoosh .layer-visual { background: linear-gradient(90deg, transparent, var(--gl-swoosh-color), transparent); }
@@ -160,14 +175,15 @@
         @media (max-height: 500px) and (orientation: landscape) {
             .hero { min-height: 140vh; padding-top: 100px; }
             .anatomy-stack { height: 800px; }
+            .nav { height: 60px; }
         }
     </style>
 </head>
 <body>
 
     <div class="cinematic-grain"></div>
-    <div class="ambient-blob blob-1"></div>
-    <div class="ambient-blob blob-2"></div>
+    <div class="ambient-blob blob-1" id="parallax-blob-1"></div>
+    <div class="ambient-blob blob-2" id="parallax-blob-2"></div>
 
     <nav class="nav reveal">
         <a href="#" class="brand-container">
@@ -201,7 +217,6 @@
         <p class="section-subtitle">
             Rather than leaving users in uncertainty, we utilize <strong>Simulated Progress</strong>. We drive the bar optimistically to 90% for instant visual feedback that the system is engaged. Once the browser signals that the module is ready, we burst the remaining progress to 100%.
         </p>
-        
         <div class="bento-grid">
             <div class="glass-card observer-trigger">
                 <h4 style="letter-spacing: 3px; opacity: 0.3; font-size: 0.6rem; margin: 0; text-transform: uppercase;">Standard Logic</h4>
@@ -210,10 +225,9 @@
                 </div>
                 <div>
                     <p style="font-size: 1.15rem; font-weight: 800; color: var(--text-headline); margin-bottom: 12px;">Mechanical Friction</p>
-                    <p style="font-size: 0.9rem; opacity: 0.6;">Linear animations often cause "cognitive friction," making systems feel disconnected or frozen during complex background tasks.</p>
+                    <p style="font-size: 0.9rem; opacity: 0.6;">Predictable animations often cause "cognitive friction," making systems feel disconnected during complex background tasks.</p>
                 </div>
             </div>
-            
             <div class="glass-card observer-trigger">
                 <h4 style="letter-spacing: 3px; opacity: 0.3; font-size: 0.6rem; margin: 0; text-transform: uppercase;">Kinetic Engine</h4>
                 <div class="loader-display-area">
@@ -222,7 +236,7 @@
                 </div>
                 <div>
                     <p style="font-size: 1.15rem; font-weight: 800; color: var(--text-headline); margin-bottom: 12px;">Optimistic Feedback</p>
-                    <p style="font-size: 0.9rem; opacity: 0.6;">Our non-linear engine stalls and bursts to mirror real-time server handshakes, reducing perceived wait times by up to 40%.</p>
+                    <p style="font-size: 0.9rem; opacity: 0.6;">Our non-linear engine stalls and bursts to mirror real-time server handshakes, reducing perceived wait by 40%.</p>
                 </div>
             </div>
         </div>
@@ -254,6 +268,34 @@
     <footer>LH LOADER — THE ARCHITECTURE OF SPEED © 2026</footer>
 
     <script>
+        /**
+         * 1. PARALLAX ENGINE (v152)
+         */
+        const Parallax = (() => {
+            let mouseX = 0, mouseY = 0;
+            let targetX = 0, targetY = 0;
+            const b1 = () => document.getElementById('parallax-blob-1');
+            const b2 = () => document.getElementById('parallax-blob-2');
+            const init = () => {
+                window.addEventListener('mousemove', (e) => {
+                    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+                    mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+                });
+                render();
+            };
+            const render = () => {
+                targetX += (mouseX - targetX) * 0.05;
+                targetY += (mouseY - targetY) * 0.05;
+                if(b1()) b1().style.transform = `translate3d(${targetX * -50}px, ${targetY * -50}px, 0)`;
+                if(b2()) b2().style.transform = `translate3d(${targetX * 80}px, ${targetY * 80}px, 0)`;
+                requestAnimationFrame(render);
+            };
+            return { init };
+        })();
+
+        /**
+         * 2. LOADER ENGINE (7-LAYER GLOW v149)
+         */
         const LH = (() => {
             const buildHTML = (id, barId, isMaster = false) => `
                 <div id="${id}" class="lh-loader-container ${isMaster ? 'lh-loader-container--master' : ''}" aria-hidden="true">
@@ -356,7 +398,8 @@
 
         function applyTheme() {
             const root = document.documentElement;
-            const target = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            const current = root.getAttribute('data-theme');
+            const target = current === 'dark' ? 'light' : 'dark';
             root.setAttribute('data-theme', target);
             const icon = document.getElementById('theme-icon');
             if(target === 'light') {
@@ -376,9 +419,10 @@
             root.style.setProperty('--lh-color-base', lch);
             root.style.setProperty('--lh-glow-spread', spread + 'px');
             root.style.setProperty('--lh-glow-opacity', opacity);
-            const parts = lch.split(' '), l = root.getAttribute('data-theme') === 'light' ? '80%' : '60%';
+            const parts = lch.split(' ');
             if (parts.length >= 3) {
                 const h = parseFloat(parts[2]);
+                const l = root.getAttribute('data-theme') === 'light' ? '80%' : '60%';
                 root.style.setProperty('--accent-1', `oklch(${l} 0.15 ${(h + 120) % 360})`);
                 root.style.setProperty('--accent-2', `oklch(${l} 0.15 ${(h + 240) % 360})`);
             }
@@ -390,8 +434,16 @@
         window.addEventListener('load', () => {
             LH.inject('lh-master-target', 'lh-root', 'lh-bar', true);
             LH.inject('lh-mini-target', 'lh-mini-root', 'lh-mini-bar', false);
+            
+            const activeDot = document.querySelector('.color-dot.active');
+            if(activeDot) {
+                const args = activeDot.getAttribute('onclick').match(/'([^']+)',\s*(\d+),\s*([\d.]+)/);
+                applyPreset(args[1], args[2], args[3], activeDot);
+            }
+
             LH.start(true, true); 
             initObservers();
+            Parallax.init();
             document.querySelectorAll('.reveal').forEach((el, i) => setTimeout(() => el.classList.add('active'), i * 150 + 300));
         });
 
