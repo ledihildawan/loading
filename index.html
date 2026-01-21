@@ -2,8 +2,8 @@
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LH LOADER — Architectural Authority v139</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>LH LOADER — The Final Architectural Authority v150</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +24,7 @@
             --text-body: oklch(70% 0.01 260);
             --glass-panel: oklch(100% 0 0 / 0.03);
             --glass-border: oklch(100% 0 0 / 0.08);
-            --glass-highlight: oklch(100% 0 0 / 0.12);
+            --glass-highlight: oklch(100% 0 0 / 0.15);
             --display-area-bg: rgba(0,0,0,0.25);
             --blob-opacity: 0.4;
             --btn-bg: oklch(100% 0 0);
@@ -33,13 +33,13 @@
 
         [data-theme="light"] {
             --bg-page: oklch(98% 0.005 260); 
-            --text-headline: oklch(20% 0.02 260);
-            --text-body: oklch(45% 0.02 260);
-            --glass-panel: oklch(0% 0 260 / 0.02);
-            --glass-border: oklch(0% 0 260 / 0.06);
-            --display-area-bg: oklch(0% 0 0 / 0.03);
+            --text-headline: oklch(15% 0.02 260);
+            --text-body: oklch(40% 0.02 260);
+            --glass-panel: oklch(0% 0 260 / 0.03);
+            --glass-border: oklch(0% 0 260 / 0.08);
+            --display-area-bg: oklch(0% 0 0 / 0.04);
             --blob-opacity: 0.25;
-            --btn-bg: oklch(20% 0.02 260);
+            --btn-bg: oklch(15% 0.02 260);
             --btn-text: oklch(100% 0 0);
         }
 
@@ -54,13 +54,23 @@
         }
 
         body { background-color: var(--bg-page); color: var(--text-body); font-family: 'Inter Tight', sans-serif; margin: 0; overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; transition: background-color 0.4s ease; }
-        .cinematic-grain { position: fixed; inset: 0; pointer-events: none; z-index: 9000; opacity: 0.06; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-        .ambient-blob { position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: var(--blob-opacity); transition: background 2.5s ease, opacity 1s ease; will-change: background; }
+        .cinematic-grain { position: fixed; inset: 0; pointer-events: none; z-index: 9000; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+        .ambient-blob { position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: var(--blob-opacity); transition: background 2.5s ease; will-change: background; }
         .blob-1 { top: -15%; left: -10%; width: 75vw; height: 75vw; background: var(--accent-1); }
         .blob-2 { bottom: -15%; right: -5%; width: 65vw; height: 65vw; background: var(--accent-2); }
 
         /* ==========================================================================
-           2. ENGINE CORE STYLES
+           2. BRAND IDENTITY
+           ========================================================================== */
+        .brand-container { display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; }
+        .lh-logo-svg { height: 34px; width: 34px; transition: filter 0.4s ease; }
+        .lh-logo-path { fill: none; stroke: oklch(var(--lh-color-base)); stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 100, 100; stroke-dashoffset: 0; transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .brand-container:hover .lh-logo-path { stroke-dasharray: 25, 100; stroke-dashoffset: -12; }
+        .brand-container:hover .lh-logo-svg { filter: drop-shadow(0 0 10px oklch(var(--lh-color-base) / 0.6)); }
+        .brand-text { font-weight: 800; font-size: clamp(0.7rem, 2vw, 0.85rem); letter-spacing: 5px; color: var(--text-headline); text-transform: uppercase; }
+
+        /* ==========================================================================
+           3. LOADER ENGINE CORE
            ========================================================================== */
         .lh-loader-container { position: absolute; top: 0; left: 0; width: 100%; height: 3px; z-index: 10001; opacity: 0; transition: opacity 0.4s linear; pointer-events: none; overflow: visible; }
         .lh-loader-container--master { position: fixed; }
@@ -68,9 +78,9 @@
         .lh-loader__bar { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: translateX(-100%); will-change: transform; overflow: visible; }
         .lh-loader__substrate { position: absolute; inset: 0; border-radius: 99px; overflow: hidden; z-index: 3; }
         .lh-loader__bg { width: 100%; height: 100%; background: linear-gradient(to right, oklch(var(--lh-color-base) / 0.2) 0%, oklch(var(--lh-color-base) / 0.5) 100%); }
-        .lh-loader__tip { position: absolute; right: 0; top: 0; width: 25rem; max-width: 50%; height: 100%; background: linear-gradient(to right, transparent 0%, var(--gl-beam-high) 100%); }
+        .lh-loader__tip { position: absolute; right: 0; top: 0; width: clamp(8rem, 25vw, 25rem); height: 100%; background: linear-gradient(to right, transparent 0%, var(--gl-beam-high) 100%); }
         .lh-loader__swoosh-beam { position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, oklch(from var(--gl-swoosh-color) l c h / 0.1) 30%, oklch(from var(--gl-swoosh-color) l c h / 0.9) 50%, oklch(from var(--gl-swoosh-color) l c h / 0.1) 70%, transparent 100%); animation: swoosh-move 1.8s infinite linear; mix-blend-mode: plus-lighter; }
-        .lh-loader__glow { position: absolute; top: 50%; right: 0; width: 40rem; max-width: 90%; height: 100%; transform: translate3d(0, -50%, 0); animation: gl-glow-sync-absolute 1.8s infinite linear; z-index: 2; overflow: visible; will-change: opacity, filter; }
+        .lh-loader__glow { position: absolute; top: 50%; right: 0; width: clamp(15rem, 50vw, 40rem); height: 100%; transform: translate3d(0, -50%, 0); animation: gl-glow-sync-absolute 1.8s infinite linear; z-index: 2; overflow: visible; will-change: opacity, filter; }
         .lh-loader__glow-layer { position: absolute; top: 50%; right: 0; width: 100%; height: 100%; border-radius: 9999px; transform: translateY(-50%); background: linear-gradient(to right, transparent 0%, var(--gl-glow-high) 100%); }
         
         @keyframes swoosh-move { 0% { transform: translateX(-105%); } 100% { transform: translateX(105%); } }
@@ -84,67 +94,73 @@
         .lh-loader__glow-layer--6 { right: -25px; height: 800%; filter: blur(20px); }
         .lh-loader__glow-layer--7 { right: -80px; height: 1600%; filter: blur(var(--lh-glow-spread)); opacity: 0.15; }
 
-        /* ==========================================================================
-           3. KINETIC SPINNER
-           ========================================================================== */
-        .kinetic-spinner-svg { width: 42px; height: 42px; animation: spin 2s linear infinite; animation-play-state: paused; filter: drop-shadow(0 0 8px oklch(var(--lh-color-base) / 0.3)); will-change: transform, filter; }
+        /* KINETIC SPINNER */
+        .kinetic-spinner-svg { width: 42px; height: 42px; animation: spin 2s linear infinite; animation-play-state: paused; filter: drop-shadow(0 0 10px oklch(var(--lh-color-base) / 0.4)); }
         .kinetic-spinner-svg.animate { animation-play-state: running; }
-        .kinetic-spinner-circle { fill: none; stroke: oklch(var(--lh-color-base)); stroke-width: 3.5; stroke-linecap: round; stroke-dasharray: 1, 150; stroke-dashoffset: 0; animation: dash 1.5s ease-in-out infinite; }
+        .kinetic-spinner-circle { fill: none; stroke: oklch(var(--lh-color-base)); stroke-width: 3.8; stroke-linecap: round; stroke-dasharray: 1, 150; stroke-dashoffset: 0; animation: dash 1.5s ease-in-out infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes dash { 0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; } 50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; stroke: var(--gl-swoosh-color); } 100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; stroke: oklch(var(--lh-color-base)); } }
 
         /* ==========================================================================
            4. UI FRAMEWORK
            ========================================================================== */
-        .nav { position: fixed; top: 0; width: 100%; height: 85px; display: flex; justify-content: space-between; align-items: center; padding: 0 6%; box-sizing: border-box; z-index: 100; backdrop-filter: blur(30px); border-bottom: 1px solid var(--glass-border); }
-        .brand { font-weight: 800; font-size: 0.85rem; letter-spacing: 5px; color: var(--text-headline); text-transform: uppercase; cursor: default; }
-        .github-link { color: var(--text-headline); opacity: 0.4; transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; align-items: center; }
-        .github-link:hover { opacity: 1; transform: scale(1.1) rotate(5deg); }
+        .nav { position: fixed; top: 0; width: 100%; height: clamp(65px, 8vh, 85px); display: flex; justify-content: space-between; align-items: center; padding: 0 6%; box-sizing: border-box; z-index: 100; backdrop-filter: blur(40px) saturate(1.5); border-bottom: 1px solid var(--glass-border); box-shadow: inset 0 1px 0 var(--glass-highlight); }
+        .nav-actions { display: flex; align-items: center; gap: clamp(12px, 3vw, 25px); }
+        .nav-btn { background: none; border: none; padding: 10px; cursor: pointer; color: var(--text-headline); opacity: 0.45; transition: 0.4s; display: flex; align-items: center; }
+        .nav-btn:hover { opacity: 1; transform: scale(1.1); }
 
-        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; }
-        h1 { font-size: clamp(3.2rem, 11vw, 7rem); font-weight: 800; letter-spacing: -0.06em; line-height: 0.9; margin: 0 0 25px 0; color: var(--text-headline); }
-        .tagline { font-size: clamp(1rem, 2.5vw, 1.25rem); max-width: 800px; margin-bottom: 45px; font-weight: 400; color: var(--text-body); opacity: 0.8; letter-spacing: -0.01em; }
-        .btn-cta { background: var(--btn-bg); color: var(--btn-text); padding: 22px 52px; border-radius: 100px; font-size: 1rem; font-weight: 800; border: none; cursor: pointer; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 10px 40px oklch(from var(--btn-bg) l c h / 0.2); }
-        .btn-cta:hover { transform: translateY(-3px) scale(1.02); filter: brightness(1.1); }
-        .btn-cta:active { transform: translateY(0) scale(0.98); }
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 24px; box-sizing: border-box; }
+        h1 { font-size: clamp(2.5rem, 12vw, 7.5rem); font-weight: 800; letter-spacing: -0.06em; line-height: 0.85; margin: 0 0 25px 0; color: var(--text-headline); }
+        .tagline { font-size: clamp(0.9rem, 2.5vw, 1.25rem); max-width: 800px; margin-bottom: 45px; font-weight: 400; color: var(--text-body); opacity: 0.85; }
+        .btn-cta { background: var(--btn-bg); color: var(--btn-text); padding: clamp(16px, 3vw, 22px) clamp(35px, 6vw, 55px); border-radius: 100px; font-size: 1rem; font-weight: 800; border: none; cursor: pointer; transition: 0.4s; box-shadow: 0 10px 45px oklch(from var(--btn-bg) l c h / 0.25); }
         
-        .section-container { padding: 160px 6%; max-width: 1300px; margin: 0 auto; text-align: center; }
-        .section-title { font-size: 3.5rem; color: var(--text-headline); letter-spacing: -0.05em; margin-bottom: 1.2rem; }
-        .section-subtitle { opacity: 0.65; font-weight: 300; font-size: 1.15rem; margin-bottom: 4.5rem; max-width: 750px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+        .section-container { padding: clamp(80px, 15vh, 180px) 6%; max-width: 1300px; margin: 0 auto; text-align: center; }
+        .section-title { font-size: clamp(2.2rem, 6vw, 3.8rem); color: var(--text-headline); letter-spacing: -0.06em; margin-bottom: 1.5rem; }
+        .section-subtitle { opacity: 0.7; font-weight: 300; font-size: clamp(1rem, 2vw, 1.2rem); margin-bottom: clamp(3rem, 12vh, 5rem); max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.75; }
         
-        .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 32px; margin-top: 20px; text-align: left; }
-        .glass-card { background: var(--glass-panel); border: 1px solid var(--glass-border); border-radius: 40px; padding: 50px; display: flex; flex-direction: column; justify-content: space-between; min-height: 420px; transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        .glass-card:hover { transform: translateY(-8px); background: oklch(from var(--glass-panel) l c h / 0.05); border-color: var(--glass-highlight); }
+        .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-top: 20px; text-align: left; }
+        .glass-card { background: var(--glass-panel); border: 1px solid var(--glass-border); border-radius: 40px; padding: clamp(35px, 5vw, 55px); display: flex; flex-direction: column; justify-content: space-between; min-height: 420px; transition: 0.5s; }
         .loader-display-area { height: 130px; display: flex; align-items: center; justify-content: center; width: 100%; position: relative; overflow: hidden; border-radius: 24px; background: var(--display-area-bg); border: 1px solid var(--glass-border); margin-bottom: 35px; }
         
-        .palette-container { display: flex; gap: 14px; padding: 18px; background: var(--glass-panel); border-radius: 100px; border: 1px solid var(--glass-border); backdrop-filter: blur(20px); justify-content: center; width: fit-content; margin: 20px auto; }
-        .color-dot { width: 38px; height: 38px; border-radius: 50%; cursor: pointer; border: none; transition: 0.3s; position: relative; }
-        .color-dot:hover { transform: scale(1.15); }
-        .color-dot.active::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--text-headline); opacity: 0.5; animation: pulse-ring 2s infinite; }
-        @keyframes pulse-ring { 0% { transform: scale(0.9); opacity: 0.5; } 100% { transform: scale(1.2); opacity: 0; } }
+        .palette-container { display: flex; gap: 14px; padding: 18px; background: var(--glass-panel); border-radius: 100px; border: 1px solid var(--glass-border); backdrop-filter: blur(20px); justify-content: center; width: fit-content; margin: 20px auto; flex-wrap: wrap; }
+        .color-dot { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: none; transition: 0.3s; position: relative; }
+        .color-dot.active::after { content: ''; position: absolute; inset: -7px; border-radius: 50%; border: 2px solid var(--text-headline); opacity: 0.6; animation: pulse-ring 2.5s infinite; }
+        @keyframes pulse-ring { 0% { transform: scale(0.85); opacity: 0.6; } 100% { transform: scale(1.3); opacity: 0; } }
         
-        .theme-fab { position: fixed; bottom: 40px; right: 40px; width: 68px; height: 68px; border-radius: 50%; background: var(--btn-bg); color: var(--btn-text); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2000; transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 15px 45px rgba(0,0,0,0.3); }
-        .theme-fab:hover { transform: rotate(180deg) scale(1.1); }
-        
-        .reveal { opacity: 0; transform: translateY(30px); transition: 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .reveal { opacity: 0; transform: translateY(35px); transition: 1.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
-        footer { padding: 120px 0; text-align: center; opacity: 0.3; font-size: 0.75rem; letter-spacing: 5px; font-weight: 700; text-transform: uppercase; }
+        footer { padding: 120px 0; text-align: center; opacity: 0.35; font-size: 0.75rem; letter-spacing: 6px; font-weight: 700; text-transform: uppercase; padding-bottom: 150px; }
 
         /* ==========================================================================
            5. ANATOMY STACK
            ========================================================================== */
-        .anatomy-stack { position: relative; height: 650px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: crosshair; perspective: 2500px; margin-top: 80px; }
-        .layer-container { position: relative; width: 400px; margin: 18px 0; transition: 1.2s cubic-bezier(0.1, 0.8, 0.2, 1); transform-style: preserve-3d; }
-        .layer-visual { width: 100%; height: 14px; border-radius: 99px; border: 1px solid var(--glass-border); opacity: 0.35; transition: 0.6s ease; will-change: transform, opacity; }
-        .layer-label { position: absolute; top: 50%; transform: translateY(-50%); font-size: 0.75rem; font-weight: 800; opacity: 0.25; transition: 0.8s; letter-spacing: 3px; text-transform: uppercase; color: var(--text-headline); white-space: nowrap; pointer-events: none; z-index: 200; }
+        .anatomy-stack { position: relative; height: clamp(550px, 95vh, 750px); display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: crosshair; perspective: 2500px; margin-top: 40px; width: 100%; padding: 40px 0; }
+        .layer-container { position: relative; width: min(420px, 85vw); margin: 38px 0; transition: 1.3s cubic-bezier(0.1, 0.8, 0.2, 1); transform-style: preserve-3d; }
+        .layer-visual { width: 100%; height: 14px; border-radius: 99px; border: 1px solid var(--glass-border); opacity: 0.25; transition: 0.7s ease; will-change: transform, opacity; }
+        .layer-label { position: absolute; top: 50%; transform: translateY(-50%); font-size: clamp(0.55rem, 1.8vw, 0.75rem); font-weight: 800; opacity: 0.1; transition: 0.8s; letter-spacing: 3px; text-transform: uppercase; color: var(--text-headline); white-space: nowrap; pointer-events: none; z-index: 200; }
+        
         .anatomy-stack:hover .layer-container { transform: rotateX(62deg) rotateZ(-18deg) translateY(var(--offset)); margin: 55px 0; }
         .anatomy-stack:hover .layer-visual { opacity: 1; border-color: var(--glass-highlight); }
         .anatomy-stack:hover .layer-label { opacity: 1; filter: none !important; }
-        .lp-glow .layer-label, .lp-bg .layer-label { right: calc(100% + 80px); text-align: right; }
-        .lp-swoosh .layer-label, .lp-tip .layer-label { left: calc(100% + 80px); text-align: left; }
-        .lp-glow .layer-visual { background: linear-gradient(to right, transparent 0%, var(--gl-glow-high) 100%); filter: blur(15px); box-shadow: 0 0 var(--lh-glow-spread) var(--gl-glow-high); opacity: 0.5; }
+
+        .lp-glow .layer-label, .lp-bg .layer-label { right: calc(100% + clamp(20px, 8vw, 100px)); text-align: right; }
+        .lp-swoosh .layer-label, .lp-tip .layer-label { left: calc(100% + clamp(20px, 8vw, 100px)); text-align: left; }
+
+        .lp-glow .layer-visual { background: linear-gradient(to right, transparent 0%, var(--gl-glow-high) 100%); filter: blur(14px); box-shadow: 0 0 var(--lh-glow-spread) var(--gl-glow-high); opacity: 0.45; }
         .lp-bg .layer-visual { background: linear-gradient(90deg, oklch(var(--lh-color-base) / 0.2), oklch(var(--lh-color-base) / 0.5)); }
         .lp-swoosh .layer-visual { background: linear-gradient(90deg, transparent, var(--gl-swoosh-color), transparent); }
-        .lp-tip .layer-visual { background: linear-gradient(90deg, transparent, var(--gl-beam-high)); border-right: 2px solid var(--gl-beam-high); box-shadow: 3px 0 15px var(--gl-beam-high); }
+        .lp-tip .layer-visual { background: linear-gradient(90deg, transparent, var(--gl-beam-high)); border-right: 2px solid var(--gl-beam-high); box-shadow: 4px 0 20px var(--gl-beam-high); }
+
+        @media (max-width: 768px) {
+            .lp-glow .layer-label, .lp-bg .layer-label,
+            .lp-swoosh .layer-label, .lp-tip .layer-label { position: absolute; right: auto; left: 0; bottom: -32px; top: auto; transform: rotateX(-45deg); width: 100%; text-align: center; font-size: 0.55rem; opacity: 0.3; }
+            .anatomy-stack:hover .layer-container { margin: 65px 0; }
+            .layer-container { margin: 48px 0; }
+        }
+        @media (max-height: 500px) and (orientation: landscape) {
+            .hero { min-height: 140vh; padding-top: 100px; }
+            .anatomy-stack { height: 800px; }
+        }
     </style>
 </head>
 <body>
@@ -154,24 +170,36 @@
     <div class="ambient-blob blob-2"></div>
 
     <nav class="nav reveal">
-        <div class="brand">LH LOADER</div>
-        <a href="https://github.com/ledihildawan/loading" target="_blank" class="github-link" aria-label="GitHub Profile">
-            <svg height="26" viewBox="0 0 16 16" width="26" fill="currentColor"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg>
+        <a href="#" class="brand-container">
+            <svg class="lh-logo-svg" viewBox="0 0 40 40">
+                <path class="lh-logo-path" d="M10 5V30H25M20 5V35M20 20H35V5" />
+            </svg>
+            <div class="brand-text">LH LOADER</div>
         </a>
+        <div class="nav-actions">
+            <button id="theme-toggle" class="nav-btn" onclick="handleThemeToggle()" aria-label="Toggle Theme">
+                <svg id="theme-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                </svg>
+            </button>
+            <a href="https://github.com/ledihildawan/loading" target="_blank" class="nav-btn" aria-label="GitHub">
+                <svg height="22" viewBox="0 0 16 16" width="22" fill="currentColor"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg>
+            </a>
+        </div>
     </nav>
 
     <div id="lh-master-target"></div>
 
     <section class="hero">
         <h1 class="reveal">The Art of<br>Performance.</h1>
-        <p class="tagline reveal">Transform technical latency into premium brand authority through cinematic physics and photonic precision.</p>
-        <button class="btn-cta reveal" onclick="triggerDemo()">Run System Sequence</button>
+        <p class="tagline reveal">Elevate technical wait times into premium brand moments through cinematic physics and photonic precision.</p>
+        <button class="btn-cta reveal" onclick="triggerDemo()">Run Live Sequence</button>
     </section>
 
     <section class="section-container reveal">
         <h2 class="section-title">The Perception Gap.</h2>
         <p class="section-subtitle">
-            Rather than leaving users in uncertainty, we utilize <strong>Simulated Progress</strong>. We drive the bar optimistically to 90% for instant visual feedback. Once the module is ready, we burst the remaining progress to 100%.
+            Rather than leaving users in uncertainty, we utilize <strong>Simulated Progress</strong>. We drive the bar optimistically to 90% for instant visual feedback that the system is engaged. Once the browser signals that the module is ready, we burst the remaining progress to 100%.
         </p>
         
         <div class="bento-grid">
@@ -182,7 +210,7 @@
                 </div>
                 <div>
                     <p style="font-size: 1.15rem; font-weight: 800; color: var(--text-headline); margin-bottom: 12px;">Mechanical Friction</p>
-                    <p style="font-size: 0.9rem; opacity: 0.6;">Predictable animations often cause cognitive friction, making systems feel disconnected during complex background tasks.</p>
+                    <p style="font-size: 0.9rem; opacity: 0.6;">Linear animations often cause "cognitive friction," making systems feel disconnected or frozen during complex background tasks.</p>
                 </div>
             </div>
             
@@ -190,7 +218,7 @@
                 <h4 style="letter-spacing: 3px; opacity: 0.3; font-size: 0.6rem; margin: 0; text-transform: uppercase;">Kinetic Engine</h4>
                 <div class="loader-display-area">
                     <div id="lh-mini-target" class="mini-gl-viewport"></div>
-                    <p style="opacity: 0.08; font-weight: 900; font-size: 1.1rem; letter-spacing: 12px; text-transform: uppercase;">Syncing</p>
+                    <p style="opacity: 0.08; font-weight: 900; font-size: 1rem; letter-spacing: 12px; text-transform: uppercase;">Syncing</p>
                 </div>
                 <div>
                     <p style="font-size: 1.15rem; font-weight: 800; color: var(--text-headline); margin-bottom: 12px;">Optimistic Feedback</p>
@@ -203,18 +231,17 @@
     <section class="section-container reveal">
         <h2 class="section-title">Optical Architecture.</h2>
         <p class="section-subtitle">A precision-engineered composite of light and physics, designed to maintain visual authority across professional high-refresh displays.</p>
-        
         <div class="anatomy-stack">
-            <div class="layer-container lp-glow" style="--offset: -200px;"><span class="layer-label">Atmospheric Halo</span><div class="layer-visual"></div></div>
-            <div class="layer-container lp-bg" style="--offset: -70px;"><span class="layer-label">Physical Substrate</span><div class="layer-visual"></div></div>
+            <div class="layer-container lp-glow" style="--offset: -180px;"><span class="layer-label">Atmospheric Halo</span><div class="layer-visual"></div></div>
+            <div class="layer-container lp-bg" style="--offset: -60px;"><span class="layer-label">Physical Substrate</span><div class="layer-visual"></div></div>
             <div class="layer-container lp-swoosh" style="--offset: 60px;"><span class="layer-label">Kinetic Pulse</span><div class="layer-visual"></div></div>
-            <div class="layer-container lp-tip" style="--offset: 190px;"><span class="layer-label">Leading Edge</span><div class="layer-visual"></div></div>
+            <div class="layer-container lp-tip" style="--offset: 180px;"><span class="layer-label">Leading Edge</span><div class="layer-visual"></div></div>
         </div>
     </section>
 
-    <section class="section-container reveal" style="padding-bottom: 140px;">
+    <section class="section-container reveal" style="padding-bottom: 120px;">
         <h2 class="section-title">Visual Harmony.</h2>
-        <p class="section-subtitle">Adaptive OKLCH mathematics ensure brand colors maintain flawless visual weight regardless of environmental luminance.</p>
+        <p class="section-subtitle">Consistent perceptual brightness powered by OKLCH mathematics ensure brand colors maintain flawless visual weight regardless of environmental luminance.</p>
         <div class="palette-container">
             <div class="color-dot active" style="background: oklch(100% 0 0);" onclick="applyPreset('100% 0 0', 45, 0.65, this)"></div>
             <div class="color-dot" style="background: oklch(80% 0.2 200);" onclick="applyPreset('80% 0.2 200', 35, 0.55, this)"></div> 
@@ -226,14 +253,7 @@
 
     <footer>LH LOADER — THE ARCHITECTURE OF SPEED © 2026</footer>
 
-    <button id="theme-toggle" class="theme-fab" onclick="handleThemeToggle()" aria-label="Toggle Theme Mode">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-    </button>
-
     <script>
-        /**
-         * LH LOADER ENGINE v139.0 (Final Deployment Build)
-         */
         const LH = (() => {
             const buildHTML = (id, barId, isMaster = false) => `
                 <div id="${id}" class="lh-loader-container ${isMaster ? 'lh-loader-container--master' : ''}" aria-hidden="true">
@@ -277,7 +297,7 @@
                 done() {
                     const { root, bar } = this.getNodes(); if(!root || !bar) return;
                     this.kill(); this.move(bar, 0, 450);
-                    setTimeout(() => root.classList.remove('lh-loader--active'), 600);
+                    setTimeout(() => { if(!state.on) root.classList.remove('lh-loader--active'); }, 600);
                 }
             };
         })();
@@ -335,7 +355,15 @@
         }
 
         function applyTheme() {
-            document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+            const root = document.documentElement;
+            const target = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', target);
+            const icon = document.getElementById('theme-icon');
+            if(target === 'light') {
+                icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+            } else {
+                icon.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
+            }
             const activeDot = document.querySelector('.color-dot.active');
             if (activeDot) {
                 const args = activeDot.getAttribute('onclick').match(/'([^']+)',\s*(\d+),\s*([\d.]+)/);
