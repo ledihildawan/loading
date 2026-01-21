@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>LH LOADER — Architectural Authority v154</title>
+    <title>LH LOADER — Architectural Authority v156</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css">
     
@@ -13,7 +13,7 @@
 
     <style>
         /* ==========================================================================
-           1. CORE DESIGN SYSTEM (OKLCH) — BASE CHECKPOINT v153
+           1. CORE DESIGN SYSTEM (OKLCH) — BASE CHECKPOINT v153/v154
            ========================================================================== */
         :root {
             --lh-color-base: 100% 0 0; 
@@ -55,7 +55,7 @@
             --gl-swoosh-color: oklch(from oklch(var(--lh-color-base)) calc(l + 0.5) c h);
         }
 
-        /* RESET OVERRIDES FOR MODERN NORMALIZE SINK */
+        /* RESET OVERRIDES FOR MODERN NORMALIZE */
         body { 
             background-color: var(--bg-page); 
             color: var(--text-body); 
@@ -73,9 +73,9 @@
         .blob-2 { bottom: -15%; right: -5%; width: 65vw; height: 65vw; background: var(--accent-2); }
 
         /* ==========================================================================
-           2. BRAND IDENTITY (MONOGRAM SVG)
+           2. BRAND IDENTITY (MONOGRAM SVG v143 + FLUID RESET)
            ========================================================================== */
-        .brand-container { display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; }
+        .brand-container { display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; margin: 0; }
         .lh-logo-svg { height: 34px; width: 34px; transition: filter 0.4s ease; }
         .lh-logo-path { 
             fill: none; stroke: oklch(var(--lh-color-base)); stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; 
@@ -83,10 +83,10 @@
         }
         .brand-container:hover .lh-logo-path { stroke-dasharray: 25, 100; stroke-dashoffset: -12; }
         .brand-container:hover .lh-logo-svg { filter: drop-shadow(0 0 10px oklch(var(--lh-color-base) / 0.6)); }
-        .brand-text { font-weight: 800; font-size: clamp(0.7rem, 2vw, 0.85rem); letter-spacing: 5px; color: var(--text-headline); text-transform: uppercase; margin: 0; }
+        .brand-text { font-weight: 800; font-size: clamp(0.7rem, 2vw, 0.85rem); letter-spacing: 5px; color: var(--text-headline); text-transform: uppercase; margin: 0; line-height: 1; }
 
         /* ==========================================================================
-           3. LOADER ENGINE CORE (7-LAYER GLOW)
+           3. LOADER ENGINE CORE (7-LAYER GLOW v154 CHECKPOINT)
            ========================================================================== */
         .lh-loader-container { position: absolute; top: 0; left: 0; width: 100%; height: 3px; z-index: 10001; opacity: 0; transition: opacity 0.4s linear; pointer-events: none; overflow: visible; }
         .lh-loader-container--master { position: fixed; }
@@ -111,7 +111,7 @@
         .lh-loader__glow-layer--6 { right: -25px; height: 800%; filter: blur(20px); }
         .lh-loader__glow-layer--7 { right: -80px; height: 1600%; filter: blur(var(--lh-glow-spread)); opacity: 0.15; }
 
-        /* KINETIC SPINNER */
+        /* KINETIC SPINNER (v138) */
         .kinetic-spinner-svg { width: 42px; height: 42px; animation: spin 2s linear infinite; animation-play-state: paused; filter: drop-shadow(0 0 10px oklch(var(--lh-color-base) / 0.4)); }
         .kinetic-spinner-svg.animate { animation-play-state: running; }
         .kinetic-spinner-circle { fill: none; stroke: oklch(var(--lh-color-base)); stroke-width: 3.8; stroke-linecap: round; stroke-dasharray: 1, 150; stroke-dashoffset: 0; animation: dash 1.5s ease-in-out infinite; }
@@ -119,39 +119,42 @@
         @keyframes dash { 0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; } 50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; stroke: var(--gl-swoosh-color); } 100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; stroke: oklch(var(--lh-color-base)); } }
 
         /* ==========================================================================
-           4. UI FRAMEWORK (UNIVERSAL RESPONSIVE)
+           4. UI FRAMEWORK (v141 RESPONIVE + v155 SPACING CALIBRATION)
            ========================================================================== */
         .nav { position: fixed; top: 0; width: 100%; height: clamp(65px, 8vh, 85px); display: flex; justify-content: space-between; align-items: center; padding: 0 6%; box-sizing: border-box; z-index: 100; backdrop-filter: blur(40px) saturate(1.5); border-bottom: 1px solid var(--glass-border); box-shadow: inset 0 1px 0 var(--glass-highlight); }
         .nav-actions { display: flex; align-items: center; gap: clamp(12px, 3vw, 25px); }
         .nav-btn { background: none; border: none; padding: 10px; cursor: pointer; color: var(--text-headline); opacity: 0.45; transition: 0.4s; display: flex; align-items: center; }
         .nav-btn:hover { opacity: 1; transform: scale(1.1); }
 
-        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 24px; box-sizing: border-box; }
-        h1 { font-size: clamp(2.5rem, 12vw, 7.5rem); font-weight: 800; letter-spacing: -0.06em; line-height: 0.85; margin: 0 0 25px 0; color: var(--text-headline); }
-        .tagline { font-size: clamp(0.9rem, 2.5vw, 1.25rem); max-width: 800px; margin-bottom: 45px; font-weight: 400; color: var(--text-body); opacity: 0.85; }
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 80px 24px 40px; box-sizing: border-box; }
+        h1 { font-size: clamp(2.5rem, 12vw, 7.5rem); font-weight: 800; letter-spacing: -0.06em; line-height: 0.85; margin: 0 0 30px 0; color: var(--text-headline); }
+        .tagline { font-size: clamp(0.9rem, 2.5vw, 1.25rem); max-width: 800px; margin: 0 0 50px 0; font-weight: 400; color: var(--text-body); opacity: 0.85; }
         .btn-cta { background: var(--btn-bg); color: var(--btn-text); padding: clamp(16px, 3vw, 22px) clamp(35px, 6vw, 55px); border-radius: 100px; font-size: 1rem; font-weight: 800; border: none; cursor: pointer; transition: 0.4s; box-shadow: 0 10px 45px oklch(from var(--btn-bg) l c h / 0.25); }
         
-        .section-container { padding: clamp(80px, 15vh, 180px) 6%; max-width: 1300px; margin: 0 auto; text-align: center; }
-        .section-title { font-size: clamp(2.2rem, 6vw, 3.8rem); color: var(--text-headline); letter-spacing: -0.06em; margin-bottom: 1.5rem; }
-        .section-subtitle { opacity: 0.7; font-weight: 300; font-size: clamp(1rem, 2vw, 1.2rem); margin-bottom: clamp(3rem, 12vh, 5rem); max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.75; }
+        .section-container { padding: clamp(100px, 15vh, 180px) 6%; max-width: 1300px; margin: 0 auto; text-align: center; }
+        .section-title { font-size: clamp(2.2rem, 6vw, 3.8rem); color: var(--text-headline); letter-spacing: -0.06em; margin: 0 0 25px 0; line-height: 1.1; }
+        .section-subtitle { opacity: 0.7; font-weight: 300; font-size: clamp(1rem, 2vw, 1.2rem); margin: 0 auto clamp(3rem, 12vh, 5rem); max-width: 800px; line-height: 1.75; }
         
-        .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; margin-top: 20px; text-align: left; }
-        .glass-card { background: var(--glass-panel); border: 1px solid var(--glass-border); border-radius: 40px; padding: clamp(35px, 5vw, 55px); display: flex; flex-direction: column; justify-content: space-between; min-height: 420px; transition: 0.5s; }
-        .loader-display-area { height: 130px; display: flex; align-items: center; justify-content: center; width: 100%; position: relative; overflow: hidden; border-radius: 24px; background: var(--display-area-bg); border: 1px solid var(--glass-border); margin-bottom: 35px; }
+        .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; margin: 0; text-align: left; }
+        .glass-card { background: var(--glass-panel); border: 1px solid var(--glass-border); border-radius: 40px; padding: clamp(35px, 5vw, 55px); display: flex; flex-direction: column; justify-content: space-between; min-height: 440px; transition: 0.5s; box-sizing: border-box; }
+        .loader-display-area { height: 130px; display: flex; align-items: center; justify-content: center; width: 100%; position: relative; overflow: hidden; border-radius: 24px; background: var(--display-area-bg); border: 1px solid var(--glass-border); margin: 0 0 40px 0; }
         
-        .palette-container { display: flex; gap: 14px; padding: 18px; background: var(--glass-panel); border-radius: 100px; border: 1px solid var(--glass-border); backdrop-filter: blur(20px); justify-content: center; width: fit-content; margin: 20px auto; flex-wrap: wrap; }
-        .color-dot { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: none; transition: 0.3s; position: relative; }
+        .glass-card p:first-of-type { font-size: 1.15rem; font-weight: 800; color: var(--text-headline); margin: 0 0 15px 0; line-height: 1.2; }
+        .glass-card p:last-of-type { font-size: 0.9rem; opacity: 0.6; margin: 0; line-height: 1.7; }
+
+        .palette-container { display: flex; gap: 14px; padding: 18px; background: var(--glass-panel); border-radius: 100px; border: 1px solid var(--glass-border); backdrop-filter: blur(20px); justify-content: center; width: fit-content; margin: 30px auto 0; flex-wrap: wrap; }
+        .color-dot { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: none; transition: 0.3s; position: relative; padding: 0; }
         .color-dot.active::after { content: ''; position: absolute; inset: -7px; border-radius: 50%; border: 2px solid var(--text-headline); opacity: 0.6; animation: pulse-ring 2.5s infinite; }
         @keyframes pulse-ring { 0% { transform: scale(0.85); opacity: 0.6; } 100% { transform: scale(1.3); opacity: 0; } }
         
         .reveal { opacity: 0; transform: translateY(35px); transition: 1.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
-        footer { padding: 120px 0; text-align: center; opacity: 0.35; font-size: 0.75rem; letter-spacing: 6px; font-weight: 700; text-transform: uppercase; padding-bottom: 150px; }
+        footer { padding: 120px 0; text-align: center; opacity: 0.35; font-size: 0.75rem; letter-spacing: 6px; font-weight: 700; text-transform: uppercase; margin: 0; }
 
         /* ==========================================================================
-           5. ANATOMY STACK (SPACED)
+           5. ANATOMY STACK (v145 SPACED + v141 AGNOSTIC)
            ========================================================================== */
-        .anatomy-stack { position: relative; height: clamp(550px, 95vh, 750px); display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: crosshair; perspective: 2500px; margin-top: 40px; width: 100%; padding: 40px 0; }
+        .anatomy-stack { position: relative; height: clamp(550px, 95vh, 750px); display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: crosshair; perspective: 2500px; margin: 50px 0 0; width: 100%; padding: 40px 0; }
         .layer-container { position: relative; width: min(420px, 85vw); margin: 38px 0; transition: 1.3s cubic-bezier(0.1, 0.8, 0.2, 1); transform-style: preserve-3d; }
         .layer-visual { width: 100%; height: 14px; border-radius: 99px; border: 1px solid var(--glass-border); opacity: 0.25; transition: 0.7s ease; will-change: transform, opacity; }
         .layer-label { position: absolute; top: 50%; transform: translateY(-50%); font-size: clamp(0.55rem, 1.8vw, 0.75rem); font-weight: 800; opacity: 0.1; transition: 0.8s; letter-spacing: 3px; text-transform: uppercase; color: var(--text-headline); white-space: nowrap; pointer-events: none; z-index: 200; }
@@ -168,8 +171,7 @@
 
         @media (max-width: 768px) {
             .lp-glow .layer-label, .lp-bg .layer-label,
-            .lp-swoosh .layer-label, .lp-tip .layer-label { position: absolute; right: auto; left: 0; bottom: -32px; top: auto; transform: rotateX(-45deg); width: 100%; text-align: center; font-size: 0.55rem; opacity: 0.3; }
-            .anatomy-stack:hover .layer-container { margin: 65px 0; }
+            .lp-swoosh .layer-label, .lp-tip .layer-label { position: absolute; right: auto; left: 0; bottom: -35px; top: auto; transform: rotateX(-45deg); width: 100%; text-align: center; font-size: 0.55rem; opacity: 0.3; }
             .layer-container { margin: 48px 0; }
         }
         @media (max-height: 500px) and (orientation: landscape) {
@@ -190,7 +192,7 @@
             <svg class="lh-logo-svg" viewBox="0 0 40 40">
                 <path class="lh-logo-path" d="M10 5V30H25M20 5V35M20 20H35V5" />
             </svg>
-            <div class="brand-text">LH LOADER</div>
+            <h2 class="brand-text">LH LOADER</h2>
         </a>
         <div class="nav-actions">
             <button id="theme-toggle" class="nav-btn" onclick="handleThemeToggle()" aria-label="Toggle Theme">
@@ -219,24 +221,24 @@
         </p>
         <div class="bento-grid">
             <div class="glass-card observer-trigger">
-                <h4 style="letter-spacing: 3px; opacity: 0.3; font-size: 0.6rem; margin: 0; text-transform: uppercase;">Standard Logic</h4>
+                <h4 style="letter-spacing: 3px; opacity: 0.3; font-size: 0.6rem; margin: 0 0 20px 0; text-transform: uppercase;">Standard Logic</h4>
                 <div class="loader-display-area">
                     <svg id="std-spinner" class="kinetic-spinner-svg" viewBox="0 0 50 50"><circle class="kinetic-spinner-circle" cx="25" cy="25" r="20" /></svg>
                 </div>
                 <div>
-                    <p style="font-size: 1.15rem; font-weight: 800; color: var(--text-headline); margin-bottom: 12px;">Mechanical Friction</p>
-                    <p style="font-size: 0.9rem; opacity: 0.6;">Predictable animations often cause "cognitive friction," making systems feel disconnected during complex background tasks.</p>
+                    <p>Mechanical Friction</p>
+                    <p>Predictable animations often cause cognitive friction, making systems feel disconnected during complex tasks.</p>
                 </div>
             </div>
             <div class="glass-card observer-trigger">
-                <h4 style="letter-spacing: 3px; opacity: 0.3; font-size: 0.6rem; margin: 0; text-transform: uppercase;">Kinetic Engine</h4>
+                <h4 style="letter-spacing: 3px; opacity: 0.3; font-size: 0.6rem; margin: 0 0 20px 0; text-transform: uppercase;">Kinetic Engine</h4>
                 <div class="loader-display-area">
                     <div id="lh-mini-target" class="mini-gl-viewport"></div>
-                    <p style="opacity: 0.08; font-weight: 900; font-size: 1rem; letter-spacing: 12px; text-transform: uppercase;">Syncing</p>
+                    <p style="opacity: 0.08; font-weight: 900; font-size: 1rem; letter-spacing: 12px; text-transform: uppercase; margin: 0;">Syncing</p>
                 </div>
                 <div>
-                    <p style="font-size: 1.15rem; font-weight: 800; color: var(--text-headline); margin-bottom: 12px;">Optimistic Feedback</p>
-                    <p style="font-size: 0.9rem; opacity: 0.6;">Our non-linear engine stalls and bursts to mirror real-time server handshakes, reducing perceived wait by 40%.</p>
+                    <p>Optimistic Feedback</p>
+                    <p>Our non-linear engine stalls and bursts to mirror real-time server handshakes, reducing perceived wait times by up to 40%.</p>
                 </div>
             </div>
         </div>
@@ -398,8 +400,7 @@
 
         function applyTheme() {
             const root = document.documentElement;
-            const current = root.getAttribute('data-theme');
-            const target = current === 'dark' ? 'light' : 'dark';
+            const target = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             root.setAttribute('data-theme', target);
             const icon = document.getElementById('theme-icon');
             if(target === 'light') {
@@ -435,6 +436,7 @@
             LH.inject('lh-master-target', 'lh-root', 'lh-bar', true);
             LH.inject('lh-mini-target', 'lh-mini-root', 'lh-mini-bar', false);
             
+            // INITIAL TRIAD LOAD
             const activeDot = document.querySelector('.color-dot.active');
             if(activeDot) {
                 const args = activeDot.getAttribute('onclick').match(/'([^']+)',\s*(\d+),\s*([\d.]+)/);
