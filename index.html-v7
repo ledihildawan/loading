@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Navigation Loader v7.0</title>
+    <style>
+        /* ==========================================================================
+           1. CSS CUSTOM PROPERTIES (MODERN OKLCH THEME)
+           ========================================================================== */
+        :root {
+            /* Perceived Consistent Brightness menggunakan OKLCH */
+            --gl-color-base: oklch(100% 0 0);
+            --gl-beam-high: oklch(100% 0 0 / 75%);
+            --gl-beam-medium: oklch(100% 0 0 / 50%);
+            --gl-beam-low: oklch(100% 0 0 / 25%);
+            --gl-beam-off: oklch(100% 0 0 / 0%);
+            
+            --gl-glow-high: oklch(100% 0 0 / 80%);
+            
+            /* Dimensions & Hierarchy */
+            --gl-height: .125rem;
+            --gl-z-index: 10001;
+            
+            /* Durations (Exact from Source) */
+            --gl-motion-slow: 1.2s;    /* Fade Out */
+            --gl-motion-normal: 0.4s;  /* Fade In */
+        }
+
+        /* ==========================================================================
+           2. GLOBAL LOADER (BEM STRUCTURE)
+           ========================================================================== */
+        .global-loader {
+            position: fixed;
+            z-index: var(--gl-z-index);
+            top: 0;
+            left: 0;
+            overflow: hidden visible;
+            width: 100%;
+            height: var(--gl-height);
+            opacity: 0;
+            transition: opacity var(--gl-motion-normal) linear;
+            pointer-events: none;
+            will-change: opacity;
+        }
+
+        .global-loader--is-visible {
+            opacity: 1;
+            transition: opacity var(--gl-motion-slow) linear;
+        }
+
+        .global-loader__bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100.5vw;
+            height: var(--gl-height);
+            border-radius: 9999px;
+            /* translate3d untuk Hardware Acceleration */
+            transform: translate3d(-100%, 0, 0.5px);
+            transition: transform .3s cubic-bezier(.3,0,.05,1);
+            will-change: transform;
+            backface-visibility: hidden;
+        }
+
+        /* Subtle Shimmer Overlay */
+        .global-loader__bar::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(
+                90deg, 
+                oklch(100% 0 0 / 0%) 0%, 
+                oklch(100% 0 0 / 15%) 50%, 
+                oklch(100% 0 0 / 0%) 100%
+            );
+            background-size: 200% 100%;
+            animation: gl-shimmer 2s infinite linear;
+        }
+
+        /* Speed Modifiers */
+        .global-loader__bar--rushing { transition: transform .2s linear !important; }
+        .global-loader__bar--complete { transition: transform .2s ease-out !important; }
+        .global-loader__bar--instant { transition: none !important; }
+        .global-loader__bar--stalled { animation: gl-pulse-stalled 2s infinite ease-in-out; }
+
+        .global-loader__background {
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(to right, var(--gl-beam-low) 0%, var(--gl-beam-medium) 100%);
+        }
+
+        .global-loader__tip {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 25rem;
+            height: var(--gl-height);
+            border-radius: inherit;
+            background: linear-gradient(to right, var(--gl-beam-off) 0%, var(--gl-beam-high) 100%);
+        }
+
+        /* Glow System (7 Precise Layers) */
+        .global-loader__glow-container {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 37.5rem;
+            height: var(--gl-height);
+            transform: translate3d(0, -50%, 0);
+            opacity: .6;
+            transition: opacity 0.5s ease, filter 0.5s ease;
+            animation: gl-glow-pulse 1s 3.5s ease-in-out infinite;
+        }
+
+        .global-loader__bar--rushing .global-loader__glow-container {
+            opacity: 1;
+            filter: brightness(1.8) saturate(1.2);
+        }
+
+        .global-loader__glow-layer {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 9999px;
+            transform: translate3d(0, -50%, 0);
+            background: linear-gradient(to right, oklch(100% 0 0 / 0%) 0%, var(--gl-glow-high) 100%);
+        }
+
+        .global-loader__glow-layer--1 { right: -.0625rem; width: 10%; filter: blur(.0625rem); }
+        .global-loader__glow-layer--2 { right: -.125rem; width: 15%; filter: blur(.1875rem); }
+        .global-loader__glow-layer--3 { filter: blur(.125rem); }
+        .global-loader__glow-layer--4 { height: 200%; filter: blur(.3125rem); }
+        .global-loader__glow-layer--5 { right: -.625rem; height: 400%; filter: blur(.5rem); }
+        .global-loader__glow-layer--6 { right: -1.25rem; height: 600%; filter: blur(1.25rem); }
+        .global-loader__glow-layer--7 { right: -4.6875rem; height: 1500%; filter: blur(2.5rem); }
+
+        /* Swoosh Animation */
+        .global-loader__swoosh-container {
+            position: absolute;
+            top: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+        }
+
+        .global-loader__swoosh-animation {
+            width: 100%;
+            height: 100%;
+            transform: translate3d(-100%, 0, 0);
+            background: linear-gradient(to right, var(--gl-beam-off) 0%, var(--gl-beam-off) 25%, var(--gl-beam-high) 50%, var(--gl-beam-off) 60%, var(--gl-beam-off) 100%);
+            animation: gl-swoosh-move 1s 3.5s ease-out infinite;
+        }
+
+        /* Keyframes */
+        @keyframes gl-swoosh-move { 0% { transform: translate3d(-100%, 0, 0); } to { transform: translate3d(100%, 0, 0); } }
+        @keyframes gl-glow-pulse { 0%, 50% { opacity: .6; } 60% { opacity: 1; } 90%, to { opacity: .6; } }
+        @keyframes gl-pulse-stalled { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.6) saturate(1.2); } }
+        @keyframes gl-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* A11y & Demo UI */
+        @media (prefers-reduced-motion: reduce) {
+            .global-loader__bar { transition: none !important; }
+            .global-loader__glow-container, .global-loader__swoosh-animation { display: none !important; }
+        }
+        body { background-color: oklch(12% 0 0); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; }
+        .panel { text-align: center; background: oklch(100% 0 0 / 3%); padding: 50px; border-radius: 24px; border: 1px solid oklch(100% 0 0 / 10%); max-width: 450px; }
+        .btn { background: var(--gl-color-base); color: black; border: none; padding: 14px 28px; border-radius: 10px; cursor: pointer; font-weight: bold; margin: 10px; font-size: 14px; transition: 0.2s; width: 100%; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px oklch(100% 0 0 / 15%); }
+        .log { margin-top: 25px; color: oklch(50% 0 0); font-family: monospace; font-size: 11px; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+
+    <div id="gl-wrapper" class="global-loader" aria-hidden="true">
+        <div id="gl-bar" class="global-loader__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="global-loader__background"></div>
+            <div class="global-loader__tip"></div>
+            <div class="global-loader__glow-container">
+                <div class="global-loader__glow-layer global-loader__glow-layer--1"></div>
+                <div class="global-loader__glow-layer global-loader__glow-layer--2"></div>
+                <div class="global-loader__glow-layer global-loader__glow-layer--3"></div>
+                <div class="global-loader__glow-layer global-loader__glow-layer--4"></div>
+                <div class="global-loader__glow-layer global-loader__glow-layer--5"></div>
+                <div class="global-loader__glow-layer global-loader__glow-layer--6"></div>
+                <div class="global-loader__glow-layer global-loader__glow-layer--7"></div>
+            </div>
+            <div class="global-loader__swoosh-container">
+                <div class="global-loader__swoosh-animation"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="gl-announcer" role="status" aria-live="polite" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0;"></div>
+
+    <div class="panel">
+        <h2 style="font-weight: 300; margin-bottom: 30px;">LOADER v7.0 ROBUST</h2>
+        <button class="btn" onclick="GlobalLoader.start()">Simulasikan Loading</button>
+        <button class="btn" style="background: oklch(70% 0.1 200); color: white;" onclick="GlobalLoader.finish()">Selesaikan (Finish)</button>
+        <div class="log" id="gl-log">READY</div>
+    </div>
+
+    <script>
+        /**
+         * GLOBAL LOADER CONTROLLER v7.0
+         * Engine: Zeno Decay + Visibility Sync + Emergency Cleanup
+         */
+        const GlobalLoader = (() => {
+            const dom = {
+                wrapper: document.getElementById('gl-wrapper'),
+                bar: document.getElementById('gl-bar'),
+                log: document.getElementById('gl-log'),
+                announcer: document.getElementById('gl-announcer')
+            };
+
+            let state = {
+                progress: -100,
+                isActive: false,
+                frameId: null,
+                startTime: 0,
+                hardTimeout: null
+            };
+
+            const CONFIG = {
+                MIN_DISPLAY: 450,    // Hindari flicker
+                HARD_LIMIT: 30000,   // Auto-kill setelah 30 detik
+                FADE_EXIT: 1200      // Sync dengan CSS motion-slow
+            };
+
+            const render = () => {
+                dom.bar.style.transform = `translate3d(${state.progress}%, 0, 0.5px)`;
+                // Adaptive Morphology: Bulat penuh vs Kapsul saat awal
+                dom.bar.style.borderRadius = state.progress < -96 ? '0 9999px 9999px 0' : '9999px';
+                dom.bar.setAttribute('aria-valuenow', Math.round(100 + state.progress));
+            };
+
+            const smartCreep = () => {
+                if (!state.isActive || document.hidden) return;
+
+                // Smart Bucketing: Kecepatan menurun seiring progress (Zeno's)
+                let ease = state.progress < -40 ? 0.03 : (state.progress < -5 ? 0.01 : 0.0015);
+                state.progress += (-0.4 - state.progress) * ease;
+
+                render();
+                state.frameId = requestAnimationFrame(smartCreep);
+            };
+
+            // Monitor Tab Visibility (Hibernate jika tab tidak aktif)
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden && state.isActive) {
+                    state.frameId = requestAnimationFrame(smartCreep);
+                }
+            });
+
+            return {
+                start() {
+                    if (state.isActive) return;
+                    this.clear();
+                    
+                    state.isActive = true;
+                    state.startTime = Date.now();
+                    
+                    dom.bar.className = "global-loader__bar global-loader__bar--instant";
+                    state.progress = -100;
+                    render();
+
+                    requestAnimationFrame(() => {
+                        dom.wrapper.classList.add('global-loader--is-visible');
+                        dom.bar.classList.add('global-loader__bar--rushing');
+                        state.progress = -68; // Initial Jump
+                        render();
+                        dom.log.innerText = "CONNECTING...";
+
+                        setTimeout(() => {
+                            if (!state.isActive) return;
+                            dom.bar.classList.remove('global-loader__bar--rushing');
+                            smartCreep();
+                            
+                            // Emergency Hard Timeout
+                            state.hardTimeout = setTimeout(() => this.finish(), CONFIG.HARD_LIMIT);
+                        }, 250);
+                    });
+                },
+
+                finish() {
+                    if (!state.isActive) return;
+                    const elapsed = Date.now() - state.startTime;
+                    const wait = Math.max(0, CONFIG.MIN_DISPLAY - elapsed);
+
+                    setTimeout(() => {
+                        this.clear();
+                        dom.bar.classList.add('global-loader__bar--complete');
+                        state.progress = 0;
+                        render();
+                        dom.log.innerText = "SUCCESS";
+
+                        setTimeout(() => {
+                            dom.wrapper.classList.remove('global-loader--is-visible');
+                            setTimeout(() => {
+                                if (!state.isActive) {
+                                    dom.bar.className = "global-loader__bar global-loader__bar--instant";
+                                    state.progress = -100;
+                                    render();
+                                }
+                            }, CONFIG.FADE_EXIT);
+                        }, 400);
+                    }, wait);
+                },
+
+                clear() {
+                    state.isActive = false;
+                    if (state.frameId) cancelAnimationFrame(state.frameId);
+                    if (state.hardTimeout) clearTimeout(state.hardTimeout);
+                    dom.bar.classList.remove('global-loader__bar--stalled');
+                }
+            };
+        })();
+
+        // Emergency Cleanup saat navigasi atau refresh
+        window.addEventListener('pagehide', () => GlobalLoader.clear());
+    </script>
+</body>
+</html>

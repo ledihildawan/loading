@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultra-Premium Divider Engine - Fixed Position</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #020617;
+      --text-muted: #64748b;
+      --border-dash: #e2e8f0;
+      --primary: #4f46e5;
+      --glow-spread: rgba(79, 70, 229, 0.15);
+      --anim-speed: 2.5s;
+      --bezier: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #030712;
+        --text: #f8fafc;
+        --text-muted: #94a3b8;
+        --border-dash: #1e293b;
+        --primary: #6366f1;
+        --glow-spread: rgba(99, 102, 241, 0.2);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* FRAME */
+    .layout-frame {
+      position: relative;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 1400px;
+      border-left: 1px dashed var(--border-dash);
+      border-right: 1px dashed var(--border-dash);
+    }
+
+    /* SECTION */
+    .section {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 10%;
+    }
+    .section h2 { font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -0.03em; }
+    .section p { color: var(--text-muted); font-size: 1.2rem; margin-top: 1rem; }
+
+    /* --- FIXED DIVIDER COMPONENT --- */
+    .divider {
+      position: relative;
+      width: 100%;
+      height: 1px; /* Jalur utama */
+      z-index: 10;
+      display: flex;
+      align-items: center; /* Memastikan semua anak di tengah secara vertikal */
+    }
+
+    .divider__axis {
+      position: absolute;
+      left: 50%;
+      width: 1905px;
+      height: 1px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+    }
+
+    .divider__base-line {
+      width: 100%;
+      height: 0; /* Menghindari kalkulasi tinggi ganda */
+      border: none;
+      border-top: 1px dashed var(--border-dash);
+      opacity: 0.8;
+    }
+
+    .divider__container {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      max-width: 1400px;
+      height: 20px; /* Area tangkap untuk marker & mask */
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    @media (max-width: 1429px) { .divider__container { overflow: hidden; } }
+
+    /* Animation Masks */
+    .divider__mask {
+      position: absolute;
+      height: 2px;
+      width: 50%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+    .divider__mask--l { left: 0; justify-content: flex-end; }
+    .divider__mask--r { right: 0; justify-content: flex-start; }
+
+    .divider__glow {
+      position: absolute;
+      height: 1px;
+      width: 80%;
+      opacity: 0;
+    }
+
+    /* Animation States */
+    .is-animated .divider__glow--l {
+      background: linear-gradient(to left, var(--primary), transparent);
+      box-shadow: 0 0 8px var(--primary);
+      animation: sweepL var(--anim-speed) var(--bezier) forwards;
+    }
+
+    .is-animated .divider__glow--r {
+      background: linear-gradient(to right, var(--primary), transparent);
+      box-shadow: 0 0 8px var(--primary);
+      animation: sweepR var(--anim-speed) var(--bezier) forwards;
+    }
+
+    /* Marker Diamonds - Centered Perfectly */
+    .divider__diamond {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: var(--bg);
+      border: 1px solid var(--border-dash);
+      border-radius: 2px;
+      z-index: 5;
+    }
+
+    .divider__diamond--l { 
+      left: 0; 
+      transform: translate(-50%, 0) rotate(45deg); 
+    }
+    .divider__diamond--r { 
+      right: 0; 
+      transform: translate(50%, 0) rotate(45deg); 
+    }
+
+    .is-animated .divider__diamond {
+      border-color: var(--primary);
+      box-shadow: 0 0 10px var(--glow-spread);
+      transition: all 0.8s ease;
+    }
+
+    /* KEYFRAMES */
+    @keyframes sweepL {
+      0% { right: -100%; opacity: 0; }
+      10% { opacity: 1; }
+      100% { right: 100%; opacity: 0; }
+    }
+
+    @keyframes sweepR {
+      0% { left: -100%; opacity: 0; }
+      10% { opacity: 1; }
+      100% { left: 100%; opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="layout-frame">
+    <section class="section">
+      <h2>Precision Fixed</h2>
+      <p>The geometry is now perfectly aligned on the Y-axis. Scroll to see the landing page flow.</p>
+    </section>
+
+    <div id="content"></div>
+  </main>
+
+  <script>
+    const data = [
+      { t: "Perfect Alignment", p: "Flexbox ensures every pixel is where it belongs." },
+      { t: "Dynamic Light", p: "Glow effects that follow the dashed path precisely." },
+      { t: "Zinc Aesthetic", p: "Balanced contrast for professional digital products." },
+      { t: "One-Time Trigger", p: "Performance optimized. Observation ends after one play." },
+      { t: "Responsive Frame", p: "Structure remains solid across all screen resolutions." }
+    ];
+
+    const container = document.getElementById('content');
+    data.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'divider js-reveal';
+      div.innerHTML = `
+        <div class="divider__axis">
+          <hr class="divider__base-line">
+          <div class="divider__container">
+            <div class="divider__mask divider__mask--l"><span class="divider__glow divider__glow--l"></span></div>
+            <div class="divider__mask divider__mask--r"><span class="divider__glow divider__glow--r"></span></div>
+            <span class="divider__diamond divider__diamond--l"></span>
+            <span class="divider__diamond divider__diamond--r"></span>
+          </div>
+        </div>
+      `;
+      container.appendChild(div);
+
+      const sec = document.createElement('section');
+      sec.className = 'section';
+      sec.innerHTML = `<h2>${item.t}</h2><p>${item.p}</p>`;
+      container.appendChild(sec);
+    });
+
+    const obs = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-animated');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.8 });
+
+    document.querySelectorAll('.js-reveal').forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>
