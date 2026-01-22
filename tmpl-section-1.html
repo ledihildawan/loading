@@ -3,284 +3,243 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>V32 | The Final Event Horizon</title>
+  <title>V49 | Pluto Scientific Archive - Perfect Alignment</title>
   <style>
     /* ============================================================
-       1. COSMIC SYSTEM TOKENS
+       1. SCIENTIFIC DESIGN TOKENS
        ============================================================ */
     :root {
-      --bg: oklch(4% 0.01 260); 
-      --text: oklch(98% 0.01 260);
-      --brand: oklch(75% 0.3 265); 
-      --brand-glow: color-mix(in oklch, var(--brand), transparent 20%);
-      --line-color: oklch(20% 0.02 260); 
+      --bg: oklch(5% 0.01 240); 
+      --text: oklch(98% 0.01 200);
+      --brand: oklch(85% 0.15 200); 
+      --brand-glow: color-mix(in oklch, var(--brand), transparent 40%);
+      --line-color: oklch(22% 0.03 240); 
 
       --speed: 1.2s; 
-      --phys-ease: cubic-bezier(0.4, 0, 0.2, 1);
-      --d-size: clamp(10px, 1.2vw, 12px);
+      --phys-ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --d-size: 11px;
+      --nav-h: 70px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     
     body { 
-      background-color: var(--bg); 
-      color: var(--text); 
+      background-color: var(--bg); color: var(--text); 
       font-family: 'Inter', system-ui, sans-serif; 
-      overflow: hidden; 
-      -webkit-font-smoothing: antialiased;
+      overflow: hidden; -webkit-font-smoothing: antialiased;
     }
 
     /* ============================================================
-       2. DEEP SPACE PARALLAX
+       2. UI LAYERS (GRAIN & NAV)
+       ============================================================ */
+    .noise-overlay {
+      position: fixed; inset: 0; z-index: 100; opacity: 0.04; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .nav-sticky {
+      position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-h);
+      display: flex; align-items: center; justify-content: center; z-index: 150;
+      background: color-mix(in oklch, var(--bg), transparent 15%);
+      backdrop-filter: blur(15px); border-bottom: 1px solid var(--line-color);
+    }
+    .nav-title { font-family: ui-monospace, monospace; font-weight: 800; letter-spacing: 0.6em; color: var(--brand); font-size: 0.8rem; text-align: center; }
+
+    /* ============================================================
+       3. PARALLAX & LAYOUT FRAME
        ============================================================ */
     .parallax-wrapper { 
-      perspective: 12px; perspective-origin: 50% 50%;
+      perspective: 10px; perspective-origin: 50% 50%;
       height: 100dvh; overflow-x: hidden; overflow-y: auto; scroll-behavior: smooth;
     }
 
-    .layout-frame { 
-      position: relative; margin: 0 auto; width: 100%; max-width: 1400px; 
-      transform-style: preserve-3d; min-height: 100%;
-    }
-
-    @media (min-width: 1240px) {
-      .layout-frame { border-left: 1px dashed var(--line-color); border-right: 1px dashed var(--line-color); }
-    }
-
     .stars { position: absolute; inset: 0; pointer-events: none; z-index: -5; }
-    .stars-1 { transform: translateZ(-15px) scale(2.3); background-image: radial-gradient(1px 1px at 10% 20%, #fff, transparent), radial-gradient(1px 1px at 80% 80%, #fff, transparent); background-size: 600px 600px; opacity: 0.2; }
-    .stars-2 { transform: translateZ(-5px) scale(1.5); background-image: radial-gradient(1.5px 1.5px at 30% 50%, var(--brand), transparent); background-size: 400px 400px; opacity: 0.4; animation: twinkle 10s infinite alternate; }
+    .stars-deep { transform: translateZ(-15px) scale(3); background-image: radial-gradient(1px 1px at 15% 15%, #fff, transparent), radial-gradient(1px 1px at 85% 85%, #fff, transparent); background-size: 500px 500px; opacity: 0.3; }
+    .haze-atmos { transform: translateZ(-6px) scale(1.8); background: radial-gradient(circle at 50% 40%, color-mix(in oklch, var(--brand), transparent 92%), transparent 70%); filter: blur(50px); opacity: 0.5; }
 
-    @keyframes twinkle { from { opacity: 0.2; } to { opacity: 0.6; } }
-
-    /* ============================================================
-       3. SECTION CONTENT
-       ============================================================ */
-    .section { height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 10%; transform-style: preserve-3d; position: relative; }
-    .bg-text { position: absolute; font-size: 25vw; font-weight: 950; color: var(--brand); opacity: 0.02; transform: translateZ(-10px) scale(1.8); white-space: nowrap; pointer-events: none; }
-    .content { transform: translateZ(3px) scale(0.8); z-index: 10; }
-    
-    .badge { font-size: 0.7rem; font-weight: 800; color: var(--brand); text-transform: uppercase; letter-spacing: 0.6em; margin-bottom: 1.5rem; display: block; }
-    h2 { font-size: clamp(3rem, 10vw, 6rem); font-weight: 900; letter-spacing: -0.06em; margin-bottom: 1.5rem; line-height: 0.85; }
-    p { font-size: clamp(1rem, 2vw, 1.3rem); color: oklch(70% 0.01 260); max-width: 550px; line-height: 1.6; }
+    .layout-frame { 
+      position: relative; margin: 0 auto; width: 100%; max-width: 1300px; 
+      transform-style: preserve-3d; min-height: 100%; 
+    }
+    @media (min-width: 1240px) { .layout-frame { border-left: 1px solid var(--line-color); border-right: 1px solid var(--line-color); } }
 
     /* ============================================================
-       4. SINGULARITY ENGINE (V32)
+       4. KINETIC DIVIDER ENGINE
        ============================================================ */
-    .divider { position: relative; width: 100%; height: 2px; z-index: 20; }
+    .divider { position: relative; width: 100%; height: 2px; z-index: 20; transform: translateZ(0); }
     .divider__axis { position: absolute; left: 50%; width: 200vw; height: 1px; transform: translateX(-50%); display: flex; align-items: center; }
-    .divider__line { width: 100%; border: none; border-top: 1px dashed var(--line-color); }
-    .divider__container { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 100%; max-width: 1400px; height: 100%; display: flex; align-items: center; }
+    .divider__line { width: 100%; border: none; border-top: 1px solid var(--line-color); }
+    .divider__container { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 100%; max-width: 1300px; height: 100%; display: flex; align-items: center; }
     
-    .divider__spark { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; border-radius: 50%; background: #fff; transform: translate(-50%, -50%) scale(0); box-shadow: 0 0 20px #fff, 0 0 40px var(--brand); z-index: 25; opacity: 0; }
-    
-    .divider__mask { position: absolute; height: 40px; width: 50%; overflow: hidden; display: flex; align-items: center; }
+    .divider__spark { position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; border-radius: 50%; background: #fff; transform: translate(-50%, -50%) scale(0); box-shadow: 0 0 20px #fff, 0 0 40px var(--brand); z-index: 25; opacity: 0; }
+    .divider__mask { position: absolute; height: 30px; width: 50%; overflow: hidden; display: flex; align-items: center; }
     .divider__mask--l { left: 0; justify-content: flex-end; }
     .divider__mask--r { right: 0; justify-content: flex-start; }
+    .divider__shimmer { position: absolute; height: 2px; width: 85%; opacity: 0; will-change: transform, opacity; }
+    .divider__node { position: absolute; width: var(--d-size); height: var(--d-size); background: transparent; border: 1px solid var(--line-color); z-index: 5; transition: all 0.5s var(--phys-ease); top: 50%; }
+    .divider__node--l { left: 0; transform: translate(-50%, -50%); }
+    .divider__node--r { left: 100%; transform: translate(-50%, -50%); }
 
-    .divider__shimmer { position: absolute; height: 2px; width: 100%; opacity: 0; }
+    /* ANIMATIONS */
+    .divider[data-dir="down"][data-state="animating"] .divider__spark { animation: ignite 0.5s var(--phys-ease) forwards; }
+    .divider[data-dir="up"][data-state="animating"] .divider__spark { animation: absorb 0.6s var(--phys-ease) forwards; animation-delay: 0.4s; }
+    @keyframes ignite { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 30% { transform: translate(-50%, -50%) scale(2.5); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(0); opacity: 0; } }
+    @keyframes absorb { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 75% { transform: translate(-50%, -50%) scale(2); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(0); opacity: 0; } }
 
-    .divider__diamond {
-      position: absolute; width: var(--d-size); height: var(--d-size);
-      background: transparent; border: 1px solid var(--line-color); border-radius: 1.5px;
-      z-index: 5; transition: all 0.4s var(--phys-ease); top: 50%;
-    }
-    .divider__diamond--l { left: 0; transform: translate(-50%, -50%) rotate(45deg); }
-    .divider__diamond--r { left: 100%; transform: translate(-50%, -50%) rotate(45deg); }
+    .divider[data-dir="down"][data-state="animating"] .divider__shimmer--l { background: linear-gradient(to left, #fff, var(--brand) 40%, transparent); transform-origin: right; animation: outL var(--speed) var(--phys-ease) forwards; }
+    .divider[data-dir="down"][data-state="animating"] .divider__shimmer--r { background: linear-gradient(to right, #fff, var(--brand) 40%, transparent); transform-origin: left; animation: outR var(--speed) var(--phys-ease) forwards; }
+    .divider[data-dir="up"][data-state="animating"] .divider__shimmer--l { background: linear-gradient(to right, #fff, var(--brand) 40%, transparent); transform-origin: right; animation: inL var(--speed) var(--phys-ease) forwards; }
+    .divider[data-dir="up"][data-state="animating"] .divider__shimmer--r { background: linear-gradient(to left, #fff, var(--brand) 40%, transparent); transform-origin: left; animation: inR var(--speed) var(--phys-ease) forwards; }
 
-    /* --- ANIMATION PHYSICS --- */
-    .divider[data-dir="down"][data-state="animating"] .divider__spark { animation: sparkOut 0.5s var(--phys-ease) forwards; }
-    .divider[data-dir="up"][data-state="animating"] .divider__spark { animation: sparkIn 0.6s var(--phys-ease) forwards; animation-delay: 0.5s; }
+    .divider[data-state="done"] .divider__node { background: var(--brand); border-color: var(--brand); box-shadow: 0 0 25px var(--brand-glow); }
+    .divider[data-dir="up"][data-state="animating"] .divider__node { background: transparent; border-color: var(--line-color); box-shadow: none; }
 
-    @keyframes sparkOut { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 30% { transform: translate(-50%, -50%) scale(2.5); opacity: 1; filter: blur(2px); } 100% { transform: translate(-50%, -50%) scale(0); opacity: 0; filter: blur(15px); } }
-    @keyframes sparkIn { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 70% { transform: translate(-50%, -50%) scale(2); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(0); opacity: 0; } }
+    @keyframes outL { 0% { transform: scaleX(0); opacity: 0; right: 0; } 15% { opacity: 1; } 100% { transform: scaleX(1.4); opacity: 0; right: 100%; } }
+    @keyframes outR { 0% { transform: scaleX(0); opacity: 0; left: 0; } 15% { opacity: 1; } 100% { transform: scaleX(1.4); opacity: 0; left: 100%; } }
+    @keyframes inL { 0% { transform: scaleX(1.4); opacity: 0; right: 100%; } 10% { opacity: 1; } 100% { transform: scaleX(0); opacity: 0; right: 0; filter: blur(8px); } }
+    @keyframes inR { 0% { transform: scaleX(1.4); opacity: 0; left: 100%; } 10% { opacity: 1; } 100% { transform: scaleX(0); opacity: 0; left: 0; filter: blur(8px); } }
 
-    .divider[data-dir="down"][data-state="animating"] .divider__shimmer--l { background: linear-gradient(to left, #fff, var(--brand) 30%, transparent 100%); transform-origin: right; animation: flowOutL var(--speed) var(--phys-ease) forwards; }
-    .divider[data-dir="down"][data-state="animating"] .divider__shimmer--r { background: linear-gradient(to right, #fff, var(--brand) 30%, transparent 100%); transform-origin: left; animation: flowOutR var(--speed) var(--phys-ease) forwards; }
+    /* ============================================================
+       5. CONTENT & FOOTER (STRICT CENTERING)
+       ============================================================ */
+    .section, .header-intro { height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 12%; position: relative; transform-style: preserve-3d; }
+    .content, .header-visual { display: flex; flex-direction: column; align-items: center; justify-content: center; transform: translateZ(4px) scale(0.7); z-index: 10; will-change: transform; }
+    .bg-text { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) translateZ(-8px) scale(1.8); font-size: 25vw; font-weight: 900; color: var(--brand); opacity: 0.02; white-space: nowrap; pointer-events: none; }
     
-    .divider[data-dir="up"][data-state="animating"] .divider__shimmer--l { background: linear-gradient(to right, #fff, var(--brand) 30%, transparent 100%); transform-origin: right; animation: flowInL var(--speed) var(--phys-ease) forwards; }
-    .divider[data-dir="up"][data-state="animating"] .divider__shimmer--r { background: linear-gradient(to left, #fff, var(--brand) 30%, transparent 100%); transform-origin: left; animation: flowInR var(--speed) var(--phys-ease) forwards; }
+    .id-tag { font-family: ui-monospace, monospace; font-size: 0.65rem; color: var(--brand); opacity: 0.6; letter-spacing: 0.4em; margin-bottom: 1.5rem; text-align: center; }
+    h1 { font-size: clamp(4rem, 15vw, 10rem); font-weight: 950; letter-spacing: -0.07em; color: var(--brand); line-height: 0.8; margin-bottom: 2rem; text-shadow: 0 0 40px var(--brand-glow); text-align: center; }
+    h2 { font-size: clamp(3rem, 10vw, 5.5rem); font-weight: 900; letter-spacing: -0.06em; margin-bottom: 1.5rem; line-height: 0.95; text-align: center; }
+    p { font-size: 1.2rem; color: oklch(85% 0.01 240); max-width: 600px; line-height: 1.8; font-weight: 300; text-align: center; }
 
-    .divider[data-state="done"] .divider__diamond { background: var(--brand); border-color: var(--brand); box-shadow: 0 0 25px var(--brand-glow), inset 0 0 5px white; }
-    .divider[data-dir="up"][data-state="animating"] .divider__diamond { background: transparent; border-color: var(--line-color); box-shadow: none; }
-
-    @keyframes flowOutL { 0% { transform: scaleX(0); opacity: 0; right: 0; } 15% { opacity: 1; } 100% { transform: scaleX(1.5); opacity: 0; right: 100%; } }
-    @keyframes flowOutR { 0% { transform: scaleX(0); opacity: 0; left: 0; } 15% { opacity: 1; } 100% { transform: scaleX(1.5); opacity: 0; left: 100%; } }
-    @keyframes flowInL { 0% { transform: scaleX(1.5); opacity: 0; right: 100%; } 10% { opacity: 1; } 100% { transform: scaleX(0); opacity: 0; right: 0; filter: blur(8px); } }
-    @keyframes flowInR { 0% { transform: scaleX(1.5); opacity: 0; left: 100%; } 10% { opacity: 1; } 100% { transform: scaleX(0); opacity: 0; left: 0; filter: blur(8px); } }
+    .footer { padding: 100px 5% 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: var(--bg); transform-style: preserve-3d; }
   </style>
 </head>
 <body>
 
-  <div class="parallax-wrapper" id="cosmicDrive">
-    <div class="stars stars-1"></div>
-    <div class="stars stars-2"></div>
+  <div class="noise-overlay"></div>
 
-    <main class="layout-frame">
+  <nav class="nav-sticky">
+    <div class="nav-title">NEW_HORIZONS_DATABASE</div>
+  </nav>
+
+  <div class="parallax-wrapper" id="scrollCore">
+    <div class="stars stars-deep"></div>
+    <div class="stars haze-atmos"></div>
+
+    <main class="layout-frame" id="mainLayout">
+      <header class="header-intro">
+        <div class="header-visual">
+          <p style="font-family: ui-monospace; opacity: 0.5; letter-spacing: 0.5em; font-size: 0.8rem; margin-bottom: 1rem;">STATUS: ARCHIVE_STABLE</p>
+          <h1>PLUTO</h1>
+          <p style="font-family: ui-monospace; opacity: 0.5; letter-spacing: 0.5em; font-size: 0.8rem;">OBJECT_ID: 134340 // KUIPER BELT</p>
+        </div>
+      </header>
       
-      <section class="section">
-        <div class="bg-text">GENESIS</div>
-        <div class="content">
-          <span class="badge">Expedition Phase I</span>
-          <h2>The First Light.</h2>
-          <p>Everything began at a single point of infinite density. A cosmic ignition that defined the architecture of time.</p>
+      <footer class="footer">
+        <h1 style="font-weight: 900; letter-spacing: 0.2em; opacity: 0.5; font-size: 2rem; margin-bottom: 1.5rem;">HORIZON_REACHED</h1>
+        <p style="font-family: ui-monospace, monospace; font-size: 0.7rem; opacity: 0.4; max-width: 450px; line-height: 2; margin-bottom: 3rem;">
+          AVG DISTANCE: 5.9 BILLION KM // ORBITAL PERIOD: 248 YEARS // SURFACE TEMP: -232.1°C
+        </p>
+        <div style="font-family: ui-monospace, monospace; font-size: 0.6rem; opacity: 0.3; letter-spacing: 0.2em;">
+            © 2026 DEEP SPACE RESEARCH INST. // NASA DATA ARCHIVE SYNCED
         </div>
-      </section>
-
-      <div class="divider js-gate" data-state="idle" data-dir="down">
-        <div class="divider__axis"><hr class="divider__line">
-          <div class="divider__container">
-            <div class="divider__spark"></div>
-            <div class="divider__mask divider__mask--l"><span class="divider__shimmer divider__shimmer--l"></span></div>
-            <div class="divider__mask divider__mask--r"><span class="divider__shimmer divider__shimmer--r"></span></div>
-            <span class="divider__diamond divider__diamond--l"></span><span class="divider__diamond divider__diamond--r"></span>
-          </div>
-        </div>
-      </div>
-
-      <section class="section">
-        <div class="bg-text">KINETIC</div>
-        <div class="content">
-          <span class="badge">Phase II: Acceleration</span>
-          <h2>Constant Motion.</h2>
-          <p>Energy flows as particles traverse the vacuum. Every action triggers a ripple across the galactic grid.</p>
-        </div>
-      </section>
-
-      <div class="divider js-gate" data-state="idle" data-dir="down">
-        <div class="divider__axis"><hr class="divider__line">
-          <div class="divider__container">
-            <div class="divider__spark"></div>
-            <div class="divider__mask divider__mask--l"><span class="divider__shimmer divider__shimmer--l"></span></div>
-            <div class="divider__mask divider__mask--r"><span class="divider__shimmer divider__shimmer--r"></span></div>
-            <span class="divider__diamond divider__diamond--l"></span><span class="divider__diamond divider__diamond--r"></span>
-          </div>
-        </div>
-      </div>
-
-      <section class="section">
-        <div class="bg-text">VOID</div>
-        <div class="content">
-          <span class="badge">Phase III: The Vacuum</span>
-          <h2>Silent Echoes.</h2>
-          <p>In the vast emptiness between stars, we find the true meaning of structural balance and symmetry.</p>
-        </div>
-      </section>
-
-      <div class="divider js-gate" data-state="idle" data-dir="down">
-        <div class="divider__axis"><hr class="divider__line">
-          <div class="divider__container">
-            <div class="divider__spark"></div>
-            <div class="divider__mask divider__mask--l"><span class="divider__shimmer divider__shimmer--l"></span></div>
-            <div class="divider__mask divider__mask--r"><span class="divider__shimmer divider__shimmer--r"></span></div>
-            <span class="divider__diamond divider__diamond--l"></span><span class="divider__diamond divider__diamond--r"></span>
-          </div>
-        </div>
-      </div>
-
-      <section class="section">
-        <div class="bg-text">SINGULAR</div>
-        <div class="content">
-          <span class="badge">Phase IV: Convergence</span>
-          <h2>The Event Horizon.</h2>
-          <p>At the edge of a singularity, laws of physics bend. Light is trapped in an eternal loop of return.</p>
-        </div>
-      </section>
-
-      <div class="divider js-gate" data-state="idle" data-dir="down">
-        <div class="divider__axis"><hr class="divider__line">
-          <div class="divider__container">
-            <div class="divider__spark"></div>
-            <div class="divider__mask divider__mask--l"><span class="divider__shimmer divider__shimmer--l"></span></div>
-            <div class="divider__mask divider__mask--r"><span class="divider__shimmer divider__shimmer--r"></span></div>
-            <span class="divider__diamond divider__diamond--l"></span><span class="divider__diamond divider__diamond--r"></span>
-          </div>
-        </div>
-      </div>
-
-      <section class="section">
-        <div class="bg-text">PULSE</div>
-        <div class="content">
-          <span class="badge">Phase V: Resonance</span>
-          <h2>Heart of Stars.</h2>
-          <p>Pulsars act as beacons, keeping the celestial engine synchronized through rhythmic bursts of radiation.</p>
-        </div>
-      </section>
-
-      <div class="divider js-gate" data-state="idle" data-dir="down">
-        <div class="divider__axis"><hr class="divider__line">
-          <div class="divider__container">
-            <div class="divider__spark"></div>
-            <div class="divider__mask divider__mask--l"><span class="divider__shimmer divider__shimmer--l"></span></div>
-            <div class="divider__mask divider__mask--r"><span class="divider__shimmer divider__shimmer--r"></span></div>
-            <span class="divider__diamond divider__diamond--l"></span><span class="divider__diamond divider__diamond--r"></span>
-          </div>
-        </div>
-      </div>
-
-      <section class="section">
-        <div class="bg-text">NEBULA</div>
-        <div class="content">
-          <span class="badge">Phase VI: Formation</span>
-          <h2>Stardust Cradle.</h2>
-          <p>Clouds of gas and dust collide to form new worlds. Destruction is merely a prelude to creation.</p>
-        </div>
-      </section>
-
-      <div class="divider js-gate" data-state="idle" data-dir="down">
-        <div class="divider__axis"><hr class="divider__line">
-          <div class="divider__container">
-            <div class="divider__spark"></div>
-            <div class="divider__mask divider__mask--l"><span class="divider__shimmer divider__shimmer--l"></span></div>
-            <div class="divider__mask divider__mask--r"><span class="divider__shimmer divider__shimmer--r"></span></div>
-            <span class="divider__diamond divider__diamond--l"></span><span class="divider__diamond divider__diamond--r"></span>
-          </div>
-        </div>
-      </div>
-
-      <section class="section">
-        <div class="bg-text">INFINITY</div>
-        <div class="content">
-          <span class="badge">Final Phase: Equilibrium</span>
-          <h2>Endless Horizon.</h2>
-          <p>The journey concludes where it began. In the perfect, infinite silence of the cosmic abyss.</p>
-        </div>
-      </section>
-
+      </footer>
     </main>
   </div>
 
   <script>
-    let lastY = 0;
-    const scrollBox = document.getElementById('cosmicDrive');
+    // 1. DATA ARCHIVE (Scientifically Accurate English Content)
+    const chapters = [
+      { id: "DISCOVERY_1930", bg: "1930", title: "The Silent Frontier.", text: "Found by Clyde Tombaugh in 1930, Pluto marked the entrance to the Kuiper Belt—a vast third zone of our solar system filled with icy remnants from the dawn of creation." },
+      { id: "GEOLOGY_NITROGEN", bg: "HEART", title: "The Pulsing Basin.", text: "Sputnik Planitia is a massive 1,000 km basin of frozen nitrogen. It is geologically alive, with convective ice cells that resurface the planet in slow-motion." },
+      { id: "PEAKS_CRYOHILL", bg: "MONS", title: "Titanium Water-Ice.", text: "Mountains like Tenzing Montes rise 3.5 km high. At temperatures of -230°C, water ice behaves like granite bedrock, forming jagged spires against the eternal dark." },
+      { id: "BINARY_SYSTEM", bg: "BINARY", title: "Tidal Symmetry.", text: "Pluto and Charon orbit a common barycenter in open space. Because they are tidally locked, they forever present the same face to one another across the void." },
+      { id: "ATMOS_SCATTER", bg: "HAZE", title: "The Blue Halo.", text: "Sunlight hitting Pluto's atmosphere scatters into a distinct blue ring. This is caused by tholins—organic particles created when UV light breaks down methane." },
+      { id: "MISSION_ENCOUNTER", bg: "MISSION", title: "First Contact.", text: "In 2015, NASA's New Horizons spacecraft completed its 9-year journey, revealing Pluto as a complex and vibrant world for the first time in history." },
+      { id: "VOID_FUTURE", bg: "VOID", title: "Endless Silence.", text: "Beyond Pluto lies the infinite darkness of the Kuiper Belt—a celestial library of primitive ice worlds that hold the secrets of our cosmic origin." }
+    ];
 
-    const initV32 = () => {
+    const layout = document.getElementById('mainLayout');
+    const footer = document.querySelector('.footer');
+
+    const dividerTemplate = `
+      <div class="divider js-trigger" data-state="idle">
+        <div class="divider__axis"><hr class="divider__line">
+          <div class="divider__container">
+            <div class="divider__spark"></div>
+            <div class="divider__mask divider__mask--l"><span class="divider__shimmer divider__shimmer--l"></span></div>
+            <div class="divider__mask divider__mask--r"><span class="divider__shimmer divider__shimmer--r"></span></div>
+            <span class="divider__node divider__node--l"></span><span class="divider__node divider__node--r"></span>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // 2. DYNAMIC INJECTION
+    chapters.forEach((ch, index) => {
+      // Injected Divider before each section
+      const divElement = document.createElement('div');
+      divElement.innerHTML = dividerTemplate;
+      layout.insertBefore(divElement.firstElementChild, footer);
+
+      // Injected Section
+      const sec = document.createElement('section');
+      sec.className = 'section';
+      sec.innerHTML = `
+        <div class="bg-text">${ch.bg}</div>
+        <div class="content">
+          <span class="id-tag">${ch.id}</span>
+          <h2>${ch.title}</h2>
+          <p>${ch.text}</p>
+        </div>
+      `;
+      layout.insertBefore(sec, footer);
+
+      // Injected Divider after the LAST section (before footer)
+      if (index === chapters.length - 1) {
+        const lastDiv = document.createElement('div');
+        lastDiv.innerHTML = dividerTemplate;
+        layout.insertBefore(lastDiv.firstElementChild, footer);
+      }
+    });
+
+    // 3. KINETIC ENGINE (V49)
+    const container = document.getElementById('scrollCore');
+    let lastY = 0;
+
+    const initOdyssey = () => {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           const el = entry.target;
-          const currentY = scrollBox.scrollTop;
+          const currentY = container.scrollTop;
           const direction = currentY > lastY ? 'down' : 'up';
-
+          
           if (entry.isIntersecting) {
             if (el.getAttribute('data-state') !== 'animating') {
               el.setAttribute('data-dir', direction);
               el.setAttribute('data-state', 'animating');
-              
               setTimeout(() => {
                 if (el.getAttribute('data-state') === 'animating') {
                   el.setAttribute('data-state', direction === 'down' ? 'done' : 'idle');
                 }
-              }, 1200); 
+              }, 1250); 
             }
+          } else {
+            // Precise re-trigger logic
+            if (entry.boundingClientRect.top > 70) el.setAttribute('data-state', 'idle');
+            else el.setAttribute('data-state', 'done');
           }
           lastY = currentY;
         });
-      }, { threshold: 0.95 });
+      }, { 
+        threshold: 0.15,
+        rootMargin: "-70px 0px 0px 0px"
+      });
 
-      document.querySelectorAll('.js-gate').forEach(d => observer.observe(d));
+      document.querySelectorAll('.js-trigger').forEach(d => observer.observe(d));
     };
 
-    window.addEventListener('DOMContentLoaded', initV32);
+    window.addEventListener('DOMContentLoaded', initOdyssey);
   </script>
 </body>
 </html>
