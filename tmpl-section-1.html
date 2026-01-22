@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>V54 | Pluto Scientific Archive - Absolute Cinematic</title>
+  <title>V62 | Pluto Scientific Archive - Responsive Integrity</title>
   <style>
     /* ============================================================
        1. SCIENTIFIC DESIGN TOKENS (OKLCH CORE)
@@ -30,7 +30,7 @@
     }
 
     /* ============================================================
-       2. CUSTOM SCROLLBAR (OKLCH)
+       2. GLOBAL CUSTOM SCROLLBAR (STAY ON TOP)
        ============================================================ */
     .parallax-wrapper::-webkit-scrollbar { width: 6px; }
     .parallax-wrapper::-webkit-scrollbar-track { background: var(--bg); border-left: 1px solid var(--line-color); }
@@ -52,7 +52,9 @@
     }
 
     .nav-sticky {
-      position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-h);
+      position: fixed; top: 0; left: 0; 
+      width: calc(100% - 6px);
+      height: var(--nav-h);
       display: flex; align-items: center; justify-content: center; z-index: 150;
       background: color-mix(in oklch, var(--bg), transparent 15%);
       backdrop-filter: blur(15px); border-bottom: 1px solid var(--line-color);
@@ -69,7 +71,7 @@
 
     .stars { position: absolute; inset: 0; pointer-events: none; z-index: -5; }
     .stars-deep { transform: translateZ(-15px) scale(3); background-image: radial-gradient(1px 1px at 15% 15%, var(--text), transparent), radial-gradient(1.5px 1.5px at 85% 85%, var(--text), transparent); background-size: 500px 500px; opacity: 0.3; }
-    .haze-atmos { transform: translateZ(-6px) scale(1.8); background: radial-gradient(circle at 50% 40%, color-mix(in oklch, var(--brand), transparent 92%), transparent 70%); filter: blur(50px); opacity: 0.5; }
+    .haze-atmos { transform: translateZ(-6px) scale(1.8); background: radial-gradient(circle at 50% 50%, color-mix(in oklch, var(--brand), transparent 92%), transparent 70%); filter: blur(50px); opacity: 0.5; }
 
     .layout-frame { 
       position: relative; margin: 0 auto; width: 100%; max-width: 1300px; 
@@ -97,6 +99,7 @@
     /* ANIMATIONS */
     .divider[data-dir="down"][data-state="animating"] .divider__spark { animation: ignite 0.5s var(--phys-ease) forwards; }
     .divider[data-dir="up"][data-state="animating"] .divider__spark { animation: absorb 0.6s var(--phys-ease) forwards; animation-delay: 0.4s; }
+    
     @keyframes ignite { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 30% { transform: translate(-50%, -50%) scale(2.5); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(0); opacity: 0; } }
     @keyframes absorb { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 75% { transform: translate(-50%, -50%) scale(2); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(0); opacity: 0; } }
 
@@ -114,7 +117,7 @@
     @keyframes inR { 0% { transform: scaleX(1.4); opacity: 0; left: 100%; } 10% { opacity: 1; } 100% { transform: scaleX(0); opacity: 0; left: 0; filter: blur(8px); } }
 
     /* ============================================================
-       6. VISUAL FRAME HUD (OKLCH OPTIMIZED)
+       6. VISUAL FRAME HUD (STRICT OKLCH)
        ============================================================ */
     .visual-frame {
       margin: 3rem 0; width: 100%; max-width: 600px; aspect-ratio: 16/9;
@@ -123,17 +126,11 @@
       position: relative; overflow: hidden;
       box-shadow: 0 30px 60px -20px oklch(0% 0 0 / 0.8);
     }
-    /* CRT Scanlines Overlay */
     .visual-frame::after {
       content: ''; position: absolute; inset: 0;
-      background: linear-gradient(
-        to bottom, 
-        transparent 50%, 
-        color-mix(in oklch, var(--brand), transparent 97%) 50%
-      );
+      background: linear-gradient(to bottom, transparent 50%, color-mix(in oklch, var(--brand), transparent 97%) 50%);
       background-size: 100% 4px; pointer-events: none; z-index: 2;
     }
-    /* HUD Corner Brackets */
     .visual-frame::before {
       content: ''; position: absolute; inset: 10px;
       border: 1px solid color-mix(in oklch, var(--brand), transparent 90%);
@@ -159,18 +156,45 @@
     @keyframes blink { 50% { opacity: 0.1; } }
 
     /* ============================================================
-       7. TYPOGRAPHY & LAYOUT
+       7. TYPOGRAPHY & LAYOUT (STRICT SYMMETRY)
        ============================================================ */
-    .section, .header-intro { height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 12%; position: relative; transform-style: preserve-3d; }
-    .content, .header-visual { display: flex; flex-direction: column; align-items: center; justify-content: center; transform: translateZ(4px) scale(0.7); z-index: 10; will-change: transform; }
-    .bg-text { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) translateZ(-8px) scale(1.8); font-size: 25vw; font-weight: 900; color: var(--brand); opacity: 0.02; white-space: nowrap; pointer-events: none; }
+    .section, .header-intro { 
+      height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 12%; position: relative; transform-style: preserve-3d; 
+    }
+
+    .content, .header-visual { 
+      display: flex; flex-direction: column; align-items: center; justify-content: center; 
+      transform: translateZ(4px) scale(0.7); z-index: 10; will-change: transform; 
+      width: 100%; max-width: 800px; margin: 0 auto;
+    }
+
+    .bg-text { 
+      position: absolute; left: 50%; top: 50%; 
+      transform: translate(-50%, -50%) translateZ(-8px) scale(1.8); 
+      font-size: 25vw; font-weight: 900; color: var(--brand); opacity: 0.02; 
+      white-space: nowrap; pointer-events: none; 
+    }
     
     .id-tag { font-family: ui-monospace, monospace; font-size: 0.65rem; color: var(--brand); opacity: 0.6; letter-spacing: 0.4em; margin-bottom: 1.5rem; text-align: center; }
-    h1 { font-size: clamp(4rem, 15vw, 10rem); font-weight: 950; letter-spacing: -0.07em; color: var(--brand); line-height: 0.8; margin-bottom: 2rem; text-shadow: 0 0 40px var(--brand-glow); }
-    h2 { font-size: clamp(3rem, 10vw, 5.5rem); font-weight: 900; letter-spacing: -0.06em; margin-bottom: 1.5rem; line-height: 0.95; }
-    p { font-size: 1.2rem; color: oklch(85% 0.01 240); max-width: 600px; line-height: 1.8; font-weight: 300; }
+    h1 { font-size: clamp(3rem, 12vw, 10rem); font-weight: 950; letter-spacing: -0.07em; color: var(--brand); line-height: 0.8; margin-bottom: 2rem; text-shadow: 0 0 40px var(--brand-glow); text-align: center; }
+    h2 { font-size: clamp(2.2rem, 8vw, 5.5rem); font-weight: 900; letter-spacing: -0.06em; margin-bottom: 1.5rem; line-height: 1; text-align: center; }
+    p { font-size: clamp(0.95rem, 4vw, 1.2rem); color: oklch(85% 0.01 240); max-width: 600px; line-height: 1.7; font-weight: 300; text-align: center; margin: 0 auto; }
 
-    .footer { padding: 100px 5% 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: var(--bg); transform-style: preserve-3d; }
+    /* ============================================================
+       8. FOOTER REFINEMENT (MOBILE FIXED)
+       ============================================================ */
+    .footer { padding: 120px 8% 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: var(--bg); transform-style: preserve-3d; }
+    
+    .footer-heading { 
+      font-weight: 900; letter-spacing: 0.15em; opacity: 0.5; 
+      font-size: clamp(1.5rem, 6vw, 2.5rem); /* Adaptive size for mobile */
+      margin-bottom: 1.5rem; color: var(--text);
+      line-height: 1.1; width: 100%;
+    }
+    
+    .footer-metrics { font-family: ui-monospace, monospace; font-size: clamp(0.6rem, 3vw, 0.75rem); opacity: 0.4; max-width: 650px; line-height: 1.8; margin-bottom: 3.5rem; text-wrap: balance; }
+    .footer-copy { font-family: ui-monospace, monospace; font-size: 0.6rem; opacity: 0.3; letter-spacing: 0.15em; margin-bottom: 2rem; }
+    .footer-disclaimer { font-family: ui-monospace, monospace; font-size: 0.55rem; opacity: 0.2; letter-spacing: 0.05em; line-height: 1.5; max-width: 550px; border-top: 1px solid var(--line-color); padding-top: 2.5rem; text-wrap: balance; }
   </style>
 </head>
 <body>
@@ -188,19 +212,22 @@
     <main class="layout-frame" id="mainLayout">
       <header class="header-intro">
         <div class="header-visual">
-          <p style="font-family: ui-monospace; opacity: 0.5; letter-spacing: 0.5em; font-size: 0.8rem; margin-bottom: 1rem;">STATUS: ARCHIVE_STABLE</p>
+          <p style="font-family: ui-monospace; opacity: 0.5; letter-spacing: 0.5em; font-size: 0.8rem; margin-bottom: 1rem;">MISSION STATUS: ARCHIVE_STABLE</p>
           <h1>PLUTO</h1>
-          <p style="font-family: ui-monospace; opacity: 0.5; letter-spacing: 0.5em; font-size: 0.8rem;">OBJECT_ID: 134340 // KUIPER BELT</p>
+          <p style="font-family: ui-monospace; opacity: 0.5; letter-spacing: 0.5em; font-size: 0.8rem;">TELEMETRY_ID: 134340 // DATA RETRIEVAL COMPLETE</p>
         </div>
       </header>
       
       <footer class="footer">
-        <h1 style="font-weight: 900; letter-spacing: 0.2em; opacity: 0.5; font-size: 2rem; margin-bottom: 1.5rem;">HORIZON_REACHED</h1>
-        <p style="font-family: ui-monospace, monospace; font-size: 0.7rem; opacity: 0.4; max-width: 450px; line-height: 2; margin-bottom: 3rem;">
-          AVG DISTANCE: 5.9 BILLION KM // ORBITAL PERIOD: 248 YEARS // SURFACE TEMP: -232.1°C
-        </p>
-        <div style="font-family: ui-monospace, monospace; font-size: 0.6rem; opacity: 0.3; letter-spacing: 0.2em;">
-            © 2026 DEEP SPACE RESEARCH INST. // NASA DATA ARCHIVE SYNCED
+        <div class="footer-heading">HORIZON_REACHED</div>
+        <div class="footer-metrics">
+          SYSTEM METRICS: 4.67 BILLION MILES FROM ORIGIN // SIGNAL DELAY: 4.5 HOURS // BIOMETRIC SCAN: COLD DARK SILENCE
+        </div>
+        <div class="footer-copy">
+            © 2026 DEEP SPACE RESEARCH INST. // SYNCED VIA NEW HORIZONS TELEMETRY
+        </div>
+        <div class="footer-disclaimer">
+          [ARCHIVE NOTES]: This digital reconstruction utilizes Artificial Intelligence to simulate planetary environments. While technical descriptions are anchored in NASA mission data, visual assets may contain synthetic approximations designed for high-fidelity educational immersion.
         </div>
       </footer>
     </main>
@@ -209,17 +236,19 @@
   <script>
     // 1. DYNAMIC CONTENT ARCHIVE
     const chapters = [
-      { id: "DISCOVERY_1930", bg: "1930", title: "The Silent Frontier.", text: "Discovered by Clyde Tombaugh in 1930, Pluto redefined our solar system's scale, marking the gateway to the vast Kuiper Belt.", type: "image", src: "public/assets/images/chapter-discovery.avif" },
-      { id: "GEOLOGY_HEART", bg: "HEART", title: "The Nitrogen Pulse.", text: "Sputnik Planitia is a massive nitrogen-ice plain forming the left lobe of the 'Heart'. It actively resurfaces itself via convective ice cells.", type: "image", src: "public/assets/images/chapter-geology.avif" },
-      { id: "BINARY_SYSTEM", bg: "BINARY", title: "Tidal Symmetry.", text: "Pluto and its moon Charon orbit a shared barycenter in open space. Tidally locked, they forever present the same face to each other.", type: "video", src: "public/assets/videos/chapter-binary-system.mp4" },
-      { id: "PEAKS_CRYOHILL", bg: "MONS", title: "Titanium Water-Ice.", text: "Mountains rise 3.5 km high. At -230°C, water ice behaves like granite bedrock, forming jagged spires against the eternal dark.", type: "image", src: "public/assets/images/chapter-peaks.avif" },
-      { id: "ATMOS_SCATTER", bg: "HAZE", title: "The Blue Halo.", text: "Sunlight hitting the atmosphere scatters into a blue ring. This is caused by tholins—organic particles created by UV radiation.", type: "image", src: "public/assets/images/chapter-atmosphere.avif" },
-      { id: "MISSION_2015", bg: "MISSION", title: "First Contact.", text: "In 2015, NASA's New Horizons completed a 9-year journey, revealing Pluto as a vibrant, complex world for the first time.", type: "video", src: "public/assets/videos/chapter-mission.mp4" },
-      { id: "VOID_FUTURE", bg: "VOID", title: "Endless Silence.", text: "Beyond Pluto lies the infinite darkness of the Kuiper Belt—a library of primitive ice worlds holding the secrets of our origin.", type: "video", src: "public/assets/videos/chapter-void.mp4" }
+      { id: "MISSION_LOG_1930", bg: "1930", title: "The Sentinel Found.", text: "In the absolute chill of 1930, Clyde Tombaugh identified a shifting point of light. Pluto emerged not as an end, but as a gateway to the vast, icy wilderness of the Kuiper Belt.", type: "image", src: "public/assets/images/chapter-discovery.avif" },
+      { id: "GEOLOGY_LOG_HEART", bg: "HEART", title: "A Nitrogen Pulse.", text: "The Sputnik Planitia serves as a planetary engine. This high-albedo basin of nitrogen ice cycles through convective heat, proving that even at the edge, geology never sleeps.", type: "image", src: "public/assets/images/chapter-geology.avif" },
+      { id: "ORBITAL_LOG_BINARY", bg: "BINARY", title: "Tidal Synchronicity.", text: "Charon and Pluto share an intimate gravity. They orbit a barycenter located in the vacuum between them—a dual-world dance where they never break their gaze from one another.", type: "video", src: "public/assets/videos/chapter-binary-system.mp4" },
+      { id: "CRYO_LOG_MONS", bg: "MONS", title: "Bedrock of Ice.", text: "Solid water-ice peaks like Tenzing Montes rise 3.5km into the cyan haze. In temperatures of 40 Kelvin, ice achieves the structural integrity of granite, supporting massive spires against the stars.", type: "image", src: "public/assets/images/chapter-peaks.avif" },
+      { id: "ATMOS_LOG_HALO", bg: "HAZE", title: "The Cyan Haze.", text: "Pluto’s atmosphere scatters sunlight into a fragile blue ring. This ring is a graveyard of tholins—complex organic particles forged by UV radiation hitting methane and nitrogen clouds.", type: "image", src: "public/assets/images/chapter-atmosphere.avif" },
+      { id: "MISSION_LOG_2015", bg: "MISSION", title: "First Contact.", text: "NASA's New Horizons spacecraft completed its 9-year journey in 2015. At 58,500 km/h, it transmitted the first high-definition telemetry of a world long shrouded in mystery.", type: "video", src: "public/assets/videos/chapter-mission.mp4" },
+      { id: "FUTURE_LOG_VOID", bg: "VOID", title: "The Endless Deep.", text: "Beyond Pluto lies the infinite silence of the Kuiper Belt—a primordial celestial library containing the original chemical blueprints of our solar system's creation.", type: "video", src: "public/assets/videos/chapter-void.mp4" }
     ];
 
     const layout = document.getElementById('mainLayout');
     const footer = document.querySelector('.footer');
+    const container = document.getElementById('scrollCore');
+    
     const dividerTemplate = `
       <div class="divider js-trigger" data-state="idle">
         <div class="divider__axis"><hr class="divider__line">
@@ -260,30 +289,49 @@
       }
     });
 
-    // 3. KINETIC ENGINE (V54 PRECISION)
-    const container = document.getElementById('scrollCore');
+    // 3. REAL-TIME DIRECTION TRACKING
     let lastY = 0;
+    let currentDirection = 'down';
+    
+    container.addEventListener('scroll', () => {
+      const scrollPos = container.scrollTop;
+      currentDirection = scrollPos > lastY ? 'down' : 'up';
+      lastY = scrollPos;
+    }, { passive: true });
+
+    // 4. PRECISION KINETIC ENGINE
     const initOdyssey = () => {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           const el = entry.target;
-          const currentY = container.scrollTop;
-          const direction = currentY > lastY ? 'down' : 'up';
+          
           if (entry.isIntersecting) {
             if (el.getAttribute('data-state') !== 'animating') {
-              el.setAttribute('data-dir', direction);
+              el.setAttribute('data-dir', currentDirection);
               el.setAttribute('data-state', 'animating');
-              setTimeout(() => { if (el.getAttribute('data-state') === 'animating') el.setAttribute('data-state', direction === 'down' ? 'done' : 'idle'); }, 1250); 
+              
+              setTimeout(() => { 
+                if (el.getAttribute('data-state') === 'animating') {
+                  el.setAttribute('data-state', currentDirection === 'down' ? 'done' : 'idle'); 
+                }
+              }, 1250); 
             }
           } else {
-            if (entry.boundingClientRect.top > 70) el.setAttribute('data-state', 'idle');
-            else el.setAttribute('data-state', 'done');
+            if (entry.boundingClientRect.top > 70) {
+              el.setAttribute('data-state', 'idle');
+            } else {
+              el.setAttribute('data-state', 'done');
+            }
           }
-          lastY = currentY;
         });
-      }, { threshold: 0.15, rootMargin: "-70px 0px 0px 0px" });
+      }, { 
+        threshold: 0.1, 
+        rootMargin: "-70px 0px 0px 0px" 
+      });
+
       document.querySelectorAll('.js-trigger').forEach(d => observer.observe(d));
     };
+
     window.addEventListener('DOMContentLoaded', initOdyssey);
   </script>
 </body>
