@@ -40,7 +40,7 @@
 
     img, video, iframe { max-inline-size: 100%; block-size: auto }
 
-    html { scroll-behavior: smooth; overflow-x: hidden }
+    html { scroll-behavior: smooth; overflow-x: hidden; scroll-padding-top: calc(var(--header-height) + var(--spacing-md)) }
 
     :root {
       font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -108,25 +108,72 @@
 
     a { color: inherit; text-decoration: none }
 
+    ::selection {
+      background-color: var(--color-primary);
+      color: var(--color-bg);
+    }
+
+    ::-webkit-scrollbar {
+      inline-size: 8px;
+      block-size: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: var(--color-line);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: var(--color-text-muted);
+    }
+
+    ::-webkit-scrollbar-corner {
+      background-color: transparent;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
     :focus-visible {
       outline: none;
-      box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-primary);
+      box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 3px var(--color-primary);
+    }
+
+    i[data-lucide] {
+      transition: transform var(--transition-normal);
+    }
+
+    i[data-lucide]:hover {
+      transform: rotate(5deg);
     }
 
     .skip-link {
       position: absolute;
       inset-block-start: -100%;
-      inset-inline: 50%;
-      translate: -50% 0;
+      inset-inline-start: var(--spacing);
       padding: var(--spacing-xs) var(--spacing-md);
       background-color: var(--color-primary);
       color: var(--color-bg);
       font-size: var(--font-sm);
       z-index: var(--z-top);
+      min-block-size: 44px;
+      min-inline-size: max-content;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--border-radius-sm);
     }
 
     .skip-link:focus {
       inset-block-start: var(--spacing-md);
+      outline: none;
     }
 
     .site-header {
@@ -412,7 +459,7 @@
       background-color: var(--color-primary);
       padding: calc(var(--spacing-xs) * 1.6) calc(var(--spacing-md) * 1.667);
       border-radius: var(--border-radius-sm);
-      transition: color var(--transition-normal), background-color var(--transition-normal), transform var(--transition-fast);
+      transition: color var(--transition-normal), background-color var(--transition-normal);
       min-block-size: 44px;
       display: inline-flex;
       align-items: center;
@@ -421,12 +468,10 @@
 
     .site-header__signup-btn:hover {
       background-color: var(--color-primary-hover);
-      transform: translateY(-1px);
     }
 
     .site-header__signup-btn:active {
       filter: brightness(0.9);
-      transform: translateY(0);
     }
 
     .site-header__theme-toggle {
@@ -574,7 +619,7 @@
       border-radius: var(--border-radius-sm);
       display: block;
       text-align: center;
-      transition: color var(--transition-normal), background-color var(--transition-normal), transform var(--transition-fast);
+      transition: color var(--transition-normal), background-color var(--transition-normal);
       inline-size: 100%;
       white-space: nowrap;
       min-block-size: 44px;
@@ -583,12 +628,10 @@
 
     .mobile-menu__signup-btn:hover {
       background-color: var(--color-primary-hover);
-      transform: translateY(-1px);
     }
 
     .mobile-menu__signup-btn:active {
       filter: brightness(0.9);
-      transform: translateY(0);
     }
 
     .site-main {
@@ -923,7 +966,7 @@
       justify-content: center;
       opacity: 0;
       visibility: hidden;
-      transition: color var(--transition-normal), background-color var(--transition-normal), transform var(--transition-fast), opacity var(--transition-normal), visibility var(--transition-normal);
+      transition: color var(--transition-normal), background-color var(--transition-normal), opacity var(--transition-normal), visibility var(--transition-normal);
       z-index: var(--z-fixed);
       font-size: 1.25rem;
     }
@@ -935,12 +978,10 @@
 
     .scroll-top:hover {
       background-color: var(--color-primary-hover);
-      transform: translateY(-2px);
     }
 
     .scroll-top:active {
       filter: brightness(0.9);
-      transform: translateY(-1px);
     }
 
     .text-center { text-align: center }
@@ -971,17 +1012,15 @@
       font-size: var(--font-base);
       margin-block-start: var(--spacing-md);
       min-block-size: 44px;
-      transition: color var(--transition-normal), background-color var(--transition-normal), transform var(--transition-fast);
+      transition: color var(--transition-normal), background-color var(--transition-normal);
     }
 
     .section__cta--btn:hover {
       background-color: var(--color-primary-hover);
-      transform: translateY(-1px);
     }
 
     .section__cta--btn:active {
       filter: brightness(0.9);
-      transform: translateY(0);
     }
 
     @media (width >= 768px) {
@@ -1079,7 +1118,7 @@
   </script>
 </head>
 <body>
-  <a href="#main-content" class="skip-link" role="button">Skip to main content</a>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <header class="site-header">
     <div class="site-header__inner">
@@ -1139,7 +1178,7 @@
 
   <main class="site-main" id="main-content">
     <section class="section" id="section-1">
-      <h1 class="section__title">Launch Production Websites Fast</h1>
+      <h1 class="section__title" tabindex="-1">Launch Production Websites Fast</h1>
       <p class="section__content">Single-file HTML template. Dark mode, responsive design, accessibility built-in. No setup, no dependencies—just download and start building.</p>
       <div class="section__cta">
         <a href="https://github.com/yourusername/frameless" class="site-header__signup-btn section__cta--btn">Get the Template</a>
@@ -1274,6 +1313,8 @@
     'use strict';
 
     const DOM = Object.freeze({
+      skipLink: document.querySelector('.skip-link'),
+      mainContent: document.querySelector('#main-content'),
       menuToggle: document.querySelector('.site-header__toggle'),
       nav: document.querySelector('.site-header__nav'),
       closeBtn: document.querySelector('.mobile-menu__close-button'),
@@ -1297,8 +1338,8 @@
 
     const getTheme = () => {
       const savedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
+      const prefersDark = globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
+
       return savedTheme ?? (prefersDark ? THEMES.DARK : THEMES.LIGHT);
     };
 
@@ -1339,7 +1380,7 @@
       try {
         DOM.menuToggle?.setAttribute('aria-expanded', 'true');
         DOM.nav?.setAttribute('aria-expanded', 'true');
-        window.focusTrapCleanup = trapFocus(DOM.nav);
+        globalThis.focusTrapCleanup = trapFocus(DOM.nav);
         setTimeout(() => DOM.closeBtn?.focus(), FOCUS_DELAY);
       } catch (error) {
         console.warn('Error opening mobile menu:', error);
@@ -1351,8 +1392,8 @@
         DOM.menuToggle?.setAttribute('aria-expanded', 'false');
         DOM.nav?.removeAttribute('aria-expanded');
 
-        window.focusTrapCleanup?.();
-        window.focusTrapCleanup = null;
+        globalThis.focusTrapCleanup?.();
+        globalThis.focusTrapCleanup = null;
 
         setTimeout(() => DOM.menuToggle?.focus(), FOCUS_DELAY);
       } catch (error) {
@@ -1384,11 +1425,11 @@
       if (!DOM.scrollBtn) return;
 
       const handleScroll = debounce(() => {
-        DOM.scrollBtn.classList.toggle('visible', window.scrollY > SCROLL_THRESHOLD);
+        DOM.scrollBtn.classList.toggle('visible', globalThis.scrollY > SCROLL_THRESHOLD);
       }, 16);
 
-      window.addEventListener('scroll', handleScroll);
-      DOM.scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      globalThis.addEventListener('scroll', handleScroll, { passive: true });
+      DOM.scrollBtn.addEventListener('click', () => globalThis.scrollTo({ top: 0, behavior: 'smooth' }));
     };
 
     const setupDividers = () => {
@@ -1419,17 +1460,49 @@
       });
     };
 
+    const setupSkipLink = () => {
+      if (!DOM.skipLink) return;
+
+      DOM.skipLink.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const mainContent = document.querySelector('#main-content');
+        if (mainContent) {
+          const focusableElements = mainContent.querySelectorAll(
+            'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+
+          if (focusableElements.length > 0) {
+            setTimeout(() => focusableElements[0].focus(), FOCUS_DELAY);
+          } else {
+            const h1 = mainContent.querySelector('h1');
+            if (h1) {
+              setTimeout(() => h1.focus(), FOCUS_DELAY);
+            }
+          }
+        }
+      });
+
+      DOM.skipLink.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          DOM.skipLink.blur();
+        }
+      });
+    };
+
     const init = () => {
       typeof lucide !== 'undefined' && lucide.createIcons();
-      
+
       setTheme(getTheme());
       DOM.themeToggles.forEach(toggle => toggle.addEventListener('click', toggleTheme));
       setupMobileMenu();
       setupScrollButton();
       setupDividers();
       setupSmoothScroll();
+      setupSkipLink();
 
-      window.addEventListener('storage', (e) => {
+      globalThis.addEventListener('storage', (e) => {
         if (e.key === 'theme') {
           setTheme(e.newValue ?? getTheme());
         }
