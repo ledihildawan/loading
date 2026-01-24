@@ -3,107 +3,524 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Core Engine V16 | Fully Configurable</title>
+  <meta name="description" content="Core Starter - Single-file vanilla HTML template with responsive layout and modern features.">
+  <title>Core Starter | Single-File Template</title>
   <style>
     /* ============================================================
-       1. GLOBAL CONFIGURATION (CSS VARIABLES)
+       CORE STARTER - VANILLA HTML TEMPLATE
+       Single-file, zero-dependency, fully customizable
+
+       QUICK START:
+       1. Edit CSS variables in :root below
+       2. Update site info in <head> meta tags
+       3. Customize sections in <main>
+       4. Update navigation links in header
+       5. Modify footer content
+
+       STRUCTURE GUIDE:
+       - <header>: Site navigation with logo
+       - <main>: Page content with sections
+       - <footer>: Site information and links
+
+       IMPORTANT: For border X alignment on large screens (1240px+):
+       All components with border X (.site-header__inner, .site-main,
+       .site-footer__main, .site-footer__meta) MUST have:
+       - max-width: var(--max-width)
+       - margin: 0 auto
+       - width: 100%
+       This ensures perfect alignment across all sections.
+
+       CONTENT SPACING WITH BORDER X:
+       When border X is active on desktop, the container padding is set to 0.
+       Content inside MUST have its own horizontal padding to avoid touching
+       the border. Use var(--spacing) or var(--spacing-lg) for consistency.
+       Examples:
+       - .section: padding: 4rem var(--spacing)
+       - .site-footer__main: padding: 3rem var(--spacing) 2rem
+       - .site-footer__meta: padding: 1rem var(--spacing)
+
+       CREATING NEW COMPONENTS:
+       Use utility classes to avoid alignment issues:
+       1. .content-wrapper - base max-width and centering
+       2. .content-wrapper--bordered - adds border X on large screens
+       3. .component-with-border - ready-to-use template
        ============================================================ */
-    :root {
-      /* Theme Colors */
-      --bg: #fafafa;
-      --text: #18181b;
-      --text-muted: #71717a;
-      --line-color: #e4e4e7;
-      --brand: #3f3f46;
-      
-      /* Structural Logic */
-      --max-w: 1200px;
-      --section-h: 80dvh;
-      --line-style: dashed; /* solid, dashed, dotted */
-      --d-size: 11px;
-      
-      /* Desktop Trigger Point */
-      --desktop-bp: 1240px;
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
+    :root {
+      /* ============================================================
+         CONFIGURATION - Edit these to customize your site
+         ============================================================ */
+
+      /* -- Branding -- */
+      --site-name: "CORE STARTER";
+      --site-tagline: "Modern vanilla HTML template for rapid development";
+      --site-copyright: "© 2025 Your Name";
+
+      /* -- Colors (OKLCH format) -- */
+      --color-bg: oklch(99% 0 0);
+      --color-text: oklch(20% 0 0);
+      --color-text-muted: oklch(45% 0 0);
+      --color-primary: oklch(15% 0 0);
+      --color-primary-hover: oklch(5% 0 0);
+      --color-line: oklch(89% 0 0);
+
+      /* -- Dark mode colors -- */
+      --color-bg-dark: oklch(5% 0 0);
+      --color-text-dark: oklch(96% 0 0);
+      --color-text-muted-dark: oklch(65% 0 0);
+      --color-primary-dark: oklch(90% 0 0);
+      --color-line-dark: oklch(20% 0 0);
+
+      /* -- Layout -- */
+      --max-width: 1200px;
+      --header-height: 64px;
+      --spacing: 1rem;
+      --spacing-lg: 2rem;
+      --border-width: 1px;
+      --border-style: solid;
+
+      /* -- Typography (clamp for responsive sizing) -- */
+      --font-xs: clamp(0.7rem, 0.65rem + 0.25vw, 0.8125rem);
+      --font-sm: clamp(0.8rem, 0.75rem + 0.25vw, 0.875rem);
+      --font-base: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+      --font-lg: clamp(1.125rem, 1rem + 0.625vw, 1.5rem);
+      --font-xl: clamp(1.5rem, 1.25rem + 1.25vw, 2rem);
+      --font-2xl: clamp(2rem, 1.5rem + 2.5vw, 3rem);
+
+      /* -- Effects -- */
+      --blur-amount: 12px;
+      --transition-fast: 0.15s ease;
+      --transition-normal: 0.2s ease;
+      --transition-slow: 0.3s ease;
+
+      /* -- Divider animation -- */
+      --divider-color: var(--color-primary);
+      --divider-gradient-size: 20%;
+      --symbol-size: 11px;
+    }
+
+    /* ============================================================
+       DARK MODE
+       ============================================================ */
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #09090b;
-        --text: #f4f4f5;
-        --text-muted: #a1a1aa;
-        --line-color: #27272a;
-        --brand: #e4e4e7;
+        --color-bg: var(--color-bg-dark);
+        --color-text: var(--color-text-dark);
+        --color-text-muted: var(--color-text-muted-dark);
+        --color-primary: var(--color-primary-dark);
+        --color-line: var(--color-line-dark);
       }
     }
 
-    /* Reset Global & Box Sizing */
-    *, *::before, *::after { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
+    /* Force dark mode (uncomment to enable) */
+    /* :root {
+      --color-bg: var(--color-bg-dark);
+      --color-text: var(--color-text-dark);
+      --color-text-muted: var(--color-text-muted-dark);
+      --color-primary: var(--color-primary-dark);
+      --color-line: var(--color-line-dark);
+    } */
+
+    /* ============================================================
+       BASE
+       ============================================================ */
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    body { 
-      background-color: var(--bg); 
-      color: var(--text); 
-      font-family: system-ui, -apple-system, sans-serif; 
-      overflow-x: hidden;
-      line-height: 1.6;
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-primary);
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.5rem 1rem;
+      background-color: var(--color-primary);
+      color: var(--color-bg);
+      font-size: var(--font-sm);
+      z-index: 1000;
+    }
+
+    .skip-link:focus {
+      top: 1rem;
     }
 
     /* ============================================================
-       2. RESPONSIVE LAYOUT FRAME
+       LAYOUT UTILITIES
+       Use these classes for consistent layout alignment
        ============================================================ */
-    .layout-frame { 
-      position: relative; 
-      margin: 0 auto; 
-      width: 100%; 
-      max-width: var(--max-w); 
-      min-height: 100dvh;
-      padding: 0 20px;
+
+    /* Base content wrapper - ensures max-width alignment */
+    .content-wrapper {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Bordered wrapper - adds left/right borders on large screens */
+    .content-wrapper--bordered {
+      padding: 0 var(--spacing);
     }
 
     @media (min-width: 1240px) {
-      .layout-frame {
-        border-left: 1px var(--line-style) var(--line-color); 
-        border-right: 1px var(--line-style) var(--line-color);
+      .content-wrapper--bordered {
+        border-left: var(--border-width) var(--border-style) var(--color-line);
+        border-right: var(--border-width) var(--border-style) var(--color-line);
         padding: 0;
       }
     }
 
+    /* Template for new components with border X */
+    .component-with-border {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      width: 100%;
+      padding: 0 var(--spacing);
+    }
+
+    @media (min-width: 1240px) {
+      .component-with-border {
+        border-left: var(--border-width) var(--border-style) var(--color-line);
+        border-right: var(--border-width) var(--border-style) var(--color-line);
+        padding: 0;
+      }
+    }
+
+    /* Content padding for bordered containers */
+    .content-padded {
+      padding: var(--spacing);
+    }
+
+    .content-padded-lg {
+      padding: var(--spacing-lg);
+    }
+
     /* ============================================================
-       3. SECTION & DIVIDER
+       HEADER
        ============================================================ */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      width: 100%;
+      height: var(--header-height);
+      background-color: color-mix(in oklch, var(--color-bg) 85%, transparent);
+      backdrop-filter: blur(var(--blur-amount));
+      -webkit-backdrop-filter: blur(var(--blur-amount));
+      border-bottom: var(--border-width) var(--border-style) var(--color-line);
+    }
+
+    .site-header__inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--spacing);
+    }
+
+    @media (min-width: 1240px) {
+      .site-header__inner {
+        border-left: var(--border-width) var(--border-style) var(--color-line);
+        border-right: var(--border-width) var(--border-style) var(--color-line);
+        padding: 0;
+      }
+    }
+
+    .site-header__content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 var(--spacing);
+    }
+
+    @media (max-width: 1239px) {
+      .site-header__content {
+        padding: 0;
+      }
+    }
+
+    .site-header__logo {
+      font-weight: 700;
+      font-size: var(--font-base);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      transition: color var(--transition-normal);
+    }
+
+    .site-header__logo:hover {
+      color: color-mix(in oklch, var(--color-primary-hover) 80%, var(--color-primary));
+    }
+
+    /* Mobile menu toggle */
+    .site-header__toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      color: var(--color-text);
+      transition: color var(--transition-normal), background-color var(--transition-normal);
+    }
+
+    .site-header__toggle:hover {
+      color: color-mix(in oklch, var(--color-primary) 90%, var(--color-text));
+      background-color: color-mix(in oklch, var(--color-primary) 8%, transparent);
+    }
+
+    @media (min-width: 768px) {
+      .site-header__toggle {
+        display: none;
+      }
+    }
+
+    @media (min-width: 1240px) {
+      .site-header__inner {
+        border-left: var(--border-width) var(--border-style) var(--color-line);
+        border-right: var(--border-width) var(--border-style) var(--color-line);
+        padding: 0;
+      }
+    }
+
+    .site-header__logo {
+      font-weight: 700;
+      font-size: var(--font-base);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      transition: color var(--transition-normal);
+    }
+
+    .site-header__logo:hover {
+      color: color-mix(in oklch, var(--color-primary-hover) 80%, var(--color-primary));
+    }
+
+    .site-header__toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      color: var(--color-text);
+      transition: color var(--transition-normal), background-color var(--transition-normal);
+    }
+
+    .site-header__toggle:hover {
+      color: color-mix(in oklch, var(--color-primary) 90%, var(--color-text));
+      background-color: color-mix(in oklch, var(--color-primary) 8%, transparent);
+    }
+
+    @media (min-width: 768px) {
+      .site-header__toggle {
+        display: none;
+      }
+    }
+
+    .site-header__nav {
+      position: absolute;
+      top: var(--header-height);
+      left: 0;
+      right: 0;
+      background-color: var(--color-bg);
+      border-bottom: var(--border-width) var(--border-style) var(--color-line);
+      padding: 0 var(--spacing);
+      display: none;
+    }
+
+    .site-header__nav[aria-expanded="true"] {
+      display: flex;
+      flex-direction: column;
+      padding: var(--spacing);
+    }
+
+    @media (min-width: 768px) {
+      .site-header__nav {
+        position: static;
+        background-color: transparent;
+        border: none;
+        display: flex;
+      }
+    }
+
+    .site-header__nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      list-style: none;
+    }
+
+    @media (min-width: 768px) {
+      .site-header__nav-list {
+        flex-direction: row;
+        gap: 1.5rem;
+      }
+    }
+
+    .site-header__nav-link {
+      font-size: var(--font-sm);
+      color: var(--color-text-muted);
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      transition: color var(--transition-normal), background-color var(--transition-normal);
+    }
+
+    .site-header__nav-link:hover {
+      color: var(--color-text);
+      background-color: color-mix(in oklch, var(--color-primary) 8%, transparent);
+    }
+
+    /* CTA/Login Section */
+    .site-header__cta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 767px) {
+      .site-header__cta {
+        display: none;
+      }
+    }
+
+    .site-header__login-btn {
+      font-size: var(--font-sm);
+      color: var(--color-text-muted);
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: color var(--transition-normal), background-color var(--transition-normal);
+    }
+
+    .site-header__login-btn:hover {
+      color: var(--color-text);
+      background-color: color-mix(in oklch, var(--color-primary) 8%, transparent);
+    }
+
+    .site-header__signup-btn {
+      font-size: var(--font-sm);
+      color: var(--color-bg);
+      background-color: var(--color-primary);
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: color var(--transition-normal), background-color var(--transition-normal);
+    }
+
+    .site-header__signup-btn:hover {
+      background-color: color-mix(in oklch, var(--color-primary-hover) 80%, var(--color-primary));
+    }
+
+    /* ============================================================
+       MAIN
+       ============================================================ */
+    .site-main {
+      flex: 1;
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    @media (min-width: 1240px) {
+      .site-main {
+        border-left: var(--border-width) var(--border-style) var(--color-line);
+        border-right: var(--border-width) var(--border-style) var(--color-line);
+      }
+    }
+
     .section {
-      height: var(--section-h);
+      min-height: 60vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 0 10%;
+      padding: 4rem var(--spacing);
     }
 
+    @media (min-width: 768px) {
+      .section {
+        padding: 4rem 10%;
+      }
+    }
+
+    @media (min-width: 1240px) {
+      .section {
+        padding: 4rem var(--spacing);
+      }
+    }
+
+    .section__title {
+      font-size: var(--font-xl);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      color: var(--color-text);
+    }
+
+    .section__content {
+      font-size: var(--font-base);
+      color: var(--color-text-muted);
+      max-width: 600px;
+      line-height: 1.7;
+    }
+
+    /* ============================================================
+       DIVIDER
+       ============================================================ */
     .divider {
       position: relative;
+      z-index: 10;
       width: 100%;
-      height: 20px;
-      display: flex;
-      align-items: center;
+      border: none;
+      padding: 2rem 0;
     }
 
-    .divider__axis-x {
+    .divider__axis {
       position: absolute;
       left: 50%;
+      transform: translateX(-50%);
       width: 100vw;
       height: 1px;
-      transform: translateX(-50%);
     }
 
     .divider__line {
       width: 100%;
       border: none;
-      border-top: 1px var(--line-style) var(--line-color);
+      border-top: var(--border-width) var(--border-style) var(--color-line);
     }
 
     .divider__container {
@@ -112,55 +529,514 @@
       top: 50%;
       transform: translate(-50%, -50%);
       width: 100%;
-      max-width: var(--max-w);
+      max-width: var(--max-width);
       height: 100%;
       display: flex;
       align-items: center;
+      padding: 0 var(--spacing);
+    }
+
+    @media (min-width: 1240px) {
+      .divider__container {
+        padding: 0;
+      }
+    }
+
+    .divider__gradient {
+      position: absolute;
+      top: 0;
+      height: 1px;
+      width: 50%;
+      overflow: hidden;
+    }
+
+    .divider__gradient--left {
+      left: 0;
+    }
+
+    .divider__gradient--right {
+      right: 0;
+    }
+
+    .divider__bar {
+      position: absolute;
+      top: 0;
+      height: 1px;
+      width: var(--divider-gradient-size);
+      opacity: 0;
+    }
+
+    .divider__bar--left {
+      inset-inline-end: 100%;
+      background: linear-gradient(to right, var(--divider-color), transparent);
+    }
+
+    .divider__bar--right {
+      inset-inline-start: 100%;
+      background: linear-gradient(to left, var(--divider-color), transparent);
+    }
+
+    @keyframes slideLeft {
+      0% {
+        inset-inline-end: -20%;
+        width: 20%;
+        opacity: 0;
+      }
+      100% {
+        inset-inline-end: 100%;
+        width: 90%;
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideRight {
+      0% {
+        inset-inline-start: -20%;
+        width: 20%;
+        opacity: 0;
+      }
+      100% {
+        inset-inline-start: 100%;
+        width: 90%;
+        opacity: 1;
+      }
+    }
+
+    .divider.in-view .divider__bar--left {
+      animation: slideLeft 1.5s ease-out forwards;
+    }
+
+    .divider.in-view .divider__bar--right {
+      animation: slideRight 1.5s ease-out forwards;
     }
 
     .divider__symbol {
       position: absolute;
-      width: var(--d-size);
-      height: var(--d-size);
-      background: transparent;
-      border: 1px solid var(--line-color);
+      width: var(--symbol-size);
+      aspect-ratio: 1;
+      background: var(--color-bg);
+      border: var(--border-width) var(--border-style) var(--color-line);
       border-radius: 1px;
       display: none;
     }
 
     @media (min-width: 1240px) {
-      .divider__symbol { display: block; }
+      .divider__symbol {
+        display: block;
+      }
     }
 
-    .divider__symbol--l { left: 0; transform: translate(-50%, 0) rotate(45deg); }
-    .divider__symbol--r { right: 0; transform: translate(50%, 0) rotate(45deg); }
+    .divider__symbol--left {
+      left: 0;
+      transform: translate(-50%, 0) rotate(45deg);
+    }
+
+    .divider__symbol--right {
+      right: 0;
+      transform: translate(50%, 0) rotate(45deg);
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .site-footer {
+      width: 100%;
+    }
+
+    .site-footer__main {
+      padding: 3rem var(--spacing) 2rem;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    @media (min-width: 1240px) {
+      .site-footer__main {
+        border-left: var(--border-width) var(--border-style) var(--color-line);
+        border-right: var(--border-width) var(--border-style) var(--color-line);
+        padding: 3rem var(--spacing) 2rem;
+      }
+    }
+
+    .site-footer__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .site-footer__grid {
+        grid-template-columns: 2fr 1fr 1fr;
+      }
+    }
+
+    .site-footer__brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .site-footer__brand-name {
+      font-weight: 700;
+      font-size: var(--font-base);
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .site-footer__brand-desc {
+      font-size: var(--font-sm);
+      color: var(--color-text-muted);
+      max-width: 300px;
+      line-height: 1.7;
+      margin-top: 0.5rem;
+    }
+
+    .site-footer__section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .site-footer__heading {
+      font-size: var(--font-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+      color: var(--color-text);
+    }
+
+    .site-footer__links {
+      list-style: none;
+    }
+
+    .site-footer__links li {
+      margin-bottom: 0.5rem;
+    }
+
+    .site-footer__link {
+      font-size: var(--font-sm);
+      color: var(--color-text-muted);
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      transition: color var(--transition-normal), background-color var(--transition-normal);
+    }
+
+    .site-footer__link:hover {
+      color: var(--color-primary);
+      background-color: color-mix(in oklch, var(--color-primary) 8%, transparent);
+    }
+
+    .site-footer__separator {
+      width: 100%;
+      border-top: var(--border-width) var(--border-style) var(--color-line);
+    }
+
+    .site-footer__meta {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 1rem var(--spacing);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: var(--font-xs);
+      color: var(--color-text-muted);
+    }
+
+    @media (min-width: 1240px) {
+      .site-footer__meta {
+        border-left: var(--border-width) var(--border-style) var(--color-line);
+        border-right: var(--border-width) var(--border-style) var(--color-line);
+        padding: 1rem var(--spacing);
+      }
+    }
+
+    /* ============================================================
+       SCROLL TO TOP
+       ============================================================ */
+    .scroll-top {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      background-color: var(--color-primary);
+      color: var(--color-bg);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: color var(--transition-normal), background-color var(--transition-normal), transform var(--transition-fast);
+      z-index: 99;
+      font-size: 1.25rem;
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .scroll-top:hover {
+      background-color: color-mix(in oklch, var(--color-primary-hover) 60%, var(--color-primary));
+      transform: translateY(-2px);
+    }
+
+    /* ============================================================
+       UTILITY CLASSES
+       ============================================================ */
+    .text-center { text-align: center; }
+    .text-left { text-align: left; }
+    .text-right { text-align: right; }
+
+    .mb-1 { margin-bottom: 0.5rem; }
+    .mb-2 { margin-bottom: 1rem; }
+    .mb-3 { margin-bottom: 1.5rem; }
+    .mb-4 { margin-bottom: 2rem; }
+
+    .mt-1 { margin-top: 0.5rem; }
+    .mt-2 { margin-top: 1rem; }
+    .mt-3 { margin-top: 1.5rem; }
+    .mt-4 { margin-top: 2rem; }
+
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-center { justify-content: center; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-4 { gap: 1rem; }
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <main class="layout-frame">
-    
-    <section class="section"><h2>Section 01</h2></section>
-    <div class="divider"><div class="divider__axis-x"><hr class="divider__line"><div class="divider__container"><span class="divider__symbol divider__symbol--l"></span><span class="divider__symbol divider__symbol--r"></span></div></div></div>
-    
-    <section class="section"><h2>Section 02</h2></section>
-    <div class="divider"><div class="divider__axis-x"><hr class="divider__line"><div class="divider__container"><span class="divider__symbol divider__symbol--l"></span><span class="divider__symbol divider__symbol--r"></span></div></div></div>
-    
-    <section class="section"><h2>Section 03</h2></section>
-    <div class="divider"><div class="divider__axis-x"><hr class="divider__line"><div class="divider__container"><span class="divider__symbol divider__symbol--l"></span><span class="divider__symbol divider__symbol--r"></span></div></div></div>
-    
-    <section class="section"><h2>Section 04</h2></section>
-    <div class="divider"><div class="divider__axis-x"><hr class="divider__line"><div class="divider__container"><span class="divider__symbol divider__symbol--l"></span><span class="divider__symbol divider__symbol--r"></span></div></div></div>
-    
-    <section class="section"><h2>Section 05</h2></section>
-    <div class="divider"><div class="divider__axis-x"><hr class="divider__line"><div class="divider__container"><span class="divider__symbol divider__symbol--l"></span><span class="divider__symbol divider__symbol--r"></span></div></div></div>
-    
-    <section class="section"><h2>Section 06</h2></section>
-    <div class="divider"><div class="divider__axis-x"><hr class="divider__line"><div class="divider__container"><span class="divider__symbol divider__symbol--l"></span><span class="divider__symbol divider__symbol--r"></span></div></div></div>
-    
-    <section class="section"><h2>Section 07</h2></section>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="site-header__content">
+        <!-- Brand/Logo Section -->
+        <a href="#" class="site-header__logo">CORE STARTER</a>
 
+        <!-- Navigation Section -->
+        <nav class="site-header__nav" id="primary-navigation" aria-label="Primary navigation">
+          <ul class="site-header__nav-list">
+            <li><a href="#section-1" class="site-header__nav-link">Home</a></li>
+            <li><a href="#section-2" class="site-header__nav-link">Features</a></li>
+            <li><a href="#section-3" class="site-header__nav-link">About</a></li>
+            <li><a href="#section-4" class="site-header__nav-link">Contact</a></li>
+          </ul>
+        </nav>
+
+        <!-- CTA/Login Section -->
+        <div class="site-header__cta">
+          <a href="#login" class="site-header__login-btn">Login</a>
+          <a href="#signup" class="site-header__signup-btn">Sign Up</a>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button
+          class="site-header__toggle"
+          aria-label="Toggle navigation menu"
+          aria-expanded="false"
+          aria-controls="primary-navigation"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-main" id="main-content">
+    <section class="section" id="section-1">
+      <h2 class="section__title">Welcome</h2>
+      <p class="section__content">This is a single-file vanilla HTML starter template. Edit the content sections to build your site.</p>
+    </section>
+
+    <div class="divider" aria-hidden="true">
+      <div class="divider__axis">
+        <hr class="divider__line">
+        <div class="divider__container">
+          <div class="divider__gradient divider__gradient--left">
+            <span class="divider__bar divider__bar--left"></span>
+          </div>
+          <div class="divider__gradient divider__gradient--right">
+            <span class="divider__bar divider__bar--right"></span>
+          </div>
+          <span class="divider__symbol divider__symbol--left"></span>
+          <span class="divider__symbol divider__symbol--right"></span>
+        </div>
+      </div>
+    </div>
+
+    <section class="section" id="section-2">
+      <h2 class="section__title">Features</h2>
+      <p class="section__content">Sticky header, responsive layout, dark mode support, animated dividers, scroll-to-top button, and accessibility-first design.</p>
+    </section>
+
+    <div class="divider" aria-hidden="true">
+      <div class="divider__axis">
+        <hr class="divider__line">
+        <div class="divider__container">
+          <div class="divider__gradient divider__gradient--left">
+            <span class="divider__bar divider__bar--left"></span>
+          </div>
+          <div class="divider__gradient divider__gradient--right">
+            <span class="divider__bar divider__bar--right"></span>
+          </div>
+          <span class="divider__symbol divider__symbol--left"></span>
+          <span class="divider__symbol divider__symbol--right"></span>
+        </div>
+      </div>
+    </div>
+
+    <section class="section" id="section-3">
+      <h2 class="section__title">About</h2>
+      <p class="section__content">Customize colors, fonts, spacing, and more by editing the CSS variables in the :root section at the top.</p>
+    </section>
+
+    <div class="divider" aria-hidden="true">
+      <div class="divider__axis">
+        <hr class="divider__line">
+        <div class="divider__container">
+          <div class="divider__gradient divider__gradient--left">
+            <span class="divider__bar divider__bar--left"></span>
+          </div>
+          <div class="divider__gradient divider__gradient--right">
+            <span class="divider__bar divider__bar--right"></span>
+          </div>
+          <span class="divider__symbol divider__symbol--left"></span>
+          <span class="divider__symbol divider__symbol--right"></span>
+        </div>
+      </div>
+    </div>
+
+    <section class="section" id="section-4">
+      <h2 class="section__title">Contact</h2>
+      <p class="section__content">Add your contact information or form here. This template is ready for you to customize.</p>
+    </section>
+
+    <div class="divider" aria-hidden="true">
+      <div class="divider__axis">
+        <hr class="divider__line">
+        <div class="divider__container">
+          <div class="divider__gradient divider__gradient--left">
+            <span class="divider__bar divider__bar--left"></span>
+          </div>
+          <div class="divider__gradient divider__gradient--right">
+            <span class="divider__bar divider__bar--right"></span>
+          </div>
+          <span class="divider__symbol divider__symbol--left"></span>
+          <span class="divider__symbol divider__symbol--right"></span>
+        </div>
+      </div>
+    </div>
   </main>
 
+  <footer class="site-footer">
+    <div class="site-footer__main">
+      <div class="site-footer__grid">
+        <div class="site-footer__brand">
+          <div class="site-footer__brand-name">CORE STARTER</div>
+          <p class="site-footer__brand-desc">Modern vanilla HTML template for rapid development. Zero dependencies, fully customizable.</p>
+        </div>
+
+        <section class="site-footer__section" aria-labelledby="footer-heading-1">
+          <h3 class="site-footer__heading" id="footer-heading-1">Resources</h3>
+          <ul class="site-footer__links">
+            <li><a href="#docs" class="site-footer__link">Documentation</a></li>
+            <li><a href="#examples" class="site-footer__link">Examples</a></li>
+            <li><a href="#faq" class="site-footer__link">FAQ</a></li>
+          </ul>
+        </section>
+
+        <section class="site-footer__section" aria-labelledby="footer-heading-2">
+          <h3 class="site-footer__heading" id="footer-heading-2">Connect</h3>
+          <ul class="site-footer__links">
+            <li><a href="#github" class="site-footer__link">GitHub</a></li>
+            <li><a href="#twitter" class="site-footer__link">Twitter</a></li>
+            <li><a href="#email" class="site-footer__link">Email</a></li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <div class="site-footer__separator"></div>
+
+    <div class="site-footer__meta">
+      <small>&copy; 2025 Your Name</small>
+      <small>v1.0.0</small>
+    </div>
+  </footer>
+
+  <button class="scroll-top" aria-label="Scroll to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const menuToggle = document.querySelector('.site-header__toggle');
+      const nav = document.querySelector('.site-header__nav');
+      const scrollBtn = document.querySelector('.scroll-top');
+      const dividers = document.querySelectorAll('.divider');
+
+      if (menuToggle && nav) {
+        menuToggle.addEventListener('click', function() {
+          const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+          menuToggle.setAttribute('aria-expanded', !isExpanded);
+          nav.setAttribute('aria-expanded', !isExpanded);
+        });
+      }
+
+      if (scrollBtn) {
+        window.addEventListener('scroll', function() {
+          scrollBtn.classList.toggle('visible', window.scrollY > 300);
+        });
+
+        scrollBtn.addEventListener('click', function() {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+          }
+        });
+      }, { threshold: 0.5 });
+
+      dividers.forEach(function(divider) {
+        observer.observe(divider);
+      });
+
+      document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+          const href = this.getAttribute('href');
+          if (href === '#') return;
+
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth' });
+
+            if (nav && nav.getAttribute('aria-expanded') === 'true') {
+              nav.setAttribute('aria-expanded', 'false');
+              menuToggle.setAttribute('aria-expanded', 'false');
+            }
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
