@@ -376,6 +376,7 @@
       touch-action: manipulation;
       pointer-events: auto;
       cursor: pointer;
+      position: relative;
     }
 
     @media (width >= 768px) {
@@ -396,6 +397,34 @@
 
     .site-header__nav-link:active {
       background-color: var(--btn-active-bg);
+    }
+
+    .site-header__nav-link--active {
+      color: var(--color-primary);
+      font-weight: 700;
+      background-color: var(--btn-hover-bg);
+    }
+
+    .site-header__nav-link--active::before {
+      content: '';
+      position: absolute;
+      inline-size: 3px;
+      block-size: 100%;
+      inset-inline-start: 0;
+      inset-block-start: 0;
+      background-color: var(--color-primary);
+      border-radius: 1px 0 0 1px;
+    }
+
+    @media (width >= 768px) {
+      .site-header__nav-link--active::before {
+        inline-size: 100%;
+        block-size: 2px;
+        inset-inline-start: 0;
+        inset-block-start: auto;
+        inset-block-end: 0;
+        border-radius: 1px 1px 0 0;
+      }
     }
 
     .site-header__cta {
@@ -1316,14 +1345,106 @@
       closeBtn: document.querySelector('.mobile-menu__close-button'),
       scrollBtn: document.querySelector('.scroll-top'),
       dividers: document.querySelectorAll('.divider'),
+      navLinks: document.querySelectorAll('.site-header__nav-link'),
+      themeToggles: document.querySelectorAll('.site-header__theme-toggle'),
     });
 
     const THEMES = Object.freeze({ LIGHT: 'light', DARK: 'dark' });
     const SCROLL_THRESHOLD = 300;
     const FOCUS_DELAY = 100;
+    const ANIMATION_TIMEOUT = 3000;
+    const PREFERS_REDUCED_MOTION = globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const EVENTS = Object.freeze({
+      THEME_CHANGE: 'themechange',
+      MENU_TOGGLE: 'menutoggle',
+      SCROLL: 'scrollupdate',
+    });
+
+    const state = {
+      currentTheme: THEMES.LIGHT,
+      isMobileMenuOpen: false,
+      scrollPosition: 0,
+      activeSection: null,
+      focusTrapCleanup: null,
+    };
+
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    const observers = new Set();
+
+    const safeExecute = (fn, errorMessage = 'Operation failed') => {
+      try {
+        return fn();
+      } catch (error) {
+        console.warn(`${errorMessage}:`, error);
+        return null;
+      }
+    };
+
+    const useLocalStorage = {
+      get: (key, defaultValue) => {
+        try {
+          return globalThis.localStorage.getItem(key) ?? defaultValue;
+        } catch {
+          return defaultValue;
+        }
+      },
+      set: (key, value) => {
+        try {
+          globalThis.localStorage.setItem(key, value);
+        } catch (error) {
+          console.warn('Failed to save to localStorage:', error);
+        }
+      },
+    };
+
+    const createEventManager = () => {
+      const listeners = new Map();
+
+      return {
+        on: (event, callback) => {
+          if (!listeners.has(event)) listeners.set(event, new Set());
+          listeners.get(event).add(callback);
+          return () => listeners.get(event)?.delete(callback);
+        },
+        emit: (event, data) => {
+          listeners.get(event)?.forEach(cb => safeExecute(() => cb(data), `Error in ${event} listener`));
+        },
+      };
+    };
+
+    const eventManager = createEventManager();
+
+    const createAnnouncer = () => {
+      const announcement = document.createElement('div');
+      announcement.setAttribute('role', 'status');
+      announcement.setAttribute('aria-live', 'polite');
+      announcement.setAttribute('aria-atomic', 'true');
+      announcement.className = 'sr-only';
+      Object.assign(announcement.style, {
+        position: 'absolute',
+        width: '1px',
+        height: '1px',
+        padding: '0',
+        overflow: 'hidden',
+        clip: 'rect(0, 0, 0, 0)',
+        whiteSpace: 'nowrap',
+        border: '0',
+      });
+      document.body.appendChild(announcement);
+
+      return (message) => {
+        announcement.textContent = message;
+        setTimeout(() => announcement.textContent = '', 1000);
+      };
+    };
+
+    const announce = createAnnouncer();
 
     const getTheme = () => {
-      const savedTheme = localStorage.getItem('theme');
+      const savedTheme = useLocalStorage.get('theme');
       const prefersDark = globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
 
       return savedTheme ?? (prefersDark ? THEMES.DARK : THEMES.LIGHT);
@@ -1331,7 +1452,10 @@
 
     const setTheme = (theme) => {
       document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem('theme', theme);
+      useLocalStorage.set('theme', theme);
+      state.currentTheme = theme;
+      eventManager.emit(EVENTS.THEME_CHANGE, { theme });
+      announce(`Theme changed to ${theme} mode`);
     };
 
     const toggleTheme = () => {
@@ -1349,7 +1473,7 @@
 
       const handleKeyDown = (e) => {
         if (e.key !== 'Tab') return;
-        
+
         const shouldMoveToFirst = e.shiftKey && document.activeElement === firstFocusable;
         const shouldMoveToLast = !e.shiftKey && document.activeElement === lastFocusable;
 
@@ -1357,80 +1481,129 @@
         shouldMoveToLast && (e.preventDefault(), firstFocusable.focus());
       };
 
-      element.addEventListener('keydown', handleKeyDown);
+      element.addEventListener('keydown', handleKeyDown, { signal });
 
       return () => element.removeEventListener('keydown', handleKeyDown);
     };
 
     const openMobileMenu = () => {
-      try {
+      safeExecute(() => {
         DOM.menuToggle?.setAttribute('aria-expanded', 'true');
         DOM.nav?.setAttribute('aria-expanded', 'true');
-        globalThis.focusTrapCleanup = trapFocus(DOM.nav);
-      } catch (error) {
-        console.warn('Error opening mobile menu:', error);
-      }
+        state.focusTrapCleanup = trapFocus(DOM.nav);
+        state.isMobileMenuOpen = true;
+        eventManager.emit(EVENTS.MENU_TOGGLE, { isOpen: true });
+        announce('Mobile menu opened');
+        document.body.style.overflow = 'hidden';
+      }, 'Error opening mobile menu');
     };
 
     const closeMobileMenu = () => {
-      try {
+      safeExecute(() => {
         DOM.menuToggle?.setAttribute('aria-expanded', 'false');
         DOM.nav?.removeAttribute('aria-expanded');
-
-        globalThis.focusTrapCleanup?.();
-        globalThis.focusTrapCleanup = null;
-      } catch (error) {
-        console.warn('Error closing mobile menu:', error);
-      }
+        state.focusTrapCleanup?.();
+        state.focusTrapCleanup = null;
+        state.isMobileMenuOpen = false;
+        eventManager.emit(EVENTS.MENU_TOGGLE, { isOpen: false });
+        announce('Mobile menu closed');
+        document.body.style.overflow = '';
+      }, 'Error closing mobile menu');
     };
 
     const toggleMobileMenu = () => {
       DOM.nav?.hasAttribute('aria-expanded') ? closeMobileMenu() : openMobileMenu();
     };
 
-    const setupScrollButton = () => {
-      let ticking = false;
-      const handleScroll = () => {
-        if (!ticking) {
-          requestAnimationFrame(() => {
-            DOM.scrollBtn.classList.toggle('visible', globalThis.scrollY > SCROLL_THRESHOLD);
-
-            ticking = false;
-          });
-
-          ticking = true;
-        }
-      };
-
-      globalThis.addEventListener('scroll', handleScroll, { passive: true });
-
-      DOM.scrollBtn.addEventListener('click', (e) => {
-        globalThis.scrollTo({ top: 0, behavior: 'smooth' });
+    const handleScroll = () => {
+      requestAnimationFrame(() => {
+        const isVisible = globalThis.scrollY > SCROLL_THRESHOLD;
+        DOM.scrollBtn?.classList.toggle('visible', isVisible);
+        state.scrollPosition = globalThis.scrollY;
+        eventManager.emit(EVENTS.SCROLL, { scrollY: globalThis.scrollY, isVisible });
       });
     };
 
+    const handleScrollToTop = () => {
+      globalThis.scrollTo({ top: 0, behavior: PREFERS_REDUCED_MOTION ? 'auto' : 'smooth' });
+      announce('Scrolled to top');
+    };
+
     const setupDividers = () => {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => entry.isIntersecting && entry.target.classList.add('in-view'));
-      }, { threshold: 0.5 });
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px',
+      };
+
+      const handleIntersection = (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            setTimeout(() => observer.unobserve(entry.target), ANIMATION_TIMEOUT);
+          }
+        });
+      };
+
+      const observer = new IntersectionObserver(handleIntersection, observerOptions);
+      observers.add(observer);
 
       DOM.dividers.forEach(divider => observer.observe(divider));
     };
 
-    const setupSmoothScroll = () => {
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', (e) => {
-          const href = anchor.getAttribute('href');
-          if (href === '#') return;
+    const setupActiveNavigation = () => {
+      const sections = document.querySelectorAll('.section');
+      const observerOptions = {
+        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
+        rootMargin: '-20% 0px -60% 0px',
+      };
 
-          const target = document.querySelector(href);
-          if (!target) return;
+      const handleIntersection = (entries) => {
+        const visibleSections = entries
+          .filter(entry => entry.isIntersecting)
+          .map(entry => entry.target)
+          .sort((a, b) => {
+            const aRect = a.getBoundingClientRect();
+            const bRect = b.getBoundingClientRect();
+            return Math.abs(aRect.top) - Math.abs(bRect.top);
+          });
 
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth' });
-          DOM.nav?.hasAttribute('aria-expanded') && closeMobileMenu();
-        });
-      });
+        const activeSection = visibleSections[0];
+        if (activeSection && activeSection.id !== state.activeSection) {
+          state.activeSection = activeSection.id;
+          console.log('Active section:', state.activeSection);
+          
+          DOM.navLinks.forEach(link => {
+            const isActive = link.getAttribute('href') === `#${activeSection.id}`;
+            link.classList.toggle('site-header__nav-link--active', isActive);
+            link.setAttribute('aria-current', isActive ? 'page' : 'false');
+          });
+        }
+      };
+
+      const observer = new IntersectionObserver(handleIntersection, observerOptions);
+      observers.add(observer);
+
+      sections.forEach(section => observer.observe(section));
+    };
+
+    const handleAnchorClick = (e) => {
+      const anchor = e.target.closest('a[href^="#"]');
+      if (!anchor) return;
+
+      const href = anchor.getAttribute('href');
+      if (href === '#') return;
+
+      const target = document.querySelector(href);
+      if (!target) return;
+
+      e.preventDefault();
+      const behavior = PREFERS_REDUCED_MOTION ? 'auto' : 'smooth';
+      target.scrollIntoView({ behavior });
+      
+      if (state.isMobileMenuOpen) closeMobileMenu();
+      
+      target.focus({ preventScroll: true });
+      announce(`Navigated to ${target.textContent.trim() || target.id}`);
     };
 
     const setupSkipLink = () => {
@@ -1449,11 +1622,60 @@
           const h1 = DOM.mainContent?.querySelector('h1');
           h1 && setTimeout(() => h1.focus(), FOCUS_DELAY);
         }
-      });
+      }, { signal });
 
       DOM.skipLink.addEventListener('keydown', (e) => {
         e.key === 'Escape' && (e.preventDefault(), DOM.skipLink.blur());
-      });
+      }, { signal });
+    };
+
+    const handleKeydown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        toggleTheme();
+      }
+      if (e.key === 'Escape' && state.isMobileMenuOpen) {
+        closeMobileMenu();
+      }
+    };
+
+    const handleClick = (e) => {
+      const themeToggle = e.target.closest('.site-header__theme-toggle');
+      const menuToggle = e.target.closest('.site-header__toggle');
+      const closeBtn = e.target.closest('.mobile-menu__close-button');
+      const scrollBtn = e.target.closest('.scroll-top');
+
+      if (themeToggle) toggleTheme();
+      if (menuToggle) toggleMobileMenu();
+      if (closeBtn) closeMobileMenu();
+      if (scrollBtn) handleScrollToTop();
+
+      if (state.isMobileMenuOpen && e.target === DOM.nav) {
+        closeMobileMenu();
+      }
+    };
+
+    const setupPerformanceMonitoring = () => {
+      if (!('PerformanceObserver' in globalThis)) return;
+
+      safeExecute(() => {
+        const perfObserver = new PerformanceObserver((list) => {
+          list.getEntries().forEach(entry => {
+            if (entry.duration > 50) {
+              console.warn(`Long task detected: ${entry.name} took ${entry.duration}ms`);
+            }
+          });
+        });
+
+        perfObserver.observe({ entryTypes: ['longtask', 'measure'] });
+        observers.add(perfObserver);
+      }, 'Performance observer setup failed');
+    };
+
+    const cleanup = () => {
+      controller.abort();
+      observers.forEach(observer => observer.disconnect());
+      observers.clear();
     };
 
     const init = () => {
@@ -1461,37 +1683,33 @@
 
       setTheme(getTheme());
 
-      document.addEventListener('click', (e) => {
-        const themeToggle = e.target.closest('.site-header__theme-toggle');
-        const menuToggle = e.target.closest('.site-header__toggle');
-        const closeBtn = e.target.closest('.mobile-menu__close-button');
-
-        (themeToggle || menuToggle || closeBtn) && e.preventDefault();
-
-        themeToggle && toggleTheme();
-        menuToggle && toggleMobileMenu();
-        closeBtn && closeMobileMenu();
-
-        if (DOM.nav?.hasAttribute('aria-expanded')) {
-          const isNavOverlay = e.target === DOM.nav;
-          isNavOverlay && closeMobileMenu();
-        }
-      });
-
-      document.addEventListener('keydown', (e) => {
-        e.key === 'Escape' && DOM.nav?.hasAttribute('aria-expanded') && closeMobileMenu();
-      });
-
-      setupScrollButton();
-      setupDividers();
-      setupSmoothScroll();
-      setupSkipLink();
-
+      globalThis.addEventListener('scroll', handleScroll, { passive: true, signal });
+      document.addEventListener('click', handleClick, { capture: true, signal });
+      document.addEventListener('keydown', handleKeydown, { signal });
       globalThis.addEventListener('storage', (e) => {
         if (e.key === 'theme') {
           setTheme(e.newValue ?? getTheme());
         }
-      });
+      }, { signal });
+
+      setupDividers();
+      setupActiveNavigation();
+      setupSkipLink();
+      setupPerformanceMonitoring();
+
+      globalThis.addEventListener('beforeunload', cleanup, { signal });
+
+      console.log('Frameless initialized successfully');
+    };
+
+    globalThis.Frameless = {
+      state,
+      eventManager,
+      setTheme,
+      toggleTheme,
+      openMobileMenu,
+      closeMobileMenu,
+      cleanup,
     };
 
     init();
