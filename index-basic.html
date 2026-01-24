@@ -7,8 +7,8 @@
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
   <!-- Primary Meta Tags -->
-  <meta name="title" content="Frameless - Build Professional Websites in Minutes with a Single HTML File">
-  <meta name="description" content="Launch production-ready websites in minutes. Single-file HTML template with dark mode, responsive design, and zero dependencies. No setup required.">
+  <meta name="title" content="Frameless - Single-file HTML Template for Production Websites">
+  <meta name="description" content="Single-file HTML template with dark mode, responsive design, and accessibility built-in. Zero dependencies, no setup required.">
   <meta name="keywords" content="Frameless, HTML template, vanilla HTML, responsive design, dark mode, starter template, web development, free template">
   <meta name="author" content="Your Name">
   <meta name="robots" content="index, follow">
@@ -16,19 +16,19 @@
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yoursite.com/">
-  <meta property="og:title" content="Frameless - Build Professional Websites in Minutes with a Single HTML File">
-  <meta property="og:description" content="Launch production-ready websites in minutes. Single-file HTML template with dark mode, responsive design, and zero dependencies. No setup required.">
+  <meta property="og:title" content="Frameless - Single-file HTML Template for Production Websites">
+  <meta property="og:description" content="Single-file HTML template with dark mode, responsive design, and accessibility built-in. Zero dependencies, no setup required.">
   <meta property="og:image" content="https://yoursite.com/og-image.jpg">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://yoursite.com/">
-  <meta property="twitter:title" content="Frameless - Build Professional Websites in Minutes with a Single HTML File">
-  <meta property="twitter:description" content="Launch production-ready websites in minutes. Single-file HTML template with dark mode, responsive design, and zero dependencies. No setup required.">
+  <meta property="twitter:title" content="Frameless - Single-file HTML Template for Production Websites">
+  <meta property="twitter:description" content="Single-file HTML template with dark mode, responsive design, and accessibility built-in. Zero dependencies, no setup required.">
   <meta property="twitter:image" content="https://yoursite.com/og-image.jpg">
   <meta property="twitter:creator" content="@yourhandle">
 
-  <title>Frameless - Build Professional Websites in Minutes with a Single HTML File</title>
+  <title>Frameless - Single-file HTML Template for Production Websites</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -46,18 +46,21 @@
       font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       line-height: 1.6;
 
-      --site-name: "Frameless";
-      --site-tagline: "Single-file HTML template for rapid web development";
-      --site-copyright: "© 2025 Your Name";
-
       --color-bg: oklch(99% 0 0);
       --color-text: oklch(20% 0 0);
       --color-text-muted: oklch(45% 0 0);
       --color-primary: oklch(15% 0 0);
       --color-primary-hover: oklch(5% 0 0);
       --color-line: oklch(89% 0 0);
+      --btn-hover-bg: oklch(92% 0 0);
+      --btn-active-bg: oklch(88% 0 0);
+      --btn-hover-text: oklch(20% 0 0);
 
       --spacing: 1.5rem;
+      --spacing-xs: 0.5rem;
+      --spacing-sm: 0.75rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 2rem;
       --max-width: 1240px;
       --header-height: 64px;
       --viewport-height: 100dvh;
@@ -69,6 +72,9 @@
 
       --border-width: 1px;
       --border-style: dashed;
+      --border-radius-sm: 4px;
+      --border-radius-md: 8px;
+      --border-radius-lg: 12px;
 
       --blur-amount: 12px;
       --transition-fast: 150ms ease;
@@ -80,6 +86,16 @@
       --symbol-size: 0.5rem;
 
       --mobile-nav-bg: var(--color-bg);
+
+      --z-base: 1;
+      --z-dropdown: 10;
+      --z-sticky: 100;
+      --z-fixed: 200;
+      --z-modal: 300;
+      --z-popover: 400;
+      --z-tooltip: 500;
+      --z-notification: 600;
+      --z-top: 1000;
     }
 
     body {
@@ -102,24 +118,21 @@
       inset-block-start: -100%;
       inset-inline: 50%;
       translate: -50% 0;
-      padding: 0.5rem 1rem;
+      padding: var(--spacing-xs) var(--spacing-md);
       background-color: var(--color-primary);
       color: var(--color-bg);
       font-size: var(--font-sm);
-      z-index: 1000;
+      z-index: var(--z-top);
     }
 
-    .skip-link:focus { inset-block-start: 1rem }
-
-
     .skip-link:focus {
-      top: 1rem;
+      inset-block-start: var(--spacing-md);
     }
 
     .site-header {
       position: sticky;
       inset-block-start: 0;
-      z-index: 100;
+      z-index: var(--z-sticky);
       block-size: var(--header-height);
       background-color: color-mix(in oklch, var(--color-bg) 85%, transparent);
       backdrop-filter: blur(var(--blur-amount));
@@ -173,7 +186,15 @@
     }
 
     .site-header__logo:hover {
-      color: color-mix(in oklch, var(--color-primary-hover) 80%, var(--color-primary));
+      color: var(--color-primary-hover);
+    }
+
+    .site-header__logo:active {
+      color: var(--color-primary);
+    }
+
+    .site-header__logo:focus-visible {
+      color: var(--color-primary-hover);
     }
 
     @media (width < 480px) {
@@ -193,12 +214,16 @@
       inline-size: 2.75rem;
       block-size: 2.75rem;
       touch-action: manipulation;
-      border-radius: 4px;
+      border-radius: var(--border-radius-sm);
     }
 
     .site-header__toggle:hover {
-      color: color-mix(in oklch, var(--color-primary) 90%, var(--color-text));
-      background-color: color-mix(in oklch, var(--color-primary) 8%, transparent);
+      color: var(--btn-hover-text);
+      background-color: var(--btn-hover-bg);
+    }
+
+    .site-header__toggle:active {
+      background-color: var(--btn-active-bg);
     }
 
     @media (width >= 768px) {
@@ -213,7 +238,7 @@
       max-inline-size: 100vw;
       block-size: var(--viewport-height);
       background-color: var(--mobile-nav-bg);
-      z-index: 1000;
+      z-index: var(--z-modal);
       display: flex;
       flex-direction: column;
       opacity: 0;
@@ -244,7 +269,7 @@
         grid-column: 1;
         justify-self: start;
         position: relative;
-        z-index: 1;
+        z-index: var(--z-base);
       }
 
       .site-header__nav {
@@ -258,14 +283,14 @@
         opacity: 1;
         visibility: visible;
         position: relative;
-        z-index: 1;
+        z-index: var(--z-base);
       }
 
       .site-header__cta {
         grid-column: 3;
         justify-self: end;
         position: relative;
-        z-index: 100;
+        z-index: var(--z-sticky);
         display: flex !important;
         align-items: center;
       }
@@ -288,7 +313,7 @@
     @media (width >= 768px) {
       .site-header__nav-list {
         flex-direction: row;
-        gap: 1.5rem;
+        gap: var(--spacing);
       }
     }
 
@@ -296,7 +321,7 @@
       font-size: var(--font-base);
       font-weight: 600;
       color: var(--color-text-muted);
-      padding: 1.5rem;
+      padding: var(--spacing);
       border-block-end: var(--border-width) var(--border-style) var(--color-line);
       border-radius: 0;
       display: flex;
@@ -313,9 +338,9 @@
     @media (width >= 768px) {
       .site-header__nav-link {
         font-size: var(--font-sm);
-        padding: 8px 12px;
+        padding: calc(var(--spacing-xs) * 1.6) var(--spacing-md);
         border: none;
-        border-radius: 4px;
+        border-radius: var(--border-radius-sm);
         display: inline-block;
         min-block-size: 44px;
       }
@@ -323,21 +348,25 @@
 
     .site-header__nav-link:hover {
       color: var(--color-text);
-      background-color: color-mix(in oklch, var(--color-primary) 8%, transparent);
+      background-color: var(--btn-hover-bg);
+    }
+
+    .site-header__nav-link:active {
+      background-color: var(--btn-active-bg);
     }
 
     .site-header__cta {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      z-index: 10;
+      gap: var(--spacing-sm);
+      z-index: var(--z-dropdown);
       position: relative;
     }
 
     .site-header__cta-buttons {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: var(--spacing-sm);
     }
 
     @media (width < 768px) {
@@ -346,7 +375,7 @@
       .site-header__cta {
         justify-content: flex-end;
         margin-inline-start: auto;
-        gap: 0.5rem;
+        gap: var(--spacing-xs);
       }
 
       .site-header__cta .site-header__theme-toggle { display: none }
@@ -359,8 +388,8 @@
     .site-header__login-btn {
       font-size: var(--font-sm);
       color: var(--color-text-muted);
-      padding: 6px 12px;
-      border-radius: 4px;
+      padding: calc(var(--spacing-xs) * 1.2) var(--spacing-md);
+      border-radius: var(--border-radius-sm);
       transition: color var(--transition-normal), background-color var(--transition-normal);
       min-block-size: 44px;
       display: inline-flex;
@@ -370,16 +399,20 @@
 
     .site-header__login-btn:hover {
       color: var(--color-text);
-      background-color: color-mix(in oklch, var(--color-primary) 8%, transparent);
+      background-color: var(--btn-hover-bg);
+    }
+
+    .site-header__login-btn:active {
+      background-color: var(--btn-active-bg);
     }
 
     .site-header__signup-btn {
       font-size: var(--font-sm);
       color: var(--color-bg);
       background-color: var(--color-primary);
-      padding: 8px 20px;
-      border-radius: 4px;
-      transition: color var(--transition-normal), background-color var(--transition-normal);
+      padding: calc(var(--spacing-xs) * 1.6) calc(var(--spacing-md) * 1.667);
+      border-radius: var(--border-radius-sm);
+      transition: color var(--transition-normal), background-color var(--transition-normal), transform var(--transition-fast);
       min-block-size: 44px;
       display: inline-flex;
       align-items: center;
@@ -387,7 +420,13 @@
     }
 
     .site-header__signup-btn:hover {
-      background-color: color-mix(in oklch, var(--color-primary-hover) 80%, var(--color-primary));
+      background-color: var(--color-primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .site-header__signup-btn:active {
+      filter: brightness(0.9);
+      transform: translateY(0);
     }
 
     .site-header__theme-toggle {
@@ -400,17 +439,21 @@
       padding: 0;
       color: var(--color-text);
       transition: color var(--transition-normal), background-color var(--transition-normal);
-      border-radius: 4px;
+      border-radius: var(--border-radius-sm);
       inline-size: 2.75rem;
       block-size: 2.75rem;
       touch-action: manipulation;
-      z-index: 10;
+      z-index: var(--z-dropdown);
       position: relative;
     }
 
     .site-header__theme-toggle:hover {
-      color: color-mix(in oklch, var(--color-primary) 90%, var(--color-text));
-      background-color: color-mix(in oklch, var(--color-primary) 8%, transparent);
+      color: var(--btn-hover-text);
+      background-color: var(--btn-hover-bg);
+    }
+
+    .site-header__theme-toggle:active {
+      background-color: var(--btn-active-bg);
     }
 
     .mobile-menu__header {
@@ -421,7 +464,7 @@
       border-block-end: var(--border-width) var(--border-style) var(--color-line);
       block-size: var(--header-height);
       flex-shrink: 0;
-      gap: 0.5rem;
+      gap: var(--spacing-xs);
     }
 
     @media (width >= 768px) {
@@ -433,7 +476,7 @@
     .mobile-menu__controls {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: var(--spacing-xs);
       flex-shrink: 0;
     }
 
@@ -451,7 +494,7 @@
       padding: 0;
       color: var(--color-text);
       transition: color var(--transition-normal), background-color var(--transition-normal);
-      border-radius: 4px;
+      border-radius: var(--border-radius-sm);
       inline-size: 2.75rem;
       block-size: 2.75rem;
       touch-action: manipulation;
@@ -459,8 +502,12 @@
     }
 
     .mobile-menu__close-button:hover {
-      color: color-mix(in oklch, var(--color-primary) 90%, var(--color-text));
-      background-color: color-mix(in oklch, var(--color-primary) 8%, transparent);
+      color: var(--btn-hover-text);
+      background-color: var(--btn-hover-bg);
+    }
+
+    .mobile-menu__close-button:active {
+      background-color: var(--btn-active-bg);
     }
 
     @media (width >= 768px) {
@@ -484,7 +531,7 @@
       border-block-start: var(--border-width) var(--border-style) var(--color-line);
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: var(--spacing-sm);
       flex-shrink: 0;
       position: sticky;
       inset-block-end: 0;
@@ -498,8 +545,8 @@
     .mobile-menu__login-btn {
       font-size: var(--font-sm);
       color: var(--color-text-muted);
-      padding: 12px 16px;
-      border-radius: 4px;
+      padding: var(--spacing-md) calc(var(--spacing-md) * 1.333);
+      border-radius: var(--border-radius-sm);
       display: block;
       text-align: center;
       transition: color var(--transition-normal), background-color var(--transition-normal);
@@ -512,18 +559,22 @@
 
     .mobile-menu__login-btn:hover {
       color: var(--color-text);
-      background-color: color-mix(in oklch, var(--color-primary) 8%, transparent);
+      background-color: var(--btn-hover-bg);
+    }
+
+    .mobile-menu__login-btn:active {
+      background-color: var(--btn-active-bg);
     }
 
     .mobile-menu__signup-btn {
       font-size: var(--font-sm);
       color: var(--color-bg);
       background-color: var(--color-primary);
-      padding: 12px 16px;
-      border-radius: 4px;
+      padding: var(--spacing-md) calc(var(--spacing-md) * 1.333);
+      border-radius: var(--border-radius-sm);
       display: block;
       text-align: center;
-      transition: color var(--transition-normal), background-color var(--transition-normal);
+      transition: color var(--transition-normal), background-color var(--transition-normal), transform var(--transition-fast);
       inline-size: 100%;
       white-space: nowrap;
       min-block-size: 44px;
@@ -531,7 +582,13 @@
     }
 
     .mobile-menu__signup-btn:hover {
-      background-color: color-mix(in oklch, var(--color-primary-hover) 80%, var(--color-primary));
+      background-color: var(--color-primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .mobile-menu__signup-btn:active {
+      filter: brightness(0.9);
+      transform: translateY(0);
     }
 
     .site-main {
@@ -558,12 +615,12 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding-block: 3rem;
+      padding-block: calc(var(--spacing) * 2);
       padding-inline: var(--spacing);
     }
 
     @media (width >= 480px) {
-      .section { padding-block: 3.5rem }
+      .section { padding-block: calc(var(--spacing) * 2.333) }
     }
 
     @media (width >= 768px) {
@@ -574,14 +631,14 @@
     }
 
     @media (width >= 1240px) {
-      .section { padding-block: 4rem; padding-inline: var(--spacing) }
+      .section { padding-block: calc(var(--spacing) * 2.667); padding-inline: var(--spacing) }
     }
 
     .section__title {
       font-size: 1.5rem;
       font-weight: 700;
       line-height: 1.2;
-      margin-block-end: 1rem;
+      margin-block-end: var(--spacing-md);
       color: var(--color-text);
     }
 
@@ -612,7 +669,7 @@
 
     .divider {
       position: relative;
-      z-index: 10;
+      z-index: var(--z-dropdown);
     }
 
     .divider__axis {
@@ -726,7 +783,7 @@
     .site-footer { inline-size: 100% }
 
     .site-footer__main {
-      padding-block: 2rem 1.5rem;
+      padding-block: calc(var(--spacing) * 1.333) var(--spacing);
       padding-inline: var(--spacing);
       max-inline-size: var(--max-width);
       margin-inline: auto;
@@ -737,11 +794,11 @@
     }
 
     @media (width >= 480px) {
-      .site-footer__main { padding-block: 2.5rem 1.75rem }
+      .site-footer__main { padding-block: calc(var(--spacing) * 1.667) calc(var(--spacing) * 1.167) }
     }
 
     @media (width >= 768px) {
-      .site-footer__main { padding-block: 3rem 2rem }
+      .site-footer__main { padding-block: calc(var(--spacing) * 2) calc(var(--spacing) * 1.333) }
     }
 
     @media (width >= 1240px) {
@@ -753,12 +810,12 @@
     .site-footer__grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1.5rem;
+      gap: var(--spacing);
     }
 
     @media (width >= 480px) {
       .site-footer__grid {
-        gap: 2rem;
+        gap: var(--spacing-lg);
       }
     }
 
@@ -786,7 +843,7 @@
       color: var(--color-text-muted);
       max-inline-size: 300px;
       line-height: 1.7;
-      margin-block-start: 0.5rem;
+      margin-block-start: var(--spacing-xs);
     }
 
     .site-footer__section { display: flex; flex-direction: column }
@@ -796,13 +853,13 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-block-end: 1rem;
+      margin-block-end: var(--spacing-md);
       color: var(--color-text);
     }
 
     .site-footer__links { list-style: none }
 
-    .site-footer__links li { margin-block-end: 0.5rem }
+    .site-footer__links li { margin-block-end: var(--spacing-xs) }
 
     .site-footer__link {
       font-size: var(--font-sm);
@@ -812,6 +869,7 @@
     }
 
     .site-footer__link:hover { color: var(--color-text) }
+    .site-footer__link:active { color: var(--btn-hover-text); filter: brightness(0.8) }
 
     .site-footer__separator {
       inline-size: 100%;
@@ -822,7 +880,7 @@
       inline-size: 100%;
       max-inline-size: var(--max-width);
       margin-inline: auto;
-      padding: 0.75rem var(--spacing);
+      padding: calc(var(--spacing-xs) * 1.5) var(--spacing);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -831,7 +889,7 @@
     }
 
     @media (width >= 768px) {
-      .site-footer__meta { padding: 1rem var(--spacing) }
+      .site-footer__meta { padding: var(--spacing-md) var(--spacing) }
     }
 
     @media (width < 1240px) {
@@ -851,84 +909,111 @@
 
     .scroll-top {
       position: fixed;
-      inset-block-end: 1.5rem;
-      inset-inline-end: 1.5rem;
+      inset-block-end: var(--spacing);
+      inset-inline-end: var(--spacing);
       inline-size: 2.75rem;
       block-size: 2.75rem;
       background-color: var(--color-primary);
       color: var(--color-bg);
       border: none;
-      border-radius: 4px;
+      border-radius: var(--border-radius-sm);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
       visibility: hidden;
-      transition: color var(--transition-normal), background-color var(--transition-normal), transform var(--transition-fast);
-      z-index: 99;
+      transition: color var(--transition-normal), background-color var(--transition-normal), transform var(--transition-fast), opacity var(--transition-normal), visibility var(--transition-normal);
+      z-index: var(--z-fixed);
       font-size: 1.25rem;
     }
 
-    .scroll-top.visible { opacity: 1; visibility: visible }
+    .scroll-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
 
     .scroll-top:hover {
-      background-color: color-mix(in oklch, var(--color-primary-hover) 60%, var(--color-primary));
+      background-color: var(--color-primary-hover);
       transform: translateY(-2px);
+    }
+
+    .scroll-top:active {
+      filter: brightness(0.9);
+      transform: translateY(-1px);
     }
 
     .text-center { text-align: center }
     .text-start { text-align: start }
     .text-end { text-align: end }
 
-    .mb-1 { margin-block-end: 0.5rem }
-    .mb-2 { margin-block-end: 1rem }
-    .mb-3 { margin-block-end: 1.5rem }
-    .mb-4 { margin-block-end: 2rem }
+    .mb-1 { margin-block-end: var(--spacing-xs) }
+    .mb-2 { margin-block-end: var(--spacing-md) }
+    .mb-3 { margin-block-end: var(--spacing) }
+    .mb-4 { margin-block-end: var(--spacing-lg) }
 
-    .mt-1 { margin-block-start: 0.5rem }
-    .mt-2 { margin-block-start: 1rem }
-    .mt-3 { margin-block-start: 1.5rem }
-    .mt-4 { margin-block-start: 2rem }
+    .mt-1 { margin-block-start: var(--spacing-xs) }
+    .mt-2 { margin-block-start: var(--spacing-md) }
+    .mt-3 { margin-block-start: var(--spacing) }
+    .mt-4 { margin-block-start: var(--spacing-lg) }
 
     .flex { display: flex }
     .flex-col { flex-direction: column }
     .items-center { align-items: center }
     .justify-center { justify-content: center }
-    .gap-2 { gap: 0.5rem }
-    .gap-4 { gap: 1rem }
+    .gap-2 { gap: var(--spacing-xs) }
+    .gap-4 { gap: var(--spacing-md) }
 
-    .section__cta { margin-block-start: 1.5rem }
+    .section__cta { margin-block-start: var(--spacing) }
 
     .section__cta--btn {
-      padding: 12px 24px;
+      padding: var(--spacing-md) calc(var(--spacing-md) * 2);
       font-size: var(--font-base);
-      margin-block-start: 1rem;
+      margin-block-start: var(--spacing-md);
+      transition: color var(--transition-normal), background-color var(--transition-normal), transform var(--transition-fast);
+    }
+
+    .section__cta--btn:hover {
+      background-color: var(--color-primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .section__cta--btn:active {
+      filter: brightness(0.9);
+      transform: translateY(0);
     }
 
     @media (width >= 768px) {
-      .section__cta { margin-block-start: 2rem }
+      .section__cta { margin-block-start: var(--spacing-lg) }
     }
     
     .theme-icon--sun { display: block }
     .theme-icon--moon { display: none }
 
     [data-theme="dark"] {
-      --color-bg: oklch(5% 0 0) !important;
-      --color-text: oklch(96% 0 0) !important;
-      --color-text-muted: oklch(65% 0 0) !important;
-      --color-primary: oklch(90% 0 0) !important;
-      --color-line: oklch(20% 0 0) !important;
-      --mobile-nav-bg: oklch(8% 0 0) !important;
+      --color-bg: oklch(5% 0 0);
+      --color-text: oklch(96% 0 0);
+      --color-text-muted: oklch(65% 0 0);
+      --color-primary: oklch(90% 0 0);
+      --color-primary-hover: oklch(100% 0 0);
+      --color-line: oklch(20% 0 0);
+      --mobile-nav-bg: oklch(8% 0 0);
+      --btn-hover-bg: oklch(25% 0 0);
+      --btn-active-bg: oklch(35% 0 0);
+      --btn-hover-text: oklch(100% 0 0);
     }
 
     [data-theme="light"] {
-      --color-bg: oklch(99% 0 0) !important;
-      --color-text: oklch(20% 0 0) !important;
-      --color-text-muted: oklch(45% 0 0) !important;
-      --color-primary: oklch(15% 0 0) !important;
-      --color-line: oklch(89% 0 0) !important;
-      --mobile-nav-bg: oklch(99% 0 0) !important;
+      --color-bg: oklch(99% 0 0);
+      --color-text: oklch(20% 0 0);
+      --color-text-muted: oklch(45% 0 0);
+      --color-primary: oklch(15% 0 0);
+      --color-primary-hover: oklch(5% 0 0);
+      --color-line: oklch(89% 0 0);
+      --mobile-nav-bg: oklch(99% 0 0);
+      --btn-hover-bg: oklch(92% 0 0);
+      --btn-active-bg: oklch(88% 0 0);
+      --btn-hover-text: oklch(20% 0 0);
     }
 
     @media (prefers-color-scheme: dark) {
@@ -937,19 +1022,23 @@
         --color-text: oklch(96% 0 0);
         --color-text-muted: oklch(65% 0 0);
         --color-primary: oklch(90% 0 0);
+        --color-primary-hover: oklch(100% 0 0);
         --color-line: oklch(20% 0 0);
         --mobile-nav-bg: oklch(8% 0 0);
+        --btn-hover-bg: oklch(25% 0 0);
+        --btn-active-bg: oklch(35% 0 0);
+        --btn-hover-text: oklch(100% 0 0);
       }
 
       :root:not([data-theme]) .theme-icon--sun { display: none }
       :root:not([data-theme]) .theme-icon--moon { display: block }
     }
 
-    [data-theme="dark"] .theme-icon--sun { display: none !important }
-    [data-theme="dark"] .theme-icon--moon { display: block !important }
+    [data-theme="dark"] .theme-icon--sun { display: none }
+    [data-theme="dark"] .theme-icon--moon { display: block }
 
-    [data-theme="light"] .theme-icon--sun { display: block !important }
-    [data-theme="light"] .theme-icon--moon { display: none !important }
+    [data-theme="light"] .theme-icon--sun { display: block }
+    [data-theme="light"] .theme-icon--moon { display: none }
   </style>
 
   <!-- JSON-LD Structured Data -->
@@ -959,7 +1048,7 @@
     "@type": "WebSite",
     "name": "Frameless",
     "url": "https://yoursite.com/",
-    "description": "Single-file HTML template. Build production websites in minutes with dark mode, responsive design, and zero dependencies.",
+    "description": "Single-file HTML template with dark mode, responsive design, and accessibility built-in. Zero dependencies, no setup required.",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://yoursite.com/search?q={search_term_string}",
@@ -1049,7 +1138,7 @@
 
   <main class="site-main" id="main-content">
     <section class="section" id="section-1">
-      <h1 class="section__title">Launch Production Websites in Minutes</h1>
+      <h1 class="section__title">Launch Production Websites Fast</h1>
       <p class="section__content">Single-file HTML template. Dark mode, responsive design, accessibility built-in. No setup, no dependencies—just download and start building.</p>
       <div class="section__cta">
         <a href="https://github.com/yourusername/frameless" class="site-header__signup-btn section__cta--btn">Get the Template</a>
@@ -1074,7 +1163,7 @@
 
     <section class="section" id="section-2">
       <h2 class="section__title">Built for Launch</h2>
-      <p class="section__content">Works perfectly on every device. Includes sticky navigation, automatic dark mode, and accessibility features out of the box. Smooth animations and scroll-to-top create a polished experience—no code required.</p>
+      <p class="section__content">Works on every device. Includes sticky navigation, automatic dark mode, and accessibility features out of the box. Smooth animations and scroll-to-top create a polished experience.</p>
     </section>
 
     <div class="divider" aria-hidden="true">
@@ -1094,8 +1183,8 @@
     </div>
 
     <section class="section" id="section-3">
-      <h2 class="section__title">Skip the Framework Headaches</h2>
-      <p class="section__content">Stop wrestling with complex build tools and bloated dependencies. Frameless gives you everything you need—nothing more. Customize colors, fonts, and spacing by editing CSS variables in one place. Perfect for landing pages, portfolios, and documentation sites that need to go live fast.</p>
+      <h2 class="section__title">Simple by Design</h2>
+      <p class="section__content">Everything you need to launch—nothing you don't. Customize colors, fonts, and spacing by editing CSS variables in one place. Perfect for landing pages, portfolios, and documentation sites.</p>
     </section>
 
     <div class="divider" aria-hidden="true">
@@ -1116,7 +1205,7 @@
 
     <section class="section" id="section-4">
       <h2 class="section__title">Start Building Now</h2>
-      <p class="section__content">Download the template. Copy the file. Start building. No setup, no installation, no learning curve.</p>
+      <p class="section__content">Download the template. Copy the file. Start building. No setup, no installation.</p>
       <div class="section__cta">
         <a href="https://github.com/yourusername/frameless" class="site-header__signup-btn section__cta--btn">Download Free</a>
       </div>
@@ -1326,13 +1415,20 @@
     };
 
     const init = () => {
+      typeof lucide !== 'undefined' && lucide.createIcons();
+      
       setTheme(getTheme());
       DOM.themeToggles.forEach(toggle => toggle.addEventListener('click', toggleTheme));
       setupMobileMenu();
       setupScrollButton();
       setupDividers();
       setupSmoothScroll();
-      typeof lucide !== 'undefined' && lucide.createIcons();
+
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'theme') {
+          setTheme(e.newValue ?? getTheme());
+        }
+      });
     };
 
     init();
