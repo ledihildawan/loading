@@ -301,10 +301,6 @@
       pointer-events: auto;
     }
 
-    @supports not (height: 100dvh) {
-      .site-header__nav { block-size: 100vh }
-    }
-
     @media (width >= 768px) {
       .site-header__content {
         display: grid;
@@ -1320,21 +1316,11 @@
       closeBtn: document.querySelector('.mobile-menu__close-button'),
       scrollBtn: document.querySelector('.scroll-top'),
       dividers: document.querySelectorAll('.divider'),
-      navLinks: document.querySelectorAll('.site-header__nav-link, .mobile-menu__login-btn, .mobile-menu__signup-btn'),
-      themeToggles: document.querySelectorAll('.site-header__theme-toggle'),
     });
 
     const THEMES = Object.freeze({ LIGHT: 'light', DARK: 'dark' });
     const SCROLL_THRESHOLD = 300;
     const FOCUS_DELAY = 100;
-
-    const debounce = (fn, wait) => {
-      let timeout;
-      return (...args) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => fn(...args), wait);
-      };
-    };
 
     const getTheme = () => {
       const savedTheme = localStorage.getItem('theme');
@@ -1381,7 +1367,6 @@
         DOM.menuToggle?.setAttribute('aria-expanded', 'true');
         DOM.nav?.setAttribute('aria-expanded', 'true');
         globalThis.focusTrapCleanup = trapFocus(DOM.nav);
-        setTimeout(() => DOM.closeBtn?.focus(), FOCUS_DELAY);
       } catch (error) {
         console.warn('Error opening mobile menu:', error);
       }
@@ -1394,8 +1379,6 @@
 
         globalThis.focusTrapCleanup?.();
         globalThis.focusTrapCleanup = null;
-
-        setTimeout(() => DOM.menuToggle?.focus(), FOCUS_DELAY);
       } catch (error) {
         console.warn('Error closing mobile menu:', error);
       }
@@ -1405,43 +1388,33 @@
       DOM.nav?.hasAttribute('aria-expanded') ? closeMobileMenu() : openMobileMenu();
     };
 
-    const setupMobileMenu = () => {
-      DOM.menuToggle?.addEventListener('click', toggleMobileMenu);
-      DOM.closeBtn?.addEventListener('click', closeMobileMenu);
-
-      document.addEventListener('click', (e) => {
-        const isNavLink = e.target.closest('.site-header__nav-link, .mobile-menu__login-btn, .mobile-menu__signup-btn');
-        const isNavOverlay = e.target === DOM.nav;
-
-        (isNavLink || isNavOverlay) && closeMobileMenu();
-      });
-
-      document.addEventListener('keydown', (e) => {
-        e.key === 'Escape' && DOM.nav?.hasAttribute('aria-expanded') && closeMobileMenu();
-      });
-    };
-
     const setupScrollButton = () => {
-      if (!DOM.scrollBtn) return;
+      let ticking = false;
+      const handleScroll = () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            DOM.scrollBtn.classList.toggle('visible', globalThis.scrollY > SCROLL_THRESHOLD);
 
-      const handleScroll = debounce(() => {
-        DOM.scrollBtn.classList.toggle('visible', globalThis.scrollY > SCROLL_THRESHOLD);
-      }, 16);
+            ticking = false;
+          });
+
+          ticking = true;
+        }
+      };
 
       globalThis.addEventListener('scroll', handleScroll, { passive: true });
-      DOM.scrollBtn.addEventListener('click', () => globalThis.scrollTo({ top: 0, behavior: 'smooth' }));
+
+      DOM.scrollBtn.addEventListener('click', (e) => {
+        globalThis.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     };
 
     const setupDividers = () => {
       const observer = new IntersectionObserver((entries) => {
-        for (const entry of entries) {
-          entry.isIntersecting && entry.target.classList.add('in-view');
-        }
+        entries.forEach(entry => entry.isIntersecting && entry.target.classList.add('in-view'));
       }, { threshold: 0.5 });
 
-      for (const divider of DOM.dividers) {
-        observer.observe(divider);
-      }
+      DOM.dividers.forEach(divider => observer.observe(divider));
     };
 
     const setupSmoothScroll = () => {
@@ -1466,37 +1439,49 @@
       DOM.skipLink.addEventListener('click', (e) => {
         e.preventDefault();
 
-        const mainContent = document.querySelector('#main-content');
-        if (mainContent) {
-          const focusableElements = mainContent.querySelectorAll(
-            'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
-          );
+        const focusableElements = DOM.mainContent?.querySelectorAll(
+          'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
 
-          if (focusableElements.length > 0) {
-            setTimeout(() => focusableElements[0].focus(), FOCUS_DELAY);
-          } else {
-            const h1 = mainContent.querySelector('h1');
-            if (h1) {
-              setTimeout(() => h1.focus(), FOCUS_DELAY);
-            }
-          }
+        if (focusableElements?.length > 0) {
+          setTimeout(() => focusableElements[0].focus(), FOCUS_DELAY);
+        } else {
+          const h1 = DOM.mainContent?.querySelector('h1');
+          h1 && setTimeout(() => h1.focus(), FOCUS_DELAY);
         }
       });
 
       DOM.skipLink.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          e.preventDefault();
-          DOM.skipLink.blur();
-        }
+        e.key === 'Escape' && (e.preventDefault(), DOM.skipLink.blur());
       });
     };
 
     const init = () => {
-      typeof lucide !== 'undefined' && lucide.createIcons();
+      lucide.createIcons();
 
       setTheme(getTheme());
-      DOM.themeToggles.forEach(toggle => toggle.addEventListener('click', toggleTheme));
-      setupMobileMenu();
+
+      document.addEventListener('click', (e) => {
+        const themeToggle = e.target.closest('.site-header__theme-toggle');
+        const menuToggle = e.target.closest('.site-header__toggle');
+        const closeBtn = e.target.closest('.mobile-menu__close-button');
+
+        (themeToggle || menuToggle || closeBtn) && e.preventDefault();
+
+        themeToggle && toggleTheme();
+        menuToggle && toggleMobileMenu();
+        closeBtn && closeMobileMenu();
+
+        if (DOM.nav?.hasAttribute('aria-expanded')) {
+          const isNavOverlay = e.target === DOM.nav;
+          isNavOverlay && closeMobileMenu();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        e.key === 'Escape' && DOM.nav?.hasAttribute('aria-expanded') && closeMobileMenu();
+      });
+
       setupScrollButton();
       setupDividers();
       setupSmoothScroll();
