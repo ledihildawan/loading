@@ -65,10 +65,10 @@
       --header-height: 64px;
       --viewport-height: 100dvh;
 
-      --font-xs: 0.75rem;
-      --font-sm: 0.875rem;
-      --font-base: 1rem;
-      --font-xl: 2rem;
+      --font-xs: clamp(0.7rem, 0.625rem + 0.375vw, 0.75rem);
+      --font-sm: clamp(0.8125rem, 0.734375rem + 0.390625vw, 0.875rem);
+      --font-base: clamp(0.9375rem, 0.84375rem + 0.46875vw, 1rem);
+      --font-xl: clamp(1.75rem, 1.40625rem + 1.71875vw, 2rem);
 
       --border-width: 1px;
       --border-style: dashed;
@@ -266,10 +266,10 @@
       padding: 0;
       color: var(--color-text);
       transition: color var(--transition-normal), background-color var(--transition-normal);
+      border-radius: var(--border-radius-sm);
       inline-size: 2.75rem;
       block-size: 2.75rem;
       touch-action: manipulation;
-      border-radius: var(--border-radius-sm);
     }
 
     .site-header__toggle:hover {
@@ -403,6 +403,7 @@
       pointer-events: auto;
       cursor: pointer;
       position: relative;
+      contain: layout style;
     }
 
     @media (width >= 768px) {
@@ -687,6 +688,8 @@
       text-align: center;
       padding-block: calc(var(--spacing) * 2);
       padding-inline: var(--spacing);
+      content-visibility: auto;
+      contain-intrinsic-size: 50vh;
     }
 
     @media (width >= 480px) {
@@ -814,8 +817,14 @@
       100% { inset-inline-start: 100%; inline-size: 90%; opacity: 1 }
     }
 
-    .divider.in-view .divider__bar--left { animation: slideLeft 2s cubic-bezier(0.4, 0, 1, 1) forwards }
-    .divider.in-view .divider__bar--right { animation: slideRight 2s cubic-bezier(0.4, 0, 1, 1) forwards }
+    .divider.in-view .divider__bar--left { 
+      animation: slideLeft 2s cubic-bezier(0.4, 0, 1, 1) forwards;
+      will-change: inset-inline-end, inline-size, opacity;
+    }
+    .divider.in-view .divider__bar--right { 
+      animation: slideRight 2s cubic-bezier(0.4, 0, 1, 1) forwards;
+      will-change: inset-inline-start, inline-size, opacity;
+    }
 
     .divider__symbol {
       position: absolute;
@@ -996,6 +1005,7 @@
       transition: color var(--transition-normal), background-color var(--transition-normal), opacity var(--transition-normal), visibility var(--transition-normal);
       z-index: var(--z-fixed);
       font-size: 1.25rem;
+      will-change: opacity, visibility;
     }
 
     .scroll-top.visible {
@@ -1445,16 +1455,22 @@
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
       const [firstFocusable] = focusableElements;
-      const lastFocusable = focusableElements[focusableElements.length - 1];
+      const lastFocusable = focusableElements.at(-1);
 
       const handleKeyDown = (e) => {
         if (e.key !== 'Tab') return;
 
-        const shouldMoveToFirst = e.shiftKey && document.activeElement === firstFocusable;
-        const shouldMoveToLast = !e.shiftKey && document.activeElement === lastFocusable;
+        const { activeElement } = document;
+        const shouldMoveToFirst = e.shiftKey && activeElement === firstFocusable;
+        const shouldMoveToLast = !e.shiftKey && activeElement === lastFocusable;
 
-        shouldMoveToFirst && (e.preventDefault(), lastFocusable.focus());
-        shouldMoveToLast && (e.preventDefault(), firstFocusable.focus());
+        if (shouldMoveToFirst) {
+          e.preventDefault();
+          lastFocusable?.focus();
+        } else if (shouldMoveToLast) {
+          e.preventDefault();
+          firstFocusable?.focus();
+        }
       };
 
       element.addEventListener('keydown', handleKeyDown, { signal });
@@ -1512,37 +1528,36 @@
       };
 
       const handleIntersection = (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in-view');
-            setTimeout(() => observer.unobserve(entry.target), ANIMATION_TIMEOUT);
+        for (const { target, isIntersecting } of entries) {
+          if (isIntersecting) {
+            target.classList.add('in-view');
+            setTimeout(() => observer.unobserve(target), ANIMATION_TIMEOUT);
           }
-        });
+        }
       };
 
       const observer = new IntersectionObserver(handleIntersection, observerOptions);
       observers.add(observer);
 
-      DOM.dividers.forEach(divider => observer.observe(divider));
+      for (const divider of DOM.dividers) {
+        observer.observe(divider);
+      }
     };
 
     const setupActiveNavigation = () => {
-      const sections = document.querySelectorAll('.section');
+      const sections = [...document.querySelectorAll('.section')];
+      const navLinks = [...DOM.navLinks];
       const THRESHOLD = 40;
 
       const updateActiveSection = () => {
         let activeSection = null;
         let maxVisiblePercent = 0;
-        const windowHeight = globalThis.innerHeight;
+        const { innerHeight } = globalThis;
 
-        for (let i = 0; i < sections.length; i++) {
-          const section = sections[i];
-          const rect = section.getBoundingClientRect();
-          
-          const top = Math.max(0, rect.top);
-          const bottom = Math.min(windowHeight, rect.bottom);
-          const visibleHeight = Math.max(0, bottom - top);
-          const visiblePercent = (visibleHeight / rect.height) * 100;
+        for (const section of sections) {
+          const { top, bottom, height } = section.getBoundingClientRect();
+          const visibleHeight = Math.max(0, Math.min(innerHeight, bottom) - Math.max(0, top));
+          const visiblePercent = (visibleHeight / height) * 100;
           
           if (visiblePercent > maxVisiblePercent && visiblePercent >= THRESHOLD) {
             maxVisiblePercent = visiblePercent;
@@ -1550,31 +1565,17 @@
           }
         }
 
-        if (activeSection) {
-          if (activeSection.id !== state.activeSection) {
-            state.activeSection = activeSection.id;
-            const activeHref = `#${activeSection.id}`;
-            
-            for (let i = 0; i < DOM.navLinks.length; i++) {
-              const link = DOM.navLinks[i];
-              const href = link.getAttribute('href');
-              const isActive = href === activeHref;
-              
-              if (link.classList.contains('site-header__nav-link--active') !== isActive) {
-                link.classList.toggle('site-header__nav-link--active', isActive);
-                link.setAttribute('aria-current', isActive ? 'page' : 'false');
-              }
-            }
-          }
-        } else if (state.activeSection !== null) {
-          state.activeSection = null;
+        const activeId = activeSection?.id ?? null;
+        
+        if (activeId !== state.activeSection) {
+          state.activeSection = activeId;
           
-          for (let i = 0; i < DOM.navLinks.length; i++) {
-            const link = DOM.navLinks[i];
+          for (const link of navLinks) {
+            const isActive = link.getAttribute('href') === `#${activeId}`;
             
-            if (link.classList.contains('site-header__nav-link--active')) {
-              link.classList.remove('site-header__nav-link--active');
-              link.setAttribute('aria-current', 'false');
+            if (link.classList.contains('site-header__nav-link--active') !== isActive) {
+              link.classList.toggle('site-header__nav-link--active', isActive);
+              link.setAttribute('aria-current', isActive ? 'page' : 'false');
             }
           }
         }
@@ -1592,7 +1593,6 @@
       };
 
       globalThis.addEventListener('scroll', handleScroll, { passive: true });
-      
       updateActiveSection();
     };
 
@@ -1617,52 +1617,50 @@
     };
 
     const setupSkipLink = () => {
-      if (!DOM.skipLink) return;
+      const { skipLink, mainContent } = DOM;
+      if (!skipLink) return;
 
-      DOM.skipLink.addEventListener('click', (e) => {
+      skipLink.addEventListener('click', (e) => {
         e.preventDefault();
 
-        const focusableElements = DOM.mainContent?.querySelectorAll(
+        const focusableElements = mainContent?.querySelectorAll(
           'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
         );
 
-        if (focusableElements?.length > 0) {
-          setTimeout(() => focusableElements[0].focus(), FOCUS_DELAY);
-        } else {
-          const h1 = DOM.mainContent?.querySelector('h1');
-          h1 && setTimeout(() => h1.focus(), FOCUS_DELAY);
-        }
+        const target = focusableElements?.[0] ?? mainContent?.querySelector('h1');
+        target?.focus({ preventScroll: true });
       }, { signal });
 
-      DOM.skipLink.addEventListener('keydown', (e) => {
-        e.key === 'Escape' && (e.preventDefault(), DOM.skipLink.blur());
+      skipLink.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          skipLink.blur();
+        }
       }, { signal });
     };
 
     const handleKeydown = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      const { key, metaKey, ctrlKey } = e;
+      
+      if ((metaKey || ctrlKey) && key === 'k') {
         e.preventDefault();
         toggleTheme();
       }
-      if (e.key === 'Escape' && state.isMobileMenuOpen) {
+      
+      if (key === 'Escape' && state.isMobileMenuOpen) {
         closeMobileMenu();
       }
     };
 
     const handleClick = (e) => {
-      const themeToggle = e.target.closest('.site-header__theme-toggle');
-      const menuToggle = e.target.closest('.site-header__toggle');
-      const closeBtn = e.target.closest('.mobile-menu__close-button');
-      const scrollBtn = e.target.closest('.scroll-top');
-
-      if (themeToggle) toggleTheme();
-      if (menuToggle) toggleMobileMenu();
-      if (closeBtn) closeMobileMenu();
-      if (scrollBtn) handleScrollToTop();
-
-      if (state.isMobileMenuOpen && e.target === DOM.nav) {
-        closeMobileMenu();
-      }
+      const target = e.target;
+      const { isMobileMenuOpen } = state;
+      
+      if (target.closest('.site-header__theme-toggle')) toggleTheme();
+      if (target.closest('.site-header__toggle')) toggleMobileMenu();
+      if (target.closest('.mobile-menu__close-button')) closeMobileMenu();
+      if (target.closest('.scroll-top')) handleScrollToTop();
+      if (isMobileMenuOpen && target === DOM.nav) closeMobileMenu();
     };
 
     const setupPerformanceMonitoring = () => {
@@ -1684,29 +1682,28 @@
 
     const cleanup = () => {
       controller.abort();
-      observers.forEach(observer => observer.disconnect());
+      for (const observer of observers) {
+        observer.disconnect();
+      }
       observers.clear();
     };
 
     const init = () => {
       lucide.createIcons();
-
       setTheme(getTheme());
 
+      const { signal } = controller;
       globalThis.addEventListener('scroll', handleScroll, { passive: true, signal });
       document.addEventListener('click', handleClick, { capture: true, signal });
       document.addEventListener('keydown', handleKeydown, { signal });
       globalThis.addEventListener('storage', (e) => {
-        if (e.key === 'theme') {
-          setTheme(e.newValue ?? getTheme());
-        }
+        e.key === 'theme' && setTheme(e.newValue ?? getTheme());
       }, { signal });
 
       setupDividers();
       setupActiveNavigation();
       setupSkipLink();
       setupPerformanceMonitoring();
-
       globalThis.addEventListener('beforeunload', cleanup, { signal });
     };
 
