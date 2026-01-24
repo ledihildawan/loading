@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>LH LOADER — Architectural Authority v156</title>
+    <title>LH LOADER — The Art of Perceived Performance</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css">
     
@@ -13,12 +13,17 @@
 
     <style>
         /* ==========================================================================
-           1. CORE DESIGN SYSTEM (OKLCH) — BASE CHECKPOINT v153/v154
+           1. CORE DESIGN SYSTEM (OKLCH)
            ========================================================================== */
         :root {
+            /* Warna Dasar untuk Loader & Kontrol */
             --lh-color-base: 100% 0 0; 
-            --accent-1: oklch(60% 0.15 260); 
-            --accent-2: oklch(55% 0.15 200); 
+            
+            /* Logo Tetap Putih (Static) */
+            --logo-color: oklch(100% 0 0);
+
+            --accent-1: oklch(60% 0.15 120);
+            --accent-2: oklch(60% 0.15 240);
             --lh-glow-spread: 45px;
             --lh-glow-opacity: 0.6;
             --bg-page: oklch(12% 0.01 260);
@@ -29,7 +34,9 @@
             --glass-highlight: oklch(100% 0 0 / 0.15);
             --display-area-bg: rgba(0,0,0,0.25);
             --blob-opacity: 0.4;
-            --btn-bg: oklch(100% 0 0);
+
+            /* Button Color (Dynamic - Mengikuti lh-color-base) */
+            --btn-bg: oklch(var(--lh-color-base));
             --btn-text: oklch(0% 0 0);
         }
 
@@ -41,7 +48,8 @@
             --glass-border: oklch(0% 0 260 / 0.08);
             --display-area-bg: oklch(0% 0 0 / 0.04);
             --blob-opacity: 0.25;
-            --btn-bg: oklch(15% 0.02 260);
+            
+            /* Pada light mode, teks tombol otomatis menyesuaikan kontras */
             --btn-text: oklch(100% 0 0);
         }
 
@@ -55,7 +63,6 @@
             --gl-swoosh-color: oklch(from oklch(var(--lh-color-base)) calc(l + 0.5) c h);
         }
 
-        /* RESET OVERRIDES FOR MODERN NORMALIZE */
         body { 
             background-color: var(--bg-page); 
             color: var(--text-body); 
@@ -73,20 +80,22 @@
         .blob-2 { bottom: -15%; right: -5%; width: 65vw; height: 65vw; background: var(--accent-2); }
 
         /* ==========================================================================
-           2. BRAND IDENTITY (MONOGRAM SVG v143 + FLUID RESET)
+           2. BRAND IDENTITY (Logo Tetap Putih)
            ========================================================================== */
         .brand-container { display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; margin: 0; }
         .lh-logo-svg { height: 34px; width: 34px; transition: filter 0.4s ease; }
         .lh-logo-path { 
-            fill: none; stroke: oklch(var(--lh-color-base)); stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; 
+            fill: none; 
+            stroke: var(--logo-color); 
+            stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; 
             stroke-dasharray: 100, 100; stroke-dashoffset: 0; transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); 
         }
         .brand-container:hover .lh-logo-path { stroke-dasharray: 25, 100; stroke-dashoffset: -12; }
-        .brand-container:hover .lh-logo-svg { filter: drop-shadow(0 0 10px oklch(var(--lh-color-base) / 0.6)); }
-        .brand-text { font-weight: 800; font-size: clamp(0.7rem, 2vw, 0.85rem); letter-spacing: 5px; color: var(--text-headline); text-transform: uppercase; margin: 0; line-height: 1; }
+        .brand-container:hover .lh-logo-svg { filter: drop-shadow(0 0 10px oklch(100% 0 0 / 0.6)); }
+        .brand-text { font-weight: 800; font-size: clamp(0.7rem, 2vw, 0.85rem); letter-spacing: 5px; color: var(--logo-color); text-transform: uppercase; margin: 0; line-height: 1; transition: color 0.4s ease; }
 
         /* ==========================================================================
-           3. LOADER ENGINE CORE (7-LAYER GLOW v154 CHECKPOINT)
+           3. LOADER ENGINE CORE
            ========================================================================== */
         .lh-loader-container { position: absolute; top: 0; left: 0; width: 100%; height: 3px; z-index: 10001; opacity: 0; transition: opacity 0.4s linear; pointer-events: none; overflow: visible; }
         .lh-loader-container--master { position: fixed; }
@@ -111,16 +120,14 @@
         .lh-loader__glow-layer--6 { right: -25px; height: 800%; filter: blur(20px); }
         .lh-loader__glow-layer--7 { right: -80px; height: 1600%; filter: blur(var(--lh-glow-spread)); opacity: 0.15; }
 
-        /* KINETIC SPINNER (v138) */
+        /* KINETIC SPINNER */
         .kinetic-spinner-svg { width: 42px; height: 42px; animation: spin 2s linear infinite; animation-play-state: paused; filter: drop-shadow(0 0 10px oklch(var(--lh-color-base) / 0.4)); }
         .kinetic-spinner-svg.animate { animation-play-state: running; }
         .kinetic-spinner-circle { fill: none; stroke: oklch(var(--lh-color-base)); stroke-width: 3.8; stroke-linecap: round; stroke-dasharray: 1, 150; stroke-dashoffset: 0; animation: dash 1.5s ease-in-out infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes dash { 0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; } 50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; stroke: var(--gl-swoosh-color); } 100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; stroke: oklch(var(--lh-color-base)); } }
 
-        /* ==========================================================================
-           4. UI FRAMEWORK (v141 RESPONIVE + v155 SPACING CALIBRATION)
-           ========================================================================== */
+        /* UI FRAMEWORK */
         .nav { position: fixed; top: 0; width: 100%; height: clamp(65px, 8vh, 85px); display: flex; justify-content: space-between; align-items: center; padding: 0 6%; box-sizing: border-box; z-index: 100; backdrop-filter: blur(40px) saturate(1.5); border-bottom: 1px solid var(--glass-border); box-shadow: inset 0 1px 0 var(--glass-highlight); }
         .nav-actions { display: flex; align-items: center; gap: clamp(12px, 3vw, 25px); }
         .nav-btn { background: none; border: none; padding: 10px; cursor: pointer; color: var(--text-headline); opacity: 0.45; transition: 0.4s; display: flex; align-items: center; }
@@ -129,8 +136,86 @@
         .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 80px 24px 40px; box-sizing: border-box; }
         h1 { font-size: clamp(2.5rem, 12vw, 7.5rem); font-weight: 800; letter-spacing: -0.06em; line-height: 0.85; margin: 0 0 30px 0; color: var(--text-headline); }
         .tagline { font-size: clamp(0.9rem, 2.5vw, 1.25rem); max-width: 800px; margin: 0 0 50px 0; font-weight: 400; color: var(--text-body); opacity: 0.85; }
-        .btn-cta { background: var(--btn-bg); color: var(--btn-text); padding: clamp(16px, 3vw, 22px) clamp(35px, 6vw, 55px); border-radius: 100px; font-size: 1rem; font-weight: 800; border: none; cursor: pointer; transition: 0.4s; box-shadow: 0 10px 45px oklch(from var(--btn-bg) l c h / 0.25); }
+
+        /* ==========================================================================
+           MODERN ENHANCED CTA BUTTON (Warna Mengikuti Tema)
+           ========================================================================== */
+        .btn-cta { 
+            position: relative;
+            background: var(--btn-bg); 
+            color: var(--btn-text); 
+            padding: clamp(18px, 3vw, 24px) clamp(40px, 6vw, 60px); 
+            border-radius: 100px; 
+            font-size: 1.1rem; 
+            font-weight: 800; 
+            border: none; 
+            cursor: pointer; 
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 
+                0 10px 40px oklch(from var(--btn-bg) l c h / 0.15),
+                0 0 0 0px oklch(from var(--btn-bg) l c h / 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        /* Shine Effect */
+        .btn-cta::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                oklch(from var(--btn-bg) calc(l - 0.1) c h / 0.1),
+                oklch(from var(--btn-bg) calc(l - 0.2) c h / 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        /* Inner Glow for Premium Look */
+        .btn-cta::after {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            border-radius: 100px;
+            background: linear-gradient(180deg, oklch(100% 0 0 / 0.15), transparent);
+            pointer-events: none;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 
+                0 20px 60px oklch(from var(--btn-bg) l c h / 0.3),
+                0 0 0 6px oklch(from var(--btn-bg) l c h / 0.05);
+            letter-spacing: 0.01em;
+        }
+
+        .btn-cta:hover::before {
+            left: 100%;
+            transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-cta:active {
+            transform: translateY(0px) scale(0.97);
+            filter: brightness(0.9);
+            transition: 0.1s;
+        }
+
+        /* Icon Animation */
+        .btn-icon {
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .btn-cta:hover .btn-icon {
+            transform: translateX(5px) rotate(-5deg);
+        }
         
+        /* -------------------------------------------------------------------------- */
+
         .section-container { padding: clamp(100px, 15vh, 180px) 6%; max-width: 1300px; margin: 0 auto; text-align: center; }
         .section-title { font-size: clamp(2.2rem, 6vw, 3.8rem); color: var(--text-headline); letter-spacing: -0.06em; margin: 0 0 25px 0; line-height: 1.1; }
         .section-subtitle { opacity: 0.7; font-weight: 300; font-size: clamp(1rem, 2vw, 1.2rem); margin: 0 auto clamp(3rem, 12vh, 5rem); max-width: 800px; line-height: 1.75; }
@@ -151,9 +236,7 @@
         .reveal.active { opacity: 1; transform: translateY(0); }
         footer { padding: 120px 0; text-align: center; opacity: 0.35; font-size: 0.75rem; letter-spacing: 6px; font-weight: 700; text-transform: uppercase; margin: 0; }
 
-        /* ==========================================================================
-           5. ANATOMY STACK (v145 SPACED + v141 AGNOSTIC)
-           ========================================================================== */
+        /* ANATOMY STACK */
         .anatomy-stack { position: relative; height: clamp(550px, 95vh, 750px); display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: crosshair; perspective: 2500px; margin: 50px 0 0; width: 100%; padding: 40px 0; }
         .layer-container { position: relative; width: min(420px, 85vw); margin: 38px 0; transition: 1.3s cubic-bezier(0.1, 0.8, 0.2, 1); transform-style: preserve-3d; }
         .layer-visual { width: 100%; height: 14px; border-radius: 99px; border: 1px solid var(--glass-border); opacity: 0.25; transition: 0.7s ease; will-change: transform, opacity; }
@@ -173,11 +256,6 @@
             .lp-glow .layer-label, .lp-bg .layer-label,
             .lp-swoosh .layer-label, .lp-tip .layer-label { position: absolute; right: auto; left: 0; bottom: -35px; top: auto; transform: rotateX(-45deg); width: 100%; text-align: center; font-size: 0.55rem; opacity: 0.3; }
             .layer-container { margin: 48px 0; }
-        }
-        @media (max-height: 500px) and (orientation: landscape) {
-            .hero { min-height: 140vh; padding-top: 100px; }
-            .anatomy-stack { height: 800px; }
-            .nav { height: 60px; }
         }
     </style>
 </head>
@@ -209,15 +287,22 @@
     <div id="lh-master-target"></div>
 
     <section class="hero">
-        <h1 class="reveal">The Art of<br>Performance.</h1>
+        <h1 class="reveal">The Art of<br>Motion.</h1>
         <p class="tagline reveal">Elevate technical wait times into premium brand moments through cinematic physics and photonic precision.</p>
-        <button class="btn-cta reveal" onclick="triggerDemo()">Run Live Sequence</button>
+        
+        <button class="btn-cta reveal" onclick="triggerDemo()">
+            <span>Run Live Sequence</span>
+            <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+        </button>
     </section>
 
     <section class="section-container reveal">
         <h2 class="section-title">The Perception Gap.</h2>
         <p class="section-subtitle">
-            Rather than leaving users in uncertainty, we utilize <strong>Simulated Progress</strong>. We drive the bar optimistically to 90% for instant visual feedback that the system is engaged. Once the browser signals that the module is ready, we burst the remaining progress to 100%.
+            Rather than leaving users in uncertainty, we utilize <strong>Simulated Progress</strong>. We drive the bar optimistically for instant visual feedback, reducing psychological friction.
         </p>
         <div class="bento-grid">
             <div class="glass-card observer-trigger">
@@ -227,13 +312,13 @@
                 </div>
                 <div>
                     <p>Mechanical Friction</p>
-                    <p>Predictable animations often cause cognitive friction, making systems feel disconnected during complex tasks.</p>
+                    <p>Predictable animations often cause cognitive fatigue, making systems feel slower than they are.</p>
                 </div>
             </div>
             <div class="glass-card observer-trigger">
                 <h4 style="letter-spacing: 3px; opacity: 0.3; font-size: 0.6rem; margin: 0 0 20px 0; text-transform: uppercase;">Kinetic Engine</h4>
                 <div class="loader-display-area">
-                    <div id="lh-mini-target" class="mini-gl-viewport"></div>
+                    <div id="lh-mini-target" style="width: 100%; position: absolute; top: 0;"></div>
                     <p style="opacity: 0.08; font-weight: 900; font-size: 1rem; letter-spacing: 12px; text-transform: uppercase; margin: 0;">Syncing</p>
                 </div>
                 <div>
@@ -246,7 +331,7 @@
 
     <section class="section-container reveal">
         <h2 class="section-title">Optical Architecture.</h2>
-        <p class="section-subtitle">A precision-engineered composite of light and physics, designed to maintain visual authority across professional high-refresh displays.</p>
+        <p class="section-subtitle">A precision-engineered composite of light and physics, designed to maintain visual authority across high-refresh professional displays.</p>
         <div class="anatomy-stack">
             <div class="layer-container lp-glow" style="--offset: -180px;"><span class="layer-label">Atmospheric Halo</span><div class="layer-visual"></div></div>
             <div class="layer-container lp-bg" style="--offset: -60px;"><span class="layer-label">Physical Substrate</span><div class="layer-visual"></div></div>
@@ -257,12 +342,12 @@
 
     <section class="section-container reveal" style="padding-bottom: 120px;">
         <h2 class="section-title">Visual Harmony.</h2>
-        <p class="section-subtitle">Consistent perceptual brightness powered by OKLCH mathematics ensure brand colors maintain flawless visual weight regardless of environmental luminance.</p>
+        <p class="section-subtitle">Consistent perceptual brightness powered by OKLCH mathematics ensures brand colors maintain flawless visual weight across any environment.</p>
         <div class="palette-container">
             <div class="color-dot active" style="background: oklch(100% 0 0);" onclick="applyPreset('100% 0 0', 45, 0.65, this)"></div>
             <div class="color-dot" style="background: oklch(80% 0.2 200);" onclick="applyPreset('80% 0.2 200', 35, 0.55, this)"></div> 
             <div class="color-dot" style="background: oklch(65% 0.25 300);" onclick="applyPreset('65% 0.25 300', 25, 0.45, this)"></div> 
-            <div class="color-dot" style="background: oklch(75% 0.2 150);" onclick="applyPreset('75% 0.2 150', 15, 0.35, this)"></div> 
+            <div class="color-dot" style="background: oklch(75% 0.2 150);" onclick="applyPreset('75% 0.2 150', 15, 0.35, this)"></div>
             <div class="color-dot" style="background: oklch(70% 0.15 70);" onclick="applyPreset('70% 0.15 70', 0, 0, this)"></div> 
         </div>
     </section>
@@ -271,11 +356,10 @@
 
     <script>
         /**
-         * 1. PARALLAX ENGINE (v152)
+         * 1. PARALLAX ENGINE
          */
         const Parallax = (() => {
-            let mouseX = 0, mouseY = 0;
-            let targetX = 0, targetY = 0;
+            let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
             const b1 = () => document.getElementById('parallax-blob-1');
             const b2 = () => document.getElementById('parallax-blob-2');
             const init = () => {
@@ -296,7 +380,7 @@
         })();
 
         /**
-         * 2. LOADER ENGINE (7-LAYER GLOW v149)
+         * 2. LOADER ENGINE (CORE)
          */
         const LH = (() => {
             const buildHTML = (id, barId, isMaster = false) => `
@@ -346,23 +430,37 @@
             };
         })();
 
+        /**
+         * 3. INDEPENDENT MINI LOOP
+         */
         let miniCycleActive = false;
+        let miniTimeoutId = null;
+
         function cycleMini() {
             if (!miniCycleActive) return;
+
             const bar = document.getElementById('lh-mini-bar'); 
             const root = document.getElementById('lh-mini-root');
             if(!bar || !root) return;
-            bar.style.transition = 'none'; bar.style.transform = 'translateX(-100%)'; void bar.offsetWidth;
-            bar.style.transition = 'transform 1.8s linear'; bar.style.transform = 'translateX(5%)';
-            setTimeout(() => {
+
+            bar.style.transition = 'none'; 
+            bar.style.transform = 'translateX(-100%)'; 
+            root.classList.add('lh-loader--active');
+            void bar.offsetWidth;
+
+            bar.style.transition = 'transform 2.8s cubic-bezier(0.1, 0.5, 0.1, 1)'; 
+            bar.style.transform = 'translateX(-10%)'; 
+
+            miniTimeoutId = setTimeout(() => {
                 if (!miniCycleActive) return;
-                bar.style.transition = 'transform 0.4s ease-out'; bar.style.transform = 'translateX(100%)';
-                setTimeout(() => {
+                bar.style.transition = 'transform 0.5s cubic-bezier(0.3, 0, 0, 1)'; 
+                bar.style.transform = 'translateX(0%)';
+                miniTimeoutId = setTimeout(() => {
                     if (!miniCycleActive) return;
                     root.classList.remove('lh-loader--active');
-                    setTimeout(() => { if (miniCycleActive) { root.classList.add('lh-loader--active'); cycleMini(); } }, 1000);
-                }, 500);
-            }, 1800);
+                    miniTimeoutId = setTimeout(cycleMini, 1000); 
+                }, 600); 
+            }, 3000); 
         }
 
         function initObservers() {
@@ -372,16 +470,24 @@
                     const miniRoot = document.getElementById('lh-mini-root');
                     if (entry.isIntersecting) {
                         if(spinner) spinner.classList.add('animate');
-                        if (!miniCycleActive) { miniCycleActive = true; if(miniRoot) miniRoot.classList.add('lh-loader--active'); cycleMini(); }
+                        if (!miniCycleActive) { 
+                            miniCycleActive = true; 
+                            cycleMini(); 
+                        }
                     } else {
                         if(spinner) spinner.classList.remove('animate');
-                        miniCycleActive = false; if(miniRoot) miniRoot.classList.remove('lh-loader--active');
+                        miniCycleActive = false;
+                        clearTimeout(miniTimeoutId);
+                        if(miniRoot) miniRoot.classList.remove('lh-loader--active');
                     }
                 });
             }, { threshold: 0.1 });
             document.querySelectorAll('.observer-trigger').forEach(el => observer.observe(el));
         }
 
+        /**
+         * 4. THEME & PRESETS
+         */
         async function handleThemeToggle() {
             const toggle = document.getElementById('theme-toggle');
             const rect = toggle.getBoundingClientRect();
@@ -400,49 +506,53 @@
 
         function applyTheme() {
             const root = document.documentElement;
-            const target = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            const currentTheme = root.getAttribute('data-theme');
+            const target = currentTheme === 'dark' ? 'light' : 'dark';
             root.setAttribute('data-theme', target);
+
+            // Update icon
             const icon = document.getElementById('theme-icon');
-            if(target === 'light') {
-                icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
-            } else {
-                icon.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
-            }
-            const activeDot = document.querySelector('.color-dot.active');
-            if (activeDot) {
-                const args = activeDot.getAttribute('onclick').match(/'([^']+)',\s*(\d+),\s*([\d.]+)/);
-                applyPreset(args[1], args[2], args[3], activeDot);
+            icon.innerHTML = target === 'light' ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>' : '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
+
+            // Refresh dynamic accent colors for blobs
+            const lch = getComputedStyle(root).getPropertyValue('--lh-color-base').trim();
+            updateAccents(lch, target);
+        }
+
+        function updateAccents(lch, theme) {
+            const root = document.documentElement;
+            const parts = lch.split(' ');
+            if (parts.length >= 3) {
+                const h = parseFloat(parts[2]);
+                const l = theme === 'light' ? '80%' : '60%';
+                root.style.setProperty('--accent-1', `oklch(${l} 0.15 ${(h + 120) % 360})`);
+                root.style.setProperty('--accent-2', `oklch(${l} 0.15 ${(h + 240) % 360})`);
             }
         }
 
         function applyPreset(lch, spread, opacity, btn) {
             const root = document.documentElement;
+            const theme = root.getAttribute('data-theme');
+            
+            // 1. Update Core Color (Ini akan mengupdate tombol & loader)
             root.style.setProperty('--lh-color-base', lch);
             root.style.setProperty('--lh-glow-spread', spread + 'px');
             root.style.setProperty('--lh-glow-opacity', opacity);
-            const parts = lch.split(' ');
-            if (parts.length >= 3) {
-                const h = parseFloat(parts[2]);
-                const l = root.getAttribute('data-theme') === 'light' ? '80%' : '60%';
-                root.style.setProperty('--accent-1', `oklch(${l} 0.15 ${(h + 120) % 360})`);
-                root.style.setProperty('--accent-2', `oklch(${l} 0.15 ${(h + 240) % 360})`);
-            }
+            
+            // 2. Update Background Accents
+            updateAccents(lch, theme);
+            
+            // UI Updates
             document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
             if(btn) btn.classList.add('active');
+            
+            // Run feedback sequence
             LH.start(true, true); 
         }
 
         window.addEventListener('load', () => {
             LH.inject('lh-master-target', 'lh-root', 'lh-bar', true);
             LH.inject('lh-mini-target', 'lh-mini-root', 'lh-mini-bar', false);
-            
-            // INITIAL TRIAD LOAD
-            const activeDot = document.querySelector('.color-dot.active');
-            if(activeDot) {
-                const args = activeDot.getAttribute('onclick').match(/'([^']+)',\s*(\d+),\s*([\d.]+)/);
-                applyPreset(args[1], args[2], args[3], activeDot);
-            }
-
             LH.start(true, true); 
             initObservers();
             Parallax.init();
