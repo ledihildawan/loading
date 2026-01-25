@@ -40,7 +40,10 @@
 
     img, video, iframe { max-inline-size: 100%; block-size: auto }
 
-    html { scroll-behavior: smooth; overflow-x: hidden; scroll-padding-block-start: calc(var(--header-height) + var(--spacing-md)) }
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-block-start: calc(var(--header-height) + var(--spacing-md)); 
+    }
 
     :root {
       font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -565,7 +568,6 @@
     .menu__controls {
       display: flex;
       align-items: center;
-      gap: var(--spacing-xs);
       flex-shrink: 0;
     }
 
@@ -1043,11 +1045,6 @@
       }
     }
 
-    i[data-lucide] {
-      display: inline-block;
-      vertical-align: middle;
-    }
-
     .scroll-top {
       position: fixed;
       inset-block-end: var(--spacing);
@@ -1178,78 +1175,6 @@
     :root:not([data-theme]) .theme-icon--sun { display: none }
     :root:not([data-theme]) .theme-icon--moon { display: none }
     :root:not([data-theme]) .theme-icon--system { display: block }
-
-    .btn,
-    .nav__link,
-    .footer__link,
-    .logo {
-      text-decoration: none;
-    }
-
-    
-
-    /* Explicit pointer affordances for interactive elements */
-    .btn,
-    .nav__link,
-    .menu-toggle,
-    .menu__close,
-    .menu__btn,
-    .scroll-top,
-    .logo {
-      cursor: pointer;
-    }
-
-    /* Precise pointers (mouse, stylus): enable hover effects and richer cursors */
-    @media (hover: hover) and (pointer: fine) {
-      .nav__link { cursor: pointer; }
-      .btn--icon, .menu-toggle, .menu__close { cursor: pointer; }
-
-      /* Provide custom semantics where appropriate */
-      .logo:hover { cursor: pointer; }
-      .nav__link:hover { cursor: pointer; }
-      .btn:hover { cursor: pointer; }
-    }
-
-    /* Coarse pointers (touch): enlarge hit targets and suppress hover effects */
-    @media (pointer: coarse), (hover: none) {
-      /* Make tappable areas easier to hit on touchscreens */
-      .nav__link {
-        padding-block: calc(var(--spacing-xs) * 2);
-        padding-inline: calc(var(--spacing) * 1.25);
-        min-block-size: 56px;
-      }
-
-      .btn {
-        min-block-size: 56px;
-        block-size: 56px;
-        padding-inline: calc(var(--spacing-md) * 1.5);
-      }
-
-      .menu-toggle, .menu__close, .btn--icon, .scroll-top {
-        inline-size: 56px;
-        block-size: 56px;
-      }
-
-      /* Disable hover-only visual changes (they don't make sense for touch) */
-      .nav__link:hover,
-      .btn:hover,
-      .menu-toggle:hover,
-      .menu__close:hover,
-      .logo:hover,
-      .scroll-top:hover {
-        background-color: transparent !important;
-        transform: none !important;
-      }
-    }
-
-    /* Provide semantic cursors for special interactions on precise pointers */
-    @media (pointer: fine) {
-      /* Use text cursor for selectable text blocks if needed */
-      .section__content { cursor: text; }
-
-      /* Use default cursor for decorative elements */
-      .divider.in-view { cursor: default; }
-    }
   </style>
 
   <!-- JSON-LD Structured Data -->
@@ -1673,8 +1598,8 @@
 
     const announce = createAnnouncer();
 
+    
     // ============ Theme Management ============
-
     const getTheme = () => {
       const savedTheme = useLocalStorage.get('theme');
       
@@ -1754,8 +1679,6 @@
 
       state.isMobileMenuOpen = true;
       announce('Mobile menu opened');
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
     };
 
     const closeMobileMenu = () => {
@@ -1767,8 +1690,6 @@
       state.focusTrapCleanup = null;
       state.isMobileMenuOpen = false;
       announce('Mobile menu closed');
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
     };
 
     const toggleMobileMenu = () => {
@@ -1831,7 +1752,7 @@
       scrollToSection(0);
     };
 
-    // ============ Setup Functions ============
+     // ============ Setup Functions ============
     const setupDividers = () => {
       const observerOptions = {
         threshold: 0.1,
