@@ -154,29 +154,29 @@
       transform: rotate(5deg);
     }
 
-    .skip-link {
+    #skip-link {
       position: absolute;
       inset-block-start: -100%;
       inset-inline-start: var(--spacing);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-block-size: 44px;
+      min-inline-size: max-content;
       padding: var(--spacing-xs) var(--spacing-md);
       background-color: var(--color-primary);
       color: var(--color-bg);
       font-size: var(--font-sm);
-      z-index: var(--z-top);
-      min-block-size: 44px;
-      min-inline-size: max-content;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
       border-radius: var(--border-radius-sm);
+      z-index: var(--z-top);
     }
 
-    .skip-link:focus {
+    #skip-link:focus {
       inset-block-start: var(--spacing-md);
       outline: none;
     }
 
-    .site-header {
+    #site-header {
       position: sticky;
       inset-block-start: 0;
       z-index: var(--z-sticky);
@@ -187,9 +187,14 @@
       border-block-end: var(--border-width) var(--border-style) var(--color-line);
     }
 
-    .site-header--menu-open {
+    #site-header.site-header--menu-open {
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
+    }
+
+    body.menu-open #scroll-to-top.visible {
+      opacity: 0;
+      visibility: hidden;
     }
 
     .site-header__inner {
@@ -260,16 +265,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      color: var(--color-text);
-      transition: color var(--transition-normal), background-color var(--transition-normal);
-      border-radius: var(--border-radius-sm);
       inline-size: 2.75rem;
       block-size: 2.75rem;
+      padding: 0;
+      background: none;
+      border: none;
+      color: var(--color-text);
+      border-radius: var(--border-radius-sm);
+      cursor: pointer;
       touch-action: manipulation;
+      transition: color var(--transition-normal), background-color var(--transition-normal);
     }
 
     .site-header__toggle:hover {
@@ -285,7 +290,7 @@
       .site-header__toggle { display: none }
     }
 
-    .site-header__nav {
+    #primary-navigation {
       position: fixed;
       inset: 0;
       inline-size: 100%;
@@ -304,8 +309,8 @@
     }
 
     @media (width >= 768px) {
-      .site-header__nav {
-        position: static !important;
+      #primary-navigation {
+        position: static;
         inset: auto;
         inline-size: auto;
         max-inline-size: none;
@@ -316,11 +321,10 @@
         visibility: visible;
         z-index: var(--z-base);
         pointer-events: auto;
-        display: flex;
       }
     }
 
-    .site-header__nav[aria-expanded="true"] {
+    #primary-navigation[aria-expanded="true"] {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
@@ -343,7 +347,7 @@
 
       .site-header__nav {
         grid-column: 2;
-        position: static !important;
+        position: relative;
         background-color: transparent;
         border: none;
         display: flex;
@@ -351,7 +355,6 @@
         block-size: auto;
         opacity: 1;
         visibility: visible;
-        position: relative;
         z-index: var(--z-base);
       }
 
@@ -360,11 +363,13 @@
         justify-self: end;
         position: relative;
         z-index: var(--z-sticky);
-        display: flex !important;
+        display: flex;
         align-items: center;
       }
 
-      .site-header__cta-buttons { display: flex !important }
+      .site-header__cta-buttons {
+        display: flex;
+      }
 
       .site-header__toggle { display: none }
     }
@@ -375,10 +380,6 @@
       list-style: none;
     }
 
-    .site-header__nav-list li:last-child .site-header__nav-link {
-      border-block-end: none;
-    }
-
     @media (width >= 768px) {
       .site-header__nav-list {
         flex-direction: row;
@@ -387,32 +388,34 @@
     }
 
     .site-header__nav-link {
+      display: flex;
+      align-items: center;
+      inline-size: 100%;
+      box-sizing: border-box;
       font-size: var(--font-base);
       font-weight: 600;
       color: var(--color-text-muted);
       padding: var(--spacing);
       border-block-end: var(--border-width) var(--border-style) var(--color-line);
-      border-radius: 0;
-      display: flex;
-      align-items: center;
-      inline-size: 100%;
-      box-sizing: border-box;
       text-align: start;
-      transition: color var(--transition-fast), background-color var(--transition-fast);
-      touch-action: manipulation;
-      pointer-events: auto;
       cursor: pointer;
+      touch-action: manipulation;
       position: relative;
-      contain: layout style;
+      transition: color var(--transition-fast), background-color var(--transition-fast);
+    }
+
+    .site-header__nav-list li:last-child .site-header__nav-link {
+      border-block-end: none;
     }
 
     @media (width >= 768px) {
       .site-header__nav-link {
+        display: inline-flex;
+        inline-size: auto;
         font-size: var(--font-sm);
         padding: calc(var(--spacing-xs) * 1.6) var(--spacing-md);
-        border: none;
+        border-block-end: none;
         border-radius: var(--border-radius-sm);
-        display: inline-block;
         min-block-size: 44px;
       }
     }
@@ -434,8 +437,8 @@
       display: flex;
       align-items: center;
       gap: var(--spacing-sm);
-      z-index: var(--z-dropdown);
       position: relative;
+      z-index: var(--z-dropdown);
     }
 
     .site-header__cta-buttons {
@@ -445,7 +448,9 @@
     }
 
     @media (width < 768px) {
-      .site-header__cta-buttons { display: none }
+      .site-header__cta-buttons {
+        display: none;
+      }
 
       .site-header__cta {
         justify-content: flex-end;
@@ -453,23 +458,22 @@
         gap: var(--spacing-xs);
       }
 
-      .site-header__cta .site-header__theme-toggle { display: none }
-    }
-
-    @media (width >= 768px) {
-      .site-header__cta-buttons { display: flex !important }
+      .site-header__cta .site-header__theme-toggle {
+        display: none;
+      }
     }
 
     .site-header__login-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-block-size: 44px;
       font-size: var(--font-sm);
       color: var(--color-text-muted);
       padding: calc(var(--spacing-xs) * 1.2) var(--spacing-md);
       border-radius: var(--border-radius-sm);
+      cursor: pointer;
       transition: color var(--transition-normal), background-color var(--transition-normal);
-      min-block-size: 44px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .site-header__login-btn:hover {
@@ -482,16 +486,17 @@
     }
 
     .site-header__signup-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-block-size: 44px;
       font-size: var(--font-sm);
       color: var(--color-bg);
       background-color: var(--color-primary);
       padding: calc(var(--spacing-xs) * 1.6) calc(var(--spacing-md) * 1.667);
       border-radius: var(--border-radius-sm);
+      cursor: pointer;
       transition: color var(--transition-normal), background-color var(--transition-normal);
-      min-block-size: 44px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .site-header__signup-btn:hover {
@@ -506,18 +511,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      color: var(--color-text);
-      transition: color var(--transition-normal), background-color var(--transition-normal);
-      border-radius: var(--border-radius-sm);
       inline-size: 2.75rem;
       block-size: 2.75rem;
+      padding: 0;
+      background: none;
+      border: none;
+      color: var(--color-text);
+      border-radius: var(--border-radius-sm);
+      cursor: pointer;
       touch-action: manipulation;
-      z-index: var(--z-dropdown);
       position: relative;
+      z-index: var(--z-dropdown);
+      transition: color var(--transition-normal), background-color var(--transition-normal);
     }
 
     .site-header__theme-toggle:hover {
@@ -533,18 +538,24 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: var(--spacing-xs);
       padding: 0 var(--spacing);
       border-block-end: var(--border-width) var(--border-style) var(--color-line);
       block-size: var(--header-height);
       flex-shrink: 0;
-      gap: var(--spacing-xs);
     }
 
     @media (width >= 768px) {
-      .mobile-menu__header { display: none }
+      .mobile-menu__header {
+        display: none;
+      }
     }
 
-    .mobile-menu__logo { display: flex; align-items: center; flex: 1 }
+    .mobile-menu__logo {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
 
     .mobile-menu__controls {
       display: flex;
@@ -554,24 +565,26 @@
     }
 
     @media (width >= 768px) {
-      .mobile-menu__controls { display: none }
+      .mobile-menu__controls {
+        display: none;
+      }
     }
 
     .mobile-menu__close-button {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      color: var(--color-text);
-      transition: color var(--transition-normal), background-color var(--transition-normal);
-      border-radius: var(--border-radius-sm);
       inline-size: 2.75rem;
       block-size: 2.75rem;
+      padding: 0;
+      background: none;
+      border: none;
+      color: var(--color-text);
+      border-radius: var(--border-radius-sm);
+      cursor: pointer;
       touch-action: manipulation;
       flex-shrink: 0;
+      transition: color var(--transition-normal), background-color var(--transition-normal);
     }
 
     .mobile-menu__close-button:hover {
@@ -584,7 +597,9 @@
     }
 
     @media (width >= 768px) {
-      .mobile-menu__close-button { display: none }
+      .mobile-menu__close-button {
+        display: none;
+      }
     }
 
     .mobile-menu__body {
@@ -600,34 +615,37 @@
     }
 
     .mobile-menu__footer {
-      padding: var(--spacing);
-      border-block-start: var(--border-width) var(--border-style) var(--color-line);
       display: flex;
       flex-direction: column;
       gap: var(--spacing-sm);
-      flex-shrink: 0;
+      padding: var(--spacing);
+      border-block-start: var(--border-width) var(--border-style) var(--color-line);
       position: sticky;
       inset-block-end: 0;
       background-color: var(--color-bg);
+      flex-shrink: 0;
     }
 
     @media (width >= 768px) {
-      .mobile-menu__footer { display: none }
+      .mobile-menu__footer {
+        display: none;
+      }
     }
 
     .mobile-menu__login-btn {
-      font-size: var(--font-sm);
-      color: var(--color-text-muted);
-      padding: var(--spacing-md) calc(var(--spacing-md) * 1.333);
-      border-radius: var(--border-radius-sm);
       display: block;
       text-align: center;
-      transition: color var(--transition-normal), background-color var(--transition-normal);
-      border: var(--border-width) var(--border-style) var(--color-line);
       inline-size: 100%;
       white-space: nowrap;
       min-block-size: 44px;
+      font-size: var(--font-sm);
+      color: var(--color-text-muted);
+      padding: var(--spacing-md) calc(var(--spacing-md) * 1.333);
+      border: var(--border-width) var(--border-style) var(--color-line);
+      border-radius: var(--border-radius-sm);
+      cursor: pointer;
       touch-action: manipulation;
+      transition: color var(--transition-normal), background-color var(--transition-normal);
     }
 
     .mobile-menu__login-btn:hover {
@@ -640,18 +658,19 @@
     }
 
     .mobile-menu__signup-btn {
+      display: block;
+      text-align: center;
+      inline-size: 100%;
+      white-space: nowrap;
+      min-block-size: 44px;
       font-size: var(--font-sm);
       color: var(--color-bg);
       background-color: var(--color-primary);
       padding: var(--spacing-md) calc(var(--spacing-md) * 1.333);
       border-radius: var(--border-radius-sm);
-      display: block;
-      text-align: center;
-      transition: color var(--transition-normal), background-color var(--transition-normal);
-      inline-size: 100%;
-      white-space: nowrap;
-      min-block-size: 44px;
+      cursor: pointer;
       touch-action: manipulation;
+      transition: color var(--transition-normal), background-color var(--transition-normal);
     }
 
     .mobile-menu__signup-btn:hover {
@@ -680,12 +699,12 @@
     }
 
     .section {
-      min-block-size: 50vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
+      min-block-size: 50vh;
       padding-block: calc(var(--spacing) * 2);
       padding-inline: var(--spacing);
       content-visibility: auto;
@@ -763,11 +782,11 @@
       inset-inline-start: 50%;
       inset-block-start: 50%;
       translate: -50% -50%;
+      display: flex;
+      align-items: center;
       inline-size: 100%;
       max-inline-size: var(--max-width);
       block-size: 100%;
-      display: flex;
-      align-items: center;
       padding-inline: var(--spacing);
     }
 
@@ -786,8 +805,13 @@
       overflow: hidden;
     }
 
-    .divider__gradient--left { inset-inline-start: 0 }
-    .divider__gradient--right { inset-inline-end: 0 }
+    .divider__gradient--left {
+      inset-inline-start: 0;
+    }
+
+    .divider__gradient--right {
+      inset-inline-end: 0;
+    }
 
     .divider__bar {
       position: absolute;
@@ -869,15 +893,21 @@
     }
 
     @media (width < 1240px) {
-      .site-footer__main { max-inline-size: 100% }
+      .site-footer__main {
+        max-inline-size: 100%;
+      }
     }
 
     @media (width >= 480px) {
-      .site-footer__main { padding-block: calc(var(--spacing) * 1.667) calc(var(--spacing) * 1.167) }
+      .site-footer__main {
+        padding-block: calc(var(--spacing) * 1.667) calc(var(--spacing) * 1.167);
+      }
     }
 
     @media (width >= 768px) {
-      .site-footer__main { padding-block: calc(var(--spacing) * 2) calc(var(--spacing) * 1.333) }
+      .site-footer__main {
+        padding-block: calc(var(--spacing) * 2) calc(var(--spacing) * 1.333);
+      }
     }
 
     @media (width >= 1240px) {
@@ -925,7 +955,10 @@
       margin-block-start: var(--spacing-xs);
     }
 
-    .site-footer__section { display: flex; flex-direction: column }
+    .site-footer__section {
+      display: flex;
+      flex-direction: column;
+    }
 
     .site-footer__heading {
       font-size: var(--font-xs);
@@ -936,14 +969,154 @@
       color: var(--color-text);
     }
 
-    .site-footer__links { list-style: none }
+    .site-footer__links {
+      list-style: none;
+    }
 
-    .site-footer__links li { margin-block-end: var(--spacing-xs) }
+    .site-footer__links li {
+      margin-block-end: var(--spacing-xs);
+    }
 
     .site-footer__link {
+      display: inline-block;
       font-size: var(--font-sm);
       color: var(--color-text-muted);
+      transition: color var(--transition-normal);
+    }
+
+    .site-footer__link:hover {
+      color: var(--color-text);
+    }
+
+    .site-footer__link:active {
+      color: var(--btn-hover-text);
+      filter: brightness(0.8);
+    }
+
+    .site-footer__separator {
+      inline-size: 100%;
+      border-block-start: var(--border-width) var(--border-style) var(--color-line);
+    }
+
+    .site-footer__meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      inline-size: 100%;
+      max-inline-size: var(--max-width);
+      padding: calc(var(--spacing-xs) * 1.5) var(--spacing);
+      margin-inline: auto;
+      font-size: var(--font-sm);
+      color: var(--color-text-muted);
+    }
+
+    @media (width < 1240px) {
+      .site-footer__meta {
+        max-inline-size: 100%;
+      }
+    }
+
+    @media (width >= 768px) {
+      .site-footer__meta {
+        padding: var(--spacing-md) var(--spacing);
+      }
+    }
+
+    @media (width >= 1240px) {
+      .site-footer__meta {
+        border-inline: var(--border-width) var(--border-style) var(--color-line);
+      }
+    }
+
+    @media (width < 1240px) {
+      .site-footer__main {
+        max-inline-size: 100%;
+      }
+    }
+
+    @media (width >= 480px) {
+      .site-footer__main {
+        padding-block: calc(var(--spacing) * 1.667) calc(var(--spacing) * 1.167);
+      }
+    }
+
+    @media (width >= 768px) {
+      .site-footer__main {
+        padding-block: calc(var(--spacing) * 2) calc(var(--spacing) * 1.333);
+      }
+    }
+
+    @media (width >= 1240px) {
+      .site-footer__main {
+        border-inline: var(--border-width) var(--border-style) var(--color-line);
+      }
+    }
+
+    .site-footer__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--spacing);
+    }
+
+    @media (width >= 480px) {
+      .site-footer__grid {
+        gap: var(--spacing-lg);
+      }
+    }
+
+    @media (width >= 768px) {
+      .site-footer__grid {
+        grid-template-columns: 2fr 1fr 1fr;
+      }
+    }
+
+    .site-footer__brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .site-footer__brand-name {
+      font-weight: 700;
+      font-size: var(--font-base);
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .site-footer__brand-desc {
+      font-size: var(--font-sm);
+      color: var(--color-text-muted);
+      max-inline-size: 300px;
+      line-height: 1.7;
+      margin-block-start: var(--spacing-xs);
+    }
+
+    .site-footer__section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .site-footer__heading {
+      font-size: var(--font-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-block-end: var(--spacing-md);
+      color: var(--color-text);
+    }
+
+    .site-footer__links {
+      list-style: none;
+    }
+
+    .site-footer__links li {
+      margin-block-end: var(--spacing-xs);
+    }
+
+    .site-footer__link {
       display: inline-block;
+      font-size: var(--font-sm);
+      color: var(--color-text-muted);
       transition: color var(--transition-normal);
     }
 
@@ -956,23 +1129,27 @@
     }
 
     .site-footer__meta {
-      inline-size: 100%;
-      max-inline-size: var(--max-width);
-      margin-inline: auto;
-      padding: calc(var(--spacing-xs) * 1.5) var(--spacing);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      inline-size: 100%;
+      max-inline-size: var(--max-width);
+      padding: calc(var(--spacing-xs) * 1.5) var(--spacing);
+      margin-inline: auto;
       font-size: var(--font-sm);
       color: var(--color-text-muted);
     }
 
-    @media (width >= 768px) {
-      .site-footer__meta { padding: var(--spacing-md) var(--spacing) }
+    @media (width < 1240px) {
+      .site-footer__meta {
+        max-inline-size: 100%;
+      }
     }
 
-    @media (width < 1240px) {
-      .site-footer__meta { max-inline-size: 100% }
+    @media (width >= 768px) {
+      .site-footer__meta {
+        padding: var(--spacing-md) var(--spacing);
+      }
     }
 
     @media (width >= 1240px) {
@@ -986,38 +1163,39 @@
       vertical-align: middle;
     }
 
-    .scroll-top {
+    #scroll-to-top {
       position: fixed;
       inset-block-end: var(--spacing);
       inset-inline-end: var(--spacing);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       inline-size: 2.75rem;
       block-size: 2.75rem;
+      padding: 0;
       background-color: var(--color-primary);
       color: var(--color-bg);
       border: none;
       border-radius: var(--border-radius-sm);
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-size: 1.25rem;
       opacity: 0;
       visibility: hidden;
-      transition: color var(--transition-normal), background-color var(--transition-normal), opacity var(--transition-normal), visibility var(--transition-normal);
       z-index: var(--z-fixed);
-      font-size: 1.25rem;
+      transition: color var(--transition-normal), background-color var(--transition-normal), opacity var(--transition-normal), visibility var(--transition-normal);
       will-change: opacity, visibility;
     }
 
-    .scroll-top.visible {
+    #scroll-to-top.visible {
       opacity: 1;
       visibility: visible;
     }
 
-    .scroll-top:hover {
+    #scroll-to-top:hover {
       background-color: var(--color-primary-hover);
     }
 
-    .scroll-top:active {
+    #scroll-to-top:active {
       filter: brightness(0.9);
     }
 
@@ -1042,13 +1220,19 @@
     .gap-2 { gap: var(--spacing-xs) }
     .gap-4 { gap: var(--spacing-md) }
 
-    .section__cta { margin-block-start: var(--spacing) }
+    .section__cta {
+      margin-block-start: var(--spacing);
+    }
 
     .section__cta--btn {
-      padding: var(--spacing-md) calc(var(--spacing-md) * 2);
-      font-size: var(--font-base);
-      margin-block-start: var(--spacing-md);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       min-block-size: 44px;
+      font-size: var(--font-base);
+      padding: var(--spacing-md) calc(var(--spacing-md) * 2);
+      margin-block-start: var(--spacing-md);
+      cursor: pointer;
       transition: color var(--transition-normal), background-color var(--transition-normal);
     }
 
@@ -1154,10 +1338,10 @@
   }
   </script>
 </head>
-<body>
-  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <body>
+  <a href="#main-content" id="skip-link" class="skip-link">Skip to main content</a>
 
-  <header class="site-header">
+  <header id="site-header" class="site-header">
     <div class="site-header__inner">
       <div class="site-header__content">
         <a href="#" class="site-header__logo">Frameless</a>
@@ -1305,7 +1489,7 @@
     </div>
   </main>
 
-  <footer class="site-footer">
+  <footer id="site-footer" class="site-footer">
     <div class="site-footer__main">
       <div class="site-footer__grid">
         <div class="site-footer__brand">
@@ -1341,7 +1525,7 @@
     </div>
   </footer>
 
-  <button class="scroll-top" aria-label="Scroll to top">
+  <button id="scroll-to-top" class="scroll-top" aria-label="Scroll to top">
     <i data-lucide="arrow-up" width="20" height="20" aria-hidden="true"></i>
   </button>
 
@@ -1350,11 +1534,13 @@
     'use strict';
 
     const DOM = Object.freeze({
-      skipLink: document.querySelector('.skip-link'),
-      mainContent: document.querySelector('#main-content'),
+      skipLink: document.getElementById('skip-link'),
+      mainContent: document.getElementById('main-content'),
+      header: document.getElementById('site-header'),
+      nav: document.getElementById('primary-navigation'),
+      scrollBtn: document.getElementById('scroll-to-top'),
+      footer: document.getElementById('site-footer'),
       menuToggle: document.querySelector('.site-header__toggle'),
-      nav: document.querySelector('.site-header__nav'),
-      scrollBtn: document.querySelector('.scroll-top'),
       dividers: document.querySelectorAll('.divider'),
       navLinks: document.querySelectorAll('.site-header__nav-link'),
       themeToggles: document.querySelectorAll('.site-header__theme-toggle'),
@@ -1455,7 +1641,7 @@
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
       const [firstFocusable] = focusableElements;
-      const lastFocusable = focusableElements.at(-1);
+      const lastFocusable = focusableElements[focusableElements.length - 1];
 
       const handleKeyDown = (e) => {
         if (e.key !== 'Tab') return;
@@ -1479,30 +1665,32 @@
     };
 
     const openMobileMenu = () => {
+      DOM.menuToggle?.setAttribute('aria-expanded', 'true');
+      DOM.nav?.setAttribute('aria-expanded', 'true');
+      DOM.header?.classList.add('site-header--menu-open');
+      document.body.classList.add('menu-open');
+
       safeExecute(() => {
-        DOM.menuToggle?.setAttribute('aria-expanded', 'true');
-        DOM.nav?.setAttribute('aria-expanded', 'true');
-        DOM.menuToggle?.closest('.site-header')?.classList.add('site-header--menu-open');
         state.focusTrapCleanup = trapFocus(DOM.nav);
-        state.isMobileMenuOpen = true;
-        announce('Mobile menu opened');
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
-      }, 'Error opening mobile menu');
+      }, 'Error setting up focus trap');
+
+      state.isMobileMenuOpen = true;
+      announce('Mobile menu opened');
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
     };
 
     const closeMobileMenu = () => {
-      safeExecute(() => {
-        DOM.menuToggle?.setAttribute('aria-expanded', 'false');
-        DOM.nav?.removeAttribute('aria-expanded');
-        DOM.menuToggle?.closest('.site-header')?.classList.remove('site-header--menu-open');
-        state.focusTrapCleanup?.();
-        state.focusTrapCleanup = null;
-        state.isMobileMenuOpen = false;
-        announce('Mobile menu closed');
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-      }, 'Error closing mobile menu');
+      DOM.menuToggle?.setAttribute('aria-expanded', 'false');
+      DOM.nav?.removeAttribute('aria-expanded');
+      DOM.header?.classList.remove('site-header--menu-open');
+      document.body.classList.remove('menu-open');
+      state.focusTrapCleanup?.();
+      state.focusTrapCleanup = null;
+      state.isMobileMenuOpen = false;
+      announce('Mobile menu closed');
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
     };
 
     const toggleMobileMenu = () => {
@@ -1545,20 +1733,62 @@
     };
 
     const setupActiveNavigation = () => {
-      const sections = [...document.querySelectorAll('.section')];
       const navLinks = [...DOM.navLinks];
-      const THRESHOLD = 40;
+      let lockActiveSection = false;
+
+      for (const link of navLinks) {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          if (href === '#') return;
+
+          const section = document.querySelector(href);
+          if (!section) return;
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          const behavior = PREFERS_REDUCED_MOTION ? 'auto' : 'smooth';
+          section.scrollIntoView({ behavior });
+
+          if (state.isMobileMenuOpen) {
+            closeMobileMenu();
+          }
+
+          const targetId = section.id;
+          state.activeSection = targetId;
+
+          for (const link of navLinks) {
+            const isActive = link.getAttribute('href') === `#${targetId}`;
+            if (link.classList.contains('site-header__nav-link--active') !== isActive) {
+              link.classList.toggle('site-header__nav-link--active', isActive);
+              link.setAttribute('aria-current', isActive ? 'page' : 'false');
+            }
+          }
+
+          section.focus({ preventScroll: true });
+          announce(`Navigated to ${section.textContent.trim() || section.id}`);
+
+          lockActiveSection = true;
+          setTimeout(() => { lockActiveSection = false; }, 500);
+        }, { signal });
+      }
 
       const updateActiveSection = () => {
+        if (lockActiveSection) return;
+
+        const sections = document.querySelectorAll('.section');
+        if (sections.length === 0) return;
+
         let activeSection = null;
         let maxVisiblePercent = 0;
         const { innerHeight } = globalThis;
+        const THRESHOLD = 40;
 
         for (const section of sections) {
           const { top, bottom, height } = section.getBoundingClientRect();
           const visibleHeight = Math.max(0, Math.min(innerHeight, bottom) - Math.max(0, top));
           const visiblePercent = (visibleHeight / height) * 100;
-          
+
           if (visiblePercent > maxVisiblePercent && visiblePercent >= THRESHOLD) {
             maxVisiblePercent = visiblePercent;
             activeSection = section;
@@ -1566,13 +1796,13 @@
         }
 
         const activeId = activeSection?.id ?? null;
-        
+
         if (activeId !== state.activeSection) {
           state.activeSection = activeId;
-          
+
           for (const link of navLinks) {
             const isActive = link.getAttribute('href') === `#${activeId}`;
-            
+
             if (link.classList.contains('site-header__nav-link--active') !== isActive) {
               link.classList.toggle('site-header__nav-link--active', isActive);
               link.setAttribute('aria-current', isActive ? 'page' : 'false');
@@ -1592,8 +1822,7 @@
         }
       };
 
-      globalThis.addEventListener('scroll', handleScroll, { passive: true });
-      updateActiveSection();
+      globalThis.addEventListener('scroll', handleScroll, { passive: true, signal });
     };
 
     const handleAnchorClick = (e) => {
@@ -1607,13 +1836,48 @@
       if (!target) return;
 
       e.preventDefault();
+
       const behavior = PREFERS_REDUCED_MOTION ? 'auto' : 'smooth';
       target.scrollIntoView({ behavior });
-      
-      if (state.isMobileMenuOpen) closeMobileMenu();
-      
+
+      if (state.isMobileMenuOpen) {
+        closeMobileMenu();
+      }
+
       target.focus({ preventScroll: true });
       announce(`Navigated to ${target.textContent.trim() || target.id}`);
+    };
+
+    const handleClick = (e) => {
+      const target = e.target;
+      const { isMobileMenuOpen } = state;
+
+      const navLink = target.closest('.site-header__nav-link');
+      if (navLink) {
+        const href = navLink.getAttribute('href');
+        if (href === '#') return;
+
+        const section = document.querySelector(href);
+        if (!section) return;
+
+        e.preventDefault();
+        const behavior = PREFERS_REDUCED_MOTION ? 'auto' : 'smooth';
+        section.scrollIntoView({ behavior });
+
+        if (isMobileMenuOpen) {
+          closeMobileMenu();
+        }
+
+        section.focus({ preventScroll: true });
+        announce(`Navigated to ${section.textContent.trim() || section.id}`);
+        return;
+      }
+
+      if (target.closest('.site-header__theme-toggle')) toggleTheme();
+      if (target.closest('.site-header__toggle')) toggleMobileMenu();
+      if (target.closest('.mobile-menu__close-button')) closeMobileMenu();
+      if (target.closest('#scroll-to-top')) handleScrollToTop();
+      if (isMobileMenuOpen && target === DOM.nav) closeMobileMenu();
     };
 
     const setupSkipLink = () => {
@@ -1641,26 +1905,15 @@
 
     const handleKeydown = (e) => {
       const { key, metaKey, ctrlKey } = e;
-      
+
       if ((metaKey || ctrlKey) && key === 'k') {
         e.preventDefault();
         toggleTheme();
       }
-      
+
       if (key === 'Escape' && state.isMobileMenuOpen) {
         closeMobileMenu();
       }
-    };
-
-    const handleClick = (e) => {
-      const target = e.target;
-      const { isMobileMenuOpen } = state;
-      
-      if (target.closest('.site-header__theme-toggle')) toggleTheme();
-      if (target.closest('.site-header__toggle')) toggleMobileMenu();
-      if (target.closest('.mobile-menu__close-button')) closeMobileMenu();
-      if (target.closest('.scroll-top')) handleScrollToTop();
-      if (isMobileMenuOpen && target === DOM.nav) closeMobileMenu();
     };
 
     const setupPerformanceMonitoring = () => {
@@ -1694,7 +1947,7 @@
 
       const { signal } = controller;
       globalThis.addEventListener('scroll', handleScroll, { passive: true, signal });
-      document.addEventListener('click', handleClick, { capture: true, signal });
+      document.addEventListener('click', handleClick, { signal });
       document.addEventListener('keydown', handleKeydown, { signal });
       globalThis.addEventListener('storage', (e) => {
         e.key === 'theme' && setTheme(e.newValue ?? getTheme());
