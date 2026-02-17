@@ -3,803 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  
+  <!-- Canonical & Sitemap -->
   <link rel="canonical" href="https://yoursite.com/">
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
-   <!-- Primary Meta Tags -->
+  <!-- SEO Meta -->
+  <title>Frameless - Single-file HTML Template for Production Websites</title>
   <meta name="title" content="Frameless - Single-file HTML Template for Production Websites">
   <meta name="description" content="Single-file HTML template with dark mode, responsive design, and accessibility built-in. Zero dependencies, no setup required.">
-  <meta name="keywords" content="Frameless, HTML template, vanilla HTML, responsive design, dark mode, starter template, web development, free template">
+  <meta name="keywords" content="Frameless, HTML template, vanilla HTML, responsive design, dark mode, starter template, web development">
   <meta name="author" content="Your Name">
   <meta name="robots" content="index, follow">
 
-   <!-- Open Graph / Facebook -->
+  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yoursite.com/">
   <meta property="og:title" content="Frameless - Single-file HTML Template for Production Websites">
-  <meta property="og:description" content="Single-file HTML template with dark mode, responsive design, and accessibility built-in. Zero dependencies, no setup required.">
+  <meta property="og:description" content="Single-file HTML template with dark mode, responsive design, and accessibility built-in.">
   <meta property="og:image" content="https://yoursite.com/og-image.jpg">
 
   <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://yoursite.com/">
-  <meta property="twitter:title" content="Frameless - Single-file HTML Template for Production Websites">
-  <meta property="twitter:description" content="Single-file HTML template with dark mode, responsive design, and accessibility built-in. Zero dependencies, no setup required.">
-  <meta property="twitter:image" content="https://yoursite.com/og-image.jpg">
-  <meta property="twitter:creator" content="@yourhandle">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://yoursite.com/">
+  <meta name="twitter:title" content="Frameless - Single-file HTML Template for Production Websites">
+  <meta name="twitter:description" content="Single-file HTML template with dark mode, responsive design, and accessibility built-in.">
+  <meta name="twitter:image" content="https://yoursite.com/og-image.jpg">
+  <meta name="twitter:creator" content="@yourhandle">
 
-  <title>Frameless - Single-file HTML Template for Production Websites</title>
+  <!-- Preconnect & Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <style>
-    /* =========================================
-       1. GLOBAL DESIGN TOKENS (PRIMITIVES)
-       ========================================= */
-    :root {
-      /* Typography */
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      line-height: 1.6;
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-      /* Spacing Tokens */
-      --spacing-xs: 0.5rem;
-      --spacing-sm: 0.75rem;
-      --spacing-md: 1rem;
-      --spacing: 1.5rem;
-      --spacing-lg: 2rem;
-      --max-width: 1240px;
-      
-      /* Breakpoints (for reference in calc/clamp, strictly vars not actionable in @media) */
-      --header-height-base: 64px;
-
-      /* Typography Scale */
-      --font-xs: clamp(0.7rem, 0.625rem + 0.375vw, 0.75rem);
-      --font-sm: clamp(0.8125rem, 0.734375rem + 0.390625vw, 0.875rem);
-      --font-base: clamp(0.9375rem, 0.84375rem + 0.46875vw, 1rem);
-      --font-xl: clamp(1.75rem, 1.40625rem + 1.71875vw, 2rem);
-
-      /* Global Effects */
-      --radius-sm: 4px;
-      --radius-md: 8px;
-      --radius-lg: 12px;
-      --focus-ring: 0 0 0 2px var(--col-bg), 0 0 0 3px var(--col-primary);
-      
-      /* Animations */
-      --ease-fast: 150ms ease;
-      --ease-normal: 250ms ease;
-      --ease-slow: 400ms ease;
-      
-      /* DEFAULT THEME (Light) */
-      --col-bg: oklch(99% 0 0);
-      --col-text: oklch(20% 0 0);
-      --col-text-muted: oklch(45% 0 0);
-      --col-primary: oklch(15% 0 0);
-      --col-primary-hover: oklch(5% 0 0);
-      --col-line: oklch(89% 0 0);
-      --col-btn-hover: oklch(92% 0 0);
-      --col-btn-active: oklch(88% 0 0);
-      --col-nav-bg: oklch(99% 0 0);
-    }
-
-    /* DARK THEME TOKENS */
-    [data-theme="dark"] {
-      --col-bg: oklch(5% 0 0);
-      --col-text: oklch(96% 0 0);
-      --col-text-muted: oklch(65% 0 0);
-      --col-primary: oklch(90% 0 0);
-      --col-primary-hover: oklch(100% 0 0);
-      --col-line: oklch(20% 0 0);
-      --col-btn-hover: oklch(25% 0 0);
-      --col-btn-active: oklch(35% 0 0);
-      --col-nav-bg: oklch(8% 0 0);
-    }
-
-    /* SYSTEM PREFERENCE FALLBACK */
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme]) {
-        --col-bg: oklch(5% 0 0);
-        --col-text: oklch(96% 0 0);
-        --col-text-muted: oklch(65% 0 0);
-        --col-primary: oklch(90% 0 0);
-        --col-primary-hover: oklch(100% 0 0);
-        --col-line: oklch(20% 0 0);
-        --col-btn-hover: oklch(25% 0 0);
-        --col-btn-active: oklch(35% 0 0);
-        --col-nav-bg: oklch(8% 0 0);
-      }
-    }
-
-    /* =========================================
-       2. RESET & GLOBAL
-       ========================================= */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    ::selection { background-color: var(--col-primary); color: var(--col-bg); }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { inline-size: 8px; block-size: 8px; }
-    ::-webkit-scrollbar-track { background-color: transparent; }
-    ::-webkit-scrollbar-corner { background-color: transparent; }
-    ::-webkit-scrollbar-thumb {
-      background-color: var(--col-line);
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover { background-color: var(--col-text-muted); }
-
-    html {
-      scroll-behavior: smooth;
-      scroll-padding-block-start: calc(var(--header-height-base) + var(--spacing-md));
-      scrollbar-gutter: stable;
-      text-rendering: optimizeLegibility;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    body {
-      background-color: var(--col-bg);
-      color: var(--col-text);
-      display: flex;
-      flex-direction: column;
-      min-block-size: 100vh;
-    }
-
-    img, video, iframe { max-inline-size: 100%; block-size: auto; }
-    a { color: inherit; text-decoration: none; }
-    i[data-lucide] { display: inline-block; vertical-align: middle; }
-    :focus-visible { outline: none; box-shadow: var(--focus-ring); }
-
-    /* =========================================
-       3. COMPONENT: BUTTONS (Scoped Variables)
-       ========================================= */
-    .btn {
-      /* Private Props Defaults */
-      --btn-bg: transparent;
-      --btn-text: var(--col-text);
-      --btn-border: 1px solid transparent;
-      --btn-hover-bg: var(--col-btn-hover);
-      --btn-padding-x: var(--spacing-md);
-      --btn-height: 44px;
-      --btn-weight: 500;
-      --btn-radius: var(--radius-sm);
-
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding-block: 0;
-      padding-inline: var(--btn-padding-x);
-      min-block-size: var(--btn-height);
-      block-size: var(--btn-height);
-      
-      background-color: var(--btn-bg);
-      border: var(--btn-border);
-      border-radius: var(--btn-radius);
-      color: var(--btn-text);
-      
-      font-size: var(--font-sm);
-      font-weight: var(--btn-weight);
-      white-space: nowrap;
-      cursor: pointer;
-      transition: background-color var(--ease-fast), color var(--ease-fast), border-color var(--ease-fast), transform var(--ease-fast);
-    }
-
-    .btn:hover { background-color: var(--btn-hover-bg); }
-    .btn:disabled, .btn[aria-disabled="true"] { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
-
-    /* Variants by re-assigning variables */
-    .btn--primary {
-      --btn-bg: var(--col-primary);
-      --btn-text: var(--col-bg);
-      --btn-hover-bg: var(--col-primary-hover);
-      --btn-padding-x: calc(var(--spacing-md) * 1.5);
-      --btn-weight: 600;
-    }
-
-    .btn--ghost {
-      --btn-border: 1px solid var(--col-line);
-      --btn-text: var(--col-text-muted);
-    }
-    .btn--ghost:hover {
-      --btn-border: 1px solid var(--col-text);
-      --btn-text: var(--col-text);
-    }
-
-    /* Icon Button Variant */
-    .btn-icon, .btn--icon {
-      /* Overrides */
-      --btn-padding-x: 0;
-      inline-size: 44px; 
-      block-size: 44px;
-      
-      display: flex; 
-      /* Inherits mostly from .btn, but explicitly re-declared for specificity if needed */
-      align-items: center; justify-content: center;
-      background-color: transparent;
-      border: none;
-      border-radius: var(--radius-sm);
-      color: var(--col-text);
-      cursor: pointer;
-      touch-action: manipulation;
-      transition: background-color var(--ease-fast), transform var(--ease-fast);
-    }
-    .btn-icon:hover { background-color: var(--col-btn-hover); }
-    
-    .btn-icon--primary {
-      background-color: var(--col-primary);
-      color: var(--col-bg);
-    }
-    .btn-icon--primary:hover { background-color: var(--col-primary-hover); }
-
-    /* =========================================
-       4. COMPONENT: HEADER
-       ========================================= */
-    .header {
-      /* Scoped Vars */
-      --header-bg: color-mix(in oklch, var(--col-bg) 85%, transparent);
-      --header-blur: 12px;
-      --header-border: 1px solid var(--col-line);
-      --header-z: 100;
-
-      position: sticky;
-      inset-block-start: 0;
-      z-index: var(--header-z);
-      block-size: var(--header-height-base);
-      background-color: var(--header-bg);
-      backdrop-filter: blur(var(--header-blur));
-      -webkit-backdrop-filter: blur(var(--header-blur));
-      border-block-end: var(--header-border);
-    }
-
-    .header--menu-open {
-      --header-blur: 0; /* Removing blur when menu is open */
-      --header-bg: var(--col-bg); 
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
-    }
-
-    .header__inner {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-inline: var(--spacing);
-      margin-inline: auto;
-      inline-size: 100%;
-      max-inline-size: var(--max-width);
-      block-size: 100%;
-    }
-
-    @media (width >= 1240px) {
-      .header__inner {
-        border-inline: 1px solid var(--col-line);
-      }
-    }
-
-    .header__content {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      inline-size: 100%;
-    }
-
-    /* Logo */
-    .logo {
-      font-size: var(--font-sm);
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      line-height: 1.2;
-      text-transform: uppercase;
-      color: var(--col-primary);
-      transition: color var(--ease-fast);
-    }
-    .logo:hover { color: var(--col-primary-hover); }
-    .logo:active { color: var(--col-text-muted); }
-    @media (width >= 480px) { .logo { font-size: var(--font-base); } }
-
-    /* Header Actions */
-    .header__actions {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-xs);
-      z-index: 10;
-      margin-inline-start: auto;
-      justify-content: flex-end;
-    }
-    .header__actions .btn:not(.btn--icon) { display: none; } /* Hide text buttons on mobile */
-
-    /* =========================================
-       5. COMPONENT: NAVIGATION (The complex part)
-       ========================================= */
-    .nav {
-      /* Mobile Defaults (Scoped) */
-      --nav-pos: fixed;
-      --nav-inset: 0;
-      --nav-z: 300;
-      --nav-w: 100%;
-      --nav-h: 100dvh;
-      --nav-bg: var(--col-nav-bg);
-      --nav-opacity: 0;
-      --nav-visibility: hidden;
-      --nav-pointer: none;
-      --nav-flex-dir: column;
-      
-      position: var(--nav-pos);
-      inset: var(--nav-inset);
-      z-index: var(--nav-z);
-      display: flex;
-      flex-direction: var(--nav-flex-dir);
-      inline-size: var(--nav-w);
-      block-size: var(--nav-h);
-      background-color: var(--nav-bg);
-      overflow-inline: hidden;
-      opacity: var(--nav-opacity);
-      visibility: var(--nav-visibility);
-      pointer-events: var(--nav-pointer);
-      transition: opacity var(--ease-slow), visibility var(--ease-slow);
-    }
-
-    /* State: Expanded */
-    .nav[aria-expanded="true"] {
-      --nav-opacity: 1;
-      --nav-visibility: visible;
-      --nav-pointer: auto;
-    }
-
-    .nav__list {
-      display: flex;
-      flex-direction: var(--nav-flex-dir);
-      list-style: none;
-    }
-
-    .nav__link {
-      /* Scoped Link Vars */
-      --link-padding: var(--spacing);
-      --link-border: 1px solid var(--col-line);
-      --link-color: var(--col-text-muted);
-      --link-bg-hover: var(--col-btn-hover);
-
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding: var(--link-padding);
-      min-block-size: 44px;
-      inline-size: 100%;
-      border-block-end: var(--link-border);
-      
-      font-size: var(--font-base);
-      font-weight: 600;
-      line-height: 1.2;
-      color: var(--link-color);
-      text-align: start;
-      cursor: pointer;
-      transition: background-color var(--ease-fast), color var(--ease-fast);
-    }
-    
-    .nav__link:hover { background-color: var(--link-bg-hover); color: var(--col-text); }
-    .nav__link:active { background-color: var(--col-btn-active); }
-    .nav__list li:last-child .nav__link { border-block-end: none; } /* Mobile specific */
-    .nav__link--active { color: var(--col-text); }
-
-    /* DESKTOP NAV OVERRIDES */
-    @media (width >= 1024px) {
-      .header__content {
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-      }
-      .header__actions {
-        grid-column: 3;
-        justify-self: end;
-      }
-      .header__actions .btn:not(.btn--icon) { display: inline-flex; }
-
-      .menu-toggle { display: none; } /* Hide burger */
-
-      .nav {
-        /* Desktop Re-assignments */
-        --nav-pos: static;
-        --nav-inset: auto;
-        --nav-z: 1;
-        --nav-w: auto;
-        --nav-h: auto;
-        --nav-bg: transparent;
-        --nav-opacity: 1;
-        --nav-visibility: visible;
-        --nav-pointer: auto;
-        --nav-flex-dir: row;
-
-        grid-column: 2;
-      }
-
-      .nav__list { gap: var(--spacing); }
-
-      .nav__link {
-        /* Desktop Link Re-assignments */
-        --link-padding: calc(var(--spacing-xs) * 1.2) var(--spacing-md);
-        --link-border: none;
-        
-        justify-content: center;
-        min-block-size: 40px;
-        inline-size: auto;
-        border-radius: var(--radius-sm);
-        font-size: var(--font-sm);
-      }
-    }
-
-    /* =========================================
-       6. COMPONENT: MENU (Mobile Drawer Internals)
-       ========================================= */
-    .menu {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-xs);
-      padding-inline: var(--spacing);
-      block-size: var(--header-height-base);
-      border-block-end: 1px solid var(--col-line);
-      flex-shrink: 0;
-    }
-    .menu__logo { flex: 1; display: flex; align-items: center; }
-    .menu__controls { display: flex; align-items: center; flex-shrink: 0; }
-    
-    .menu__body {
-      flex: 1;
-      padding: 0;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior-y: contain;
-    }
-
-    .menu__footer {
-      position: sticky;
-      inset-block-end: 0;
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-sm);
-      padding: var(--spacing);
-      background-color: var(--col-bg);
-      border-block-start: 1px solid var(--col-line);
-      flex-shrink: 0;
-    }
-    .menu__btn { inline-size: 100%; }
-
-    @media (width >= 1024px) {
-      .menu, .menu__footer, .menu__body { display: none; } /* Elements strictly for mobile DOM */
-    }
-
-    /* =========================================
-       7. COMPONENT: MAIN SECTION
-       ========================================= */
-    .main {
-      inline-size: 100%;
-      max-inline-size: var(--max-width);
-      margin-inline: auto;
-      flex: 1;
-    }
-    @media (width >= 1240px) { .main { border-inline: 1px solid var(--col-line); } }
-
-    .section {
-      /* Scoped Vars */
-      --sect-pad-y: calc(var(--spacing) * 2);
-      --sect-pad-x: var(--spacing);
-      --sect-min-h: 50vh;
-      --sect-title-size: 1.5rem;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding-block: var(--sect-pad-y);
-      padding-inline: var(--sect-pad-x);
-      min-block-size: var(--sect-min-h);
-      text-align: center;
-      content-visibility: auto;
-    }
-
-    @media (width >= 480px) {
-      .section { --sect-pad-y: calc(var(--spacing) * 2.333); --sect-title-size: 1.75rem; }
-    }
-    @media (width >= 768px) {
-      .section {
-        --sect-pad-x: 10%;
-        --sect-min-h: 60vh;
-        --sect-title-size: var(--font-xl);
-      }
-    }
-    @media (width >= 1240px) {
-      .section { --sect-pad-y: calc(var(--spacing) * 2.667); --sect-pad-x: var(--spacing); }
-    }
-
-    .section__title {
-      font-size: var(--sect-title-size);
-      font-weight: 700;
-      line-height: 1.2;
-      color: var(--col-text);
-      margin-block-end: var(--spacing-md);
-    }
-
-    .section__content {
-      inline-size: 100%;
-      max-inline-size: 600px;
-      font-size: var(--font-sm);
-      line-height: 1.6; /* Mobile default */
-      color: var(--col-text-muted);
-      text-align: center;
-      overflow-wrap: break-word;
-    }
-    @media (width >= 480px) { .section__content { font-size: var(--font-base); line-height: 1.7; } }
-
-    .section__cta { margin-block-start: var(--spacing); }
-    @media (width >= 768px) { .section__cta { margin-block-start: var(--spacing-lg); } }
-
-    /* =========================================
-       8. COMPONENT: DIVIDER
-       ========================================= */
-    .divider {
-      /* Scoped Vars */
-      --div-color: var(--col-primary);
-      --div-line: 1px dashed var(--col-line);
-      --div-grad-size: 200px;
-      --div-sym-size: 0.5rem;
-      
-      position: relative;
-      z-index: 10;
-    }
-
-    .divider__axis {
-      position: absolute;
-      inset-inline-start: 50%;
-      translate: -50% 0;
-      inline-size: 100vw;
-      block-size: 1px;
-    }
-
-    .divider__line {
-      border: none;
-      border-block-start: var(--div-line);
-    }
-
-    .divider__container {
-      position: absolute;
-      inset-inline-start: 50%;
-      inset-block-start: 50%;
-      translate: -50% -50%;
-      display: flex;
-      align-items: center;
-      padding-inline: var(--spacing);
-      inline-size: 100%;
-      max-inline-size: var(--max-width);
-      block-size: 100%;
-    }
-    @media (width >= 1240px) {
-      .divider__container { padding-inline: 0; border-inline: var(--div-line); }
-    }
-
-    .divider__gradient {
-      position: absolute;
-      inset-block-start: 0;
-      block-size: 1px;
-      inline-size: 50%;
-      overflow: hidden;
-    }
-    .divider__gradient--left { inset-inline-start: 0; }
-    .divider__gradient--right { inset-inline-end: 0; }
-
-    .divider__bar {
-      position: absolute;
-      inset-block-start: 0;
-      block-size: 1px;
-      inline-size: var(--div-grad-size);
-      opacity: 0;
-    }
-    .divider__bar--left {
-      inset-inline-end: 100%;
-      background: linear-gradient(to right, var(--div-color), transparent);
-    }
-    .divider__bar--right {
-      inset-inline-start: 100%;
-      background: linear-gradient(to left, var(--div-color), transparent);
-    }
-
-    .divider__symbol {
-      position: absolute;
-      display: none;
-      inline-size: var(--div-sym-size);
-      aspect-ratio: 1;
-      background: var(--col-bg);
-      border: 1px solid var(--col-line); /* Fallback */
-      border: var(--div-line);
-      border-radius: 1px;
-    }
-    @media (width >= 1240px) {
-      .divider__symbol {
-        display: block;
-        inline-size: calc(var(--div-sym-size) + 0.125rem);
-        margin-inline: -1px;
-      }
-    }
-    .divider__symbol--left { inset-inline-start: 0; translate: -50% 0; rotate: 45deg; }
-    .divider__symbol--right { inset-inline-end: 0; translate: 50% 0; rotate: 45deg; }
-
-    /* Animation Keyframes */
-    @keyframes slideLeft {
-      0% { inset-inline-end: -20%; inline-size: 20%; opacity: 0; }
-      80% { inset-inline-end: 100%; inline-size: 90%; opacity: 1; }
-      100% { inset-inline-end: 100%; inline-size: 90%; opacity: 0; }
-    }
-    @keyframes slideRight {
-      0% { inset-inline-start: -20%; inline-size: 20%; opacity: 0; }
-      80% { inset-inline-start: 100%; inline-size: 90%; opacity: 1; }
-      100% { inset-inline-start: 100%; inline-size: 90%; opacity: 0; }
-    }
-    
-    .divider.in-view .divider__bar--left {
-      animation: slideLeft 2s cubic-bezier(0.4, 0, 1, 1) forwards;
-      will-change: inset-inline-end, inline-size, opacity;
-    }
-    .divider.in-view .divider__bar--right {
-      animation: slideRight 2s cubic-bezier(0.4, 0, 1, 1) forwards;
-      will-change: inset-inline-start, inline-size, opacity;
-    }
-
-    /* =========================================
-       9. COMPONENT: FOOTER
-       ========================================= */
-    .footer {
-      inline-size: 100%;
-      --footer-pad-top: calc(var(--spacing) * 1.333);
-      --footer-grid-cols: 1fr;
-    }
-    @media (width >= 480px) { .footer { --footer-pad-top: calc(var(--spacing) * 1.667); } }
-    @media (width >= 768px) {
-       .footer {
-         --footer-pad-top: calc(var(--spacing) * 2);
-         --footer-grid-cols: 2fr 1fr 1fr; 
-       }
-    }
-
-    .footer__main {
-      padding-block: var(--footer-pad-top) var(--spacing);
-      padding-inline: var(--spacing);
-      max-inline-size: var(--max-width);
-      margin-inline: auto;
-    }
-    @media (width >= 1240px) { .footer__main { border-inline: 1px solid var(--col-line); } }
-
-    .footer__grid {
-      display: grid;
-      grid-template-columns: var(--footer-grid-cols);
-      gap: var(--spacing);
-    }
-    @media (width >= 480px) { .footer__grid { gap: var(--spacing-lg); } }
-
-    .footer__brand { display: flex; flex-direction: column; }
-    .footer__brand-name {
-      font-size: var(--font-base);
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      line-height: 1.2;
-      text-transform: uppercase;
-      color: var(--col-primary);
-    }
-    .footer__brand-desc {
-      max-inline-size: 300px;
-      margin-block-start: var(--spacing-xs);
-      font-size: var(--font-sm);
-      line-height: 1.7;
-      color: var(--col-text-muted);
-    }
-
-    .footer__section { display: flex; flex-direction: column; }
-    .footer__heading {
-      margin-block-end: var(--spacing-md);
-      font-size: var(--font-xs);
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      line-height: 1.2;
-      text-transform: uppercase;
-      color: var(--col-text);
-    }
-
-    .footer__links { list-style: none; }
-    .footer__links li { margin-block-end: var(--spacing-xs); }
-    
-    .footer__link {
-      display: inline-block;
-      font-size: var(--font-sm);
-      color: var(--col-text-muted);
-      transition: color var(--ease-fast);
-    }
-    .footer__link:hover { color: var(--col-text); }
-    .footer__link:active { color: var(--col-primary); }
-    .footer__link:focus-visible { text-decoration: underline; text-underline-offset: 2px; }
-
-    .footer__separator {
-      inline-size: 100%;
-      border-block-start: 1px solid var(--col-line);
-    }
-
-    .footer__meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: calc(var(--spacing-xs) * 1.5) var(--spacing);
-      inline-size: 100%;
-      max-inline-size: var(--max-width);
-      margin-inline: auto;
-      font-size: var(--font-sm);
-      color: var(--col-text-muted);
-    }
-    @media (width >= 768px) { .footer__meta { padding: var(--spacing-md) var(--spacing); } }
-    @media (width >= 1240px) { .footer__meta { border-inline: 1px solid var(--col-line); } }
-
-    /* =========================================
-       10. UTILITIES & EXTRAS
-       ========================================= */
-    /* Skip Link */
-    .skip-link {
-      position: absolute;
-      inset-block-start: -100%;
-      inset-inline-start: var(--spacing);
-      z-index: 1000;
-      transition: inset-block-start var(--ease-fast), transform var(--ease-fast);
-    }
-    .skip-link:focus { inset-block-start: var(--spacing-md); outline: none; }
-
-    /* Scroll To Top */
-    .scroll-top {
-      position: fixed;
-      inset-block-end: var(--spacing);
-      inset-inline-end: var(--spacing);
-      z-index: 200;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(10px);
-      will-change: opacity, visibility, transform;
-      transition: opacity var(--ease-fast), visibility var(--ease-fast), transform var(--ease-fast);
-    }
-    .scroll-top.visible {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-    body.menu-open .scroll-top.visible { opacity: 0; visibility: hidden; }
-
-    /* Helper Classes */
-    .sr-only {
-      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;
-    }
-
-    /* Print */
-    @media print {
-      .header, .footer, .scroll-top, .skip-link, .divider { display: none !important; }
-      body { background: white; color: black; }
-      .section { block-size: auto; min-block-size: 0; padding: 0; }
-    }
-
-    /* Theme Icons */
-    .theme-icon--sun { display: block; }
-    .theme-icon--moon, .theme-icon--system { display: none; }
-
-    [data-theme="dark"] .theme-icon--sun, [data-theme="dark"] .theme-icon--system { display: none; }
-    [data-theme="dark"] .theme-icon--moon { display: block; }
-
-    [data-theme="light"] .theme-icon--sun { display: block; }
-    [data-theme="light"] .theme-icon--moon, [data-theme="light"] .theme-icon--system { display: none; }
-
-    :root:not([data-theme]) .theme-icon--sun, :root:not([data-theme]) .theme-icon--moon { display: none; }
-    :root:not([data-theme]) .theme-icon--system { display: block; }
-  </style>
-
+  <!-- Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Frameless",
     "url": "https://yoursite.com/",
-    "description": "Single-file HTML template with dark mode, responsive design, and accessibility built-in. Zero dependencies, no setup required.",
+    "description": "Single-file HTML template with dark mode, responsive design, and accessibility built-in.",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://yoursite.com/search?q={search_term_string}",
@@ -807,7 +55,7 @@
     }
   }
   </script>
-
+  
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -827,76 +75,977 @@
     }
   }
   </script>
+
+  <style>
+    /* =========================================
+       DESIGN TOKENS
+       ========================================= */
+    :root {
+      /* Typography */
+      --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-xs: clamp(0.7rem, 0.625rem + 0.375vw, 0.75rem);
+      --font-sm: clamp(0.8125rem, 0.734375rem + 0.390625vw, 0.875rem);
+      --font-base: clamp(0.9375rem, 0.84375rem + 0.46875vw, 1rem);
+      --font-xl: clamp(1.75rem, 1.40625rem + 1.71875vw, 2rem);
+      --line-height: 1.6;
+
+      /* Spacing */
+      --space-xs: 0.5rem;
+      --space-sm: 0.75rem;
+      --space-md: 1rem;
+      --space: 1.5rem;
+      --space-lg: 2rem;
+      --max-width: 1240px;
+      --header-height: 64px;
+
+      /* Effects */
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --focus-ring: 0 0 0 2px var(--color-bg), 0 0 0 3px var(--color-primary);
+      
+      /* Animation */
+      --ease-fast: 150ms ease;
+      --ease-normal: 250ms ease;
+      --ease-slow: 400ms ease;
+
+      /* Light Theme */
+      --color-bg: oklch(99% 0 0);
+      --color-text: oklch(20% 0 0);
+      --color-text-muted: oklch(45% 0 0);
+      --color-primary: oklch(15% 0 0);
+      --color-primary-hover: oklch(5% 0 0);
+      --color-line: oklch(89% 0 0);
+      --color-btn-hover: oklch(92% 0 0);
+      --color-btn-active: oklch(88% 0 0);
+      --color-nav-bg: oklch(99% 0 0);
+    }
+
+    /* Dark Theme */
+    [data-theme="dark"] {
+      --color-bg: oklch(5% 0 0);
+      --color-text: oklch(96% 0 0);
+      --color-text-muted: oklch(65% 0 0);
+      --color-primary: oklch(90% 0 0);
+      --color-primary-hover: oklch(100% 0 0);
+      --color-line: oklch(20% 0 0);
+      --color-btn-hover: oklch(25% 0 0);
+      --color-btn-active: oklch(35% 0 0);
+      --color-nav-bg: oklch(8% 0 0);
+    }
+
+    /* System Preference Fallback */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme]) {
+        --color-bg: oklch(5% 0 0);
+        --color-text: oklch(96% 0 0);
+        --color-text-muted: oklch(65% 0 0);
+        --color-primary: oklch(90% 0 0);
+        --color-primary-hover: oklch(100% 0 0);
+        --color-line: oklch(20% 0 0);
+        --color-btn-hover: oklch(25% 0 0);
+        --color-btn-active: oklch(35% 0 0);
+        --color-nav-bg: oklch(8% 0 0);
+      }
+    }
+
+    /* =========================================
+       RESET & BASE
+       ========================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-family: var(--font-sans);
+      line-height: var(--line-height);
+      scroll-behavior: smooth;
+      scroll-padding-block-start: calc(var(--header-height) + var(--space-md));
+      scrollbar-gutter: stable;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      display: flex;
+      flex-direction: column;
+      min-block-size: 100vh;
+    }
+
+    /* Selection & Scrollbar */
+    ::selection {
+      background-color: var(--color-primary);
+      color: var(--color-bg);
+    }
+
+    ::-webkit-scrollbar {
+      inline-size: 8px;
+      block-size: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--color-line);
+      border-radius: var(--radius-sm);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--color-text-muted);
+    }
+
+    /* Media Defaults */
+    img, video, iframe {
+      max-inline-size: 100%;
+      block-size: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    i[data-lucide] {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    /* =========================================
+       COMPONENTS: BUTTON
+       ========================================= */
+    .btn {
+      --btn-bg: transparent;
+      --btn-color: var(--color-text);
+      --btn-border: 1px solid transparent;
+      --btn-hover-bg: var(--color-btn-hover);
+      --btn-height: 44px;
+      --btn-padding: var(--space-md);
+      --btn-radius: var(--radius-sm);
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      padding: 0 var(--btn-padding);
+      block-size: var(--btn-height);
+      min-block-size: var(--btn-height);
+      
+      background: var(--btn-bg);
+      border: var(--btn-border);
+      border-radius: var(--btn-radius);
+      color: var(--btn-color);
+      
+      font-size: var(--font-sm);
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all var(--ease-fast);
+    }
+
+    .btn:hover {
+      background: var(--btn-hover-bg);
+    }
+
+    .btn:disabled, .btn[aria-disabled="true"] {
+      opacity: 0.5;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+
+    /* Button Variants */
+    .btn--primary {
+      --btn-bg: var(--color-primary);
+      --btn-color: var(--color-bg);
+      --btn-hover-bg: var(--color-primary-hover);
+      --btn-padding: calc(var(--space-md) * 1.5);
+      font-weight: 600;
+    }
+
+    .btn--ghost {
+      --btn-border: 1px solid var(--color-line);
+      --btn-color: var(--color-text-muted);
+    }
+
+    .btn--ghost:hover {
+      --btn-border: 1px solid var(--color-text);
+      --btn-color: var(--color-text);
+    }
+
+    /* Icon Button */
+    .btn-icon {
+      --btn-padding: 0;
+      inline-size: 44px;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-sm);
+      color: var(--color-text);
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .btn-icon:hover {
+      background: var(--color-btn-hover);
+    }
+
+    .btn-icon--primary {
+      background: var(--color-primary);
+      color: var(--color-bg);
+    }
+
+    .btn-icon--primary:hover {
+      background: var(--color-primary-hover);
+    }
+
+    /* =========================================
+       COMPONENTS: HEADER
+       ========================================= */
+    .header {
+      --header-blur: 12px;
+      --header-z: 100;
+
+      position: sticky;
+      inset-block-start: 0;
+      z-index: var(--header-z);
+      block-size: var(--header-height);
+      background: color-mix(in oklch, var(--color-bg) 85%, transparent);
+      backdrop-filter: blur(var(--header-blur));
+      border-block-end: 1px solid var(--color-line);
+    }
+
+    .header--menu-open {
+      background: var(--color-bg);
+      backdrop-filter: none;
+    }
+
+    .header__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-inline: auto;
+      padding-inline: var(--space);
+      max-inline-size: var(--max-width);
+      block-size: 100%;
+    }
+
+    @media (width >= 1240px) {
+      .header__inner {
+        border-inline: 1px solid var(--color-line);
+      }
+    }
+
+    .header__content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      inline-size: 100%;
+    }
+
+    @media (width >= 1024px) {
+      .header__content {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+      }
+    }
+
+    /* Logo */
+    .logo {
+      font-size: var(--font-sm);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      transition: color var(--ease-fast);
+    }
+
+    .logo:hover {
+      color: var(--color-primary-hover);
+    }
+
+    @media (width >= 480px) {
+      .logo {
+        font-size: var(--font-base);
+      }
+    }
+
+    /* Header Actions */
+    .header__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      margin-inline-start: auto;
+    }
+
+    @media (width >= 1024px) {
+      .header__actions {
+        grid-column: 3;
+        justify-self: end;
+      }
+    }
+
+    .header__actions .btn:not(.btn-icon) {
+      display: none;
+    }
+
+    @media (width >= 1024px) {
+      .header__actions .btn:not(.btn-icon) {
+        display: inline-flex;
+      }
+    }
+
+    /* =========================================
+       COMPONENTS: NAVIGATION
+       ========================================= */
+    .nav {
+      --nav-opacity: 0;
+      --nav-visibility: hidden;
+      --nav-pointer: none;
+
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-nav-bg);
+      opacity: var(--nav-opacity);
+      visibility: var(--nav-visibility);
+      pointer-events: var(--nav-pointer);
+      transition: opacity var(--ease-slow), visibility var(--ease-slow);
+    }
+
+    .nav[aria-expanded="true"] {
+      --nav-opacity: 1;
+      --nav-visibility: visible;
+      --nav-pointer: auto;
+    }
+
+    @media (width >= 1024px) {
+      .nav {
+        --nav-opacity: 1;
+        --nav-visibility: visible;
+        --nav-pointer: auto;
+
+        position: static;
+        flex-direction: row;
+        grid-column: 2;
+        background: transparent;
+      }
+
+      .menu-toggle {
+        display: none;
+      }
+    }
+
+    /* Nav List */
+    .nav__list {
+      display: flex;
+      flex-direction: column;
+      list-style: none;
+    }
+
+    @media (width >= 1024px) {
+      .nav__list {
+        flex-direction: row;
+        gap: var(--space);
+      }
+    }
+
+    /* Nav Link */
+    .nav__link {
+      display: flex;
+      align-items: center;
+      padding: var(--space);
+      min-block-size: 44px;
+      border-block-end: 1px solid var(--color-line);
+      
+      font-size: var(--font-base);
+      font-weight: 600;
+      color: var(--color-text-muted);
+      transition: all var(--ease-fast);
+    }
+
+    .nav__link:hover {
+      background: var(--color-btn-hover);
+      color: var(--color-text);
+    }
+
+    .nav__link:active {
+      background: var(--color-btn-active);
+    }
+
+    .nav__link--active {
+      color: var(--color-text);
+    }
+
+    .nav__list li:last-child .nav__link {
+      border-block-end: none;
+    }
+
+    @media (width >= 1024px) {
+      .nav__link {
+        padding: calc(var(--space-xs) * 1.2) var(--space-md);
+        border: none;
+        border-radius: var(--radius-sm);
+        font-size: var(--font-sm);
+      }
+
+      .nav__list li:last-child .nav__link {
+        border-block-end: none;
+      }
+    }
+
+    /* =========================================
+       COMPONENTS: MOBILE MENU
+       ========================================= */
+    .menu {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding-inline: var(--space);
+      block-size: var(--header-height);
+      border-block-end: 1px solid var(--color-line);
+      flex-shrink: 0;
+    }
+
+    .menu__logo {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .menu__body {
+      flex: 1;
+      overflow-y: auto;
+      overscroll-behavior-y: contain;
+    }
+
+    .menu__footer {
+      position: sticky;
+      inset-block-end: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      padding: var(--space);
+      background: var(--color-bg);
+      border-block-start: 1px solid var(--color-line);
+      flex-shrink: 0;
+    }
+
+    .menu__btn {
+      inline-size: 100%;
+    }
+
+    @media (width >= 1024px) {
+      .menu, .menu__body, .menu__footer {
+        display: none;
+      }
+    }
+
+    /* =========================================
+       COMPONENTS: MAIN & SECTIONS
+       ========================================= */
+    .main {
+      flex: 1;
+      margin-inline: auto;
+      max-inline-size: var(--max-width);
+    }
+
+    @media (width >= 1240px) {
+      .main {
+        border-inline: 1px solid var(--color-line);
+      }
+    }
+
+    .section {
+      --sect-padding: calc(var(--space) * 2);
+      --sect-min-height: 50vh;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-block: var(--sect-padding);
+      padding-inline: var(--space);
+      min-block-size: var(--sect-min-height);
+      text-align: center;
+      content-visibility: auto;
+    }
+
+    @media (width >= 480px) {
+      .section {
+        --sect-padding: calc(var(--space) * 2.333);
+      }
+    }
+
+    @media (width >= 768px) {
+      .section {
+        --sect-padding: calc(var(--space) * 2.667);
+        --sect-min-height: 60vh;
+        padding-inline: 10%;
+      }
+    }
+
+    @media (width >= 1240px) {
+      .section {
+        padding-inline: var(--space);
+      }
+    }
+
+    .section__title {
+      margin-block-end: var(--space-md);
+      font-size: clamp(1.5rem, 5vw, var(--font-xl));
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--color-text);
+    }
+
+    .section__content {
+      max-inline-size: 600px;
+      font-size: var(--font-sm);
+      line-height: 1.6;
+      color: var(--color-text-muted);
+    }
+
+    @media (width >= 480px) {
+      .section__content {
+        font-size: var(--font-base);
+        line-height: 1.7;
+      }
+    }
+
+    .section__cta {
+      margin-block-start: var(--space);
+    }
+
+    @media (width >= 768px) {
+      .section__cta {
+        margin-block-start: var(--space-lg);
+      }
+    }
+
+    /* =========================================
+       COMPONENTS: DIVIDER
+       ========================================= */
+    .divider {
+      position: relative;
+      z-index: 10;
+    }
+
+    .divider__axis {
+      position: absolute;
+      inset-inline-start: 50%;
+      translate: -50% 0;
+      inline-size: 100vw;
+      block-size: 1px;
+    }
+
+    .divider__line {
+      border: none;
+      border-block-start: 1px dashed var(--color-line);
+    }
+
+    .divider__container {
+      position: absolute;
+      inset-inline-start: 50%;
+      inset-block-start: 50%;
+      translate: -50% -50%;
+      display: flex;
+      align-items: center;
+      padding-inline: var(--space);
+      inline-size: 100%;
+      max-inline-size: var(--max-width);
+    }
+
+    @media (width >= 1240px) {
+      .divider__container {
+        padding-inline: 0;
+        border-inline: 1px dashed var(--color-line);
+      }
+    }
+
+    .divider__gradient {
+      position: absolute;
+      block-size: 1px;
+      inline-size: 50%;
+      overflow: hidden;
+    }
+
+    .divider__gradient--left {
+      inset-inline-start: 0;
+    }
+
+    .divider__gradient--right {
+      inset-inline-end: 0;
+    }
+
+    .divider__bar {
+      position: absolute;
+      inset-block-start: 0;
+      block-size: 1px;
+      inline-size: 200px;
+      opacity: 0;
+    }
+
+    .divider__bar--left {
+      inset-inline-end: 100%;
+      background: linear-gradient(to right, var(--color-primary), transparent);
+    }
+
+    .divider__bar--right {
+      inset-inline-start: 100%;
+      background: linear-gradient(to left, var(--color-primary), transparent);
+    }
+
+    .divider__symbol {
+      position: absolute;
+      display: none;
+      inline-size: 0.5rem;
+      aspect-ratio: 1;
+      background: var(--color-bg);
+      border: 1px dashed var(--color-line);
+      rotate: 45deg;
+    }
+
+    @media (width >= 1240px) {
+      .divider__symbol {
+        display: block;
+        inline-size: 0.625rem;
+        margin-inline: -1px;
+      }
+    }
+
+    .divider__symbol--left {
+      inset-inline-start: 0;
+      translate: -50% 0;
+    }
+
+    .divider__symbol--right {
+      inset-inline-end: 0;
+      translate: 50% 0;
+    }
+
+    /* Divider Animation */
+    @keyframes slideLeft {
+      0% { inset-inline-end: -20%; inline-size: 20%; opacity: 0; }
+      80% { inset-inline-end: 100%; inline-size: 90%; opacity: 1; }
+      100% { inset-inline-end: 100%; inline-size: 90%; opacity: 0; }
+    }
+
+    @keyframes slideRight {
+      0% { inset-inline-start: -20%; inline-size: 20%; opacity: 0; }
+      80% { inset-inline-start: 100%; inline-size: 90%; opacity: 1; }
+      100% { inset-inline-start: 100%; inline-size: 90%; opacity: 0; }
+    }
+
+    .divider.in-view .divider__bar--left {
+      animation: slideLeft 2s cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    .divider.in-view .divider__bar--right {
+      animation: slideRight 2s cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    /* =========================================
+       COMPONENTS: FOOTER
+       ========================================= */
+    .footer {
+      --footer-padding: calc(var(--space) * 1.333);
+      --footer-cols: 1fr;
+    }
+
+    @media (width >= 480px) {
+      .footer {
+        --footer-padding: calc(var(--space) * 1.667);
+      }
+    }
+
+    @media (width >= 768px) {
+      .footer {
+        --footer-padding: calc(var(--space) * 2);
+        --footer-cols: 2fr 1fr 1fr;
+      }
+    }
+
+    .footer__main {
+      margin-inline: auto;
+      padding-block: var(--footer-padding) var(--space);
+      padding-inline: var(--space);
+      max-inline-size: var(--max-width);
+    }
+
+    @media (width >= 1240px) {
+      .footer__main {
+        border-inline: 1px solid var(--color-line);
+      }
+    }
+
+    .footer__grid {
+      display: grid;
+      grid-template-columns: var(--footer-cols);
+      gap: var(--space);
+    }
+
+    @media (width >= 480px) {
+      .footer__grid {
+        gap: var(--space-lg);
+      }
+    }
+
+    .footer__brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .footer__brand-name {
+      font-size: var(--font-base);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+    }
+
+    .footer__brand-desc {
+      max-inline-size: 300px;
+      margin-block-start: var(--space-xs);
+      font-size: var(--font-sm);
+      line-height: 1.7;
+      color: var(--color-text-muted);
+    }
+
+    .footer__section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .footer__heading {
+      margin-block-end: var(--space-md);
+      font-size: var(--font-xs);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--color-text);
+    }
+
+    .footer__links {
+      list-style: none;
+    }
+
+    .footer__links li {
+      margin-block-end: var(--space-xs);
+    }
+
+    .footer__link {
+      display: inline-block;
+      font-size: var(--font-sm);
+      color: var(--color-text-muted);
+      transition: color var(--ease-fast);
+    }
+
+    .footer__link:hover {
+      color: var(--color-text);
+    }
+
+    .footer__link:active {
+      color: var(--color-primary);
+    }
+
+    .footer__separator {
+      border-block-start: 1px solid var(--color-line);
+    }
+
+    .footer__meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-inline: auto;
+      padding: calc(var(--space-xs) * 1.5) var(--space);
+      max-inline-size: var(--max-width);
+      font-size: var(--font-sm);
+      color: var(--color-text-muted);
+    }
+
+    @media (width >= 768px) {
+      .footer__meta {
+        padding: var(--space-md) var(--space);
+      }
+    }
+
+    @media (width >= 1240px) {
+      .footer__meta {
+        border-inline: 1px solid var(--color-line);
+      }
+    }
+
+    /* =========================================
+       UTILITIES
+       ========================================= */
+    .skip-link {
+      position: absolute;
+      inset-block-start: -100%;
+      inset-inline-start: var(--space);
+      z-index: 1000;
+    }
+
+    .skip-link:focus {
+      inset-block-start: var(--space-md);
+    }
+
+    .scroll-top {
+      position: fixed;
+      inset-block-end: var(--space);
+      inset-inline-end: var(--space);
+      z-index: 200;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all var(--ease-fast);
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    body:has(.nav[aria-expanded="true"]) .scroll-top.visible {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Theme Icons */
+    .theme-icon {
+      display: none;
+    }
+
+    [data-theme="light"] .theme-icon--sun,
+    :root:not([data-theme]) .theme-icon--system,
+    [data-theme="dark"] .theme-icon--moon {
+      display: block;
+    }
+
+    /* Print */
+    @media print {
+      .header, .footer, .scroll-top, .skip-link, .divider {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+        color: black;
+      }
+
+      .section {
+        min-block-size: auto;
+        padding: 0;
+      }
+    }
+  </style>
 </head>
 <body>
-  <a href="#main-content" id="skip-link" class="btn btn--primary skip-link">Skip to main content</a>
+  <!-- Skip Link -->
+  <a href="#main-content" class="btn btn--primary skip-link">Skip to main content</a>
 
-  <header id="site-header" class="header">
+  <!-- Header -->
+  <header class="header" id="site-header">
     <div class="header__inner">
       <div class="header__content">
         <a href="#" class="logo">Frameless</a>
 
-        <nav class="nav" id="primary-navigation" role="navigation" aria-label="Primary navigation">
+        <!-- Navigation -->
+        <nav class="nav" id="primary-navigation" aria-label="Primary">
+          <!-- Mobile Menu Header -->
           <div class="menu">
             <div class="menu__logo">
               <a href="#" class="logo">Frameless</a>
             </div>
             <div class="menu__controls">
-              <button id="mobile-menu-theme-toggle" class="btn-icon btn--icon" aria-label="Toggle theme between system, light, and dark mode">
-                <i class="theme-icon theme-icon--sun" data-lucide="sun" width="20" height="20" aria-hidden="true"></i>
-                <i class="theme-icon theme-icon--moon" data-lucide="moon" width="20" height="20" aria-hidden="true"></i>
-                <i class="theme-icon theme-icon--system" data-lucide="sun-moon" width="20" height="20" aria-hidden="true"></i>
+              <button class="btn-icon" id="theme-toggle-mobile" aria-label="Toggle theme">
+                <i class="theme-icon theme-icon--sun" data-lucide="sun" aria-hidden="true"></i>
+                <i class="theme-icon theme-icon--moon" data-lucide="moon" aria-hidden="true"></i>
+                <i class="theme-icon theme-icon--system" data-lucide="sun-moon" aria-hidden="true"></i>
               </button>
-              <button id="mobile-menu-close" class="btn-icon menu__close" aria-label="Close mobile navigation">
-                <i data-lucide="x" width="28" height="28" aria-hidden="true"></i>
+              <button class="btn-icon" id="menu-close" aria-label="Close menu">
+                <i data-lucide="x" aria-hidden="true"></i>
               </button>
             </div>
           </div>
 
+          <!-- Nav Links -->
           <div class="menu__body">
             <ul class="nav__list" role="menubar">
-              <li role="none"><a href="#section-1" class="nav__link" role="menuitem">Overview</a></li>
-              <li role="none"><a href="#section-2" class="nav__link" role="menuitem">Features</a></li>
-              <li role="none"><a href="#section-3" class="nav__link" role="menuitem">Why Frameless</a></li>
+              <li role="none"><a href="#overview" class="nav__link" role="menuitem">Overview</a></li>
+              <li role="none"><a href="#features" class="nav__link" role="menuitem">Features</a></li>
+              <li role="none"><a href="#why" class="nav__link" role="menuitem">Why Frameless</a></li>
             </ul>
           </div>
 
+          <!-- Mobile Menu Footer -->
           <div class="menu__footer">
-            <a href="https://github.com/ledihildawan/frameless" class="btn btn--primary menu__btn menu__btn--primary" role="button">Get the Template</a>
+            <a href="https://github.com/ledihildawan/frameless" class="btn btn--primary menu__btn">
+              Get the Template
+            </a>
           </div>
         </nav>
 
+        <!-- Header Actions -->
         <div class="header__actions">
-          <button id="theme-toggle" class="btn-icon btn--icon" aria-label="Toggle theme between system, light, and dark mode">
-            <i class="theme-icon theme-icon--sun" data-lucide="sun" width="20" height="20" aria-hidden="true"></i>
-            <i class="theme-icon theme-icon--moon" data-lucide="moon" width="20" height="20" aria-hidden="true"></i>
-            <i class="theme-icon theme-icon--system" data-lucide="sun-moon" width="20" height="20" aria-hidden="true"></i>
+          <button class="btn-icon" id="theme-toggle" aria-label="Toggle theme">
+            <i class="theme-icon theme-icon--sun" data-lucide="sun" aria-hidden="true"></i>
+            <i class="theme-icon theme-icon--moon" data-lucide="moon" aria-hidden="true"></i>
+            <i class="theme-icon theme-icon--system" data-lucide="sun-moon" aria-hidden="true"></i>
           </button>
           <a href="https://github.com/ledihildawan/frameless" class="btn btn--primary">Get the Template</a>
         </div>
 
-        <button
-          id="mobile-menu-toggle"
-          class="btn-icon menu-toggle"
-          role="button"
-          aria-label="Toggle navigation menu"
-          aria-controls="primary-navigation"
-        >
-          <i data-lucide="menu" width="24" height="24" aria-hidden="true"></i>
+        <!-- Mobile Menu Toggle -->
+        <button class="btn-icon menu-toggle" id="menu-toggle" aria-label="Open menu" aria-controls="primary-navigation">
+          <i data-lucide="menu" aria-hidden="true"></i>
         </button>
       </div>
     </div>
   </header>
 
+  <!-- Main Content -->
   <main class="main" id="main-content">
-    <section class="section" id="section-1">
+    <!-- Section 1 -->
+    <section class="section" id="overview">
       <h1 class="section__title" tabindex="-1">Launch Production Websites Fast</h1>
-      <p class="section__content">Single-file HTML template. Dark mode, responsive design, accessibility built-in. No setup, no dependencies—just download and start building.</p>
+      <p class="section__content">
+        Single-file HTML template. Dark mode, responsive design, accessibility built-in. 
+        No setup, no dependencies—just download and start building.
+      </p>
       <div class="section__cta">
         <a href="https://github.com/ledihildawan/frameless" class="btn btn--primary">Get the Template</a>
       </div>
     </section>
 
+    <!-- Divider -->
     <div class="divider" aria-hidden="true">
       <div class="divider__axis">
         <hr class="divider__line">
@@ -913,11 +1062,16 @@
       </div>
     </div>
 
-    <section class="section" id="section-2">
+    <!-- Section 2 -->
+    <section class="section" id="features">
       <h2 class="section__title">Built for Launch</h2>
-      <p class="section__content">Works on every device. Includes sticky navigation, automatic dark mode, and accessibility features out of the box. Smooth animations and scroll-to-top create a polished experience.</p>
+      <p class="section__content">
+        Works on every device. Includes sticky navigation, automatic dark mode, 
+        and accessibility features out of the box.
+      </p>
     </section>
 
+    <!-- Divider -->
     <div class="divider" aria-hidden="true">
       <div class="divider__axis">
         <hr class="divider__line">
@@ -934,11 +1088,16 @@
       </div>
     </div>
 
-    <section class="section" id="section-3">
+    <!-- Section 3 -->
+    <section class="section" id="why">
       <h2 class="section__title">Simple by Design</h2>
-      <p class="section__content">Everything you need to launch—nothing you don't. Customize colors, fonts, and spacing by editing CSS variables in one place. Perfect for landing pages, portfolios, and documentation sites.</p>
+      <p class="section__content">
+        Everything you need to launch—nothing you don't. Customize colors, fonts, 
+        and spacing by editing CSS variables in one place.
+      </p>
     </section>
 
+    <!-- Divider -->
     <div class="divider" aria-hidden="true">
       <div class="divider__axis">
         <hr class="divider__line">
@@ -955,7 +1114,8 @@
       </div>
     </div>
 
-    <section class="section" id="section-4">
+    <!-- Section 4 -->
+    <section class="section" id="download">
       <h2 class="section__title">Start Building Now</h2>
       <p class="section__content">Download the template. Copy the file. Start building. No setup, no installation.</p>
       <div class="section__cta">
@@ -963,6 +1123,7 @@
       </div>
     </section>
 
+    <!-- Divider -->
     <div class="divider" aria-hidden="true">
       <div class="divider__axis">
         <hr class="divider__line">
@@ -980,31 +1141,35 @@
     </div>
   </main>
 
-  <footer id="site-footer" class="footer">
+  <!-- Footer -->
+  <footer class="footer" id="site-footer">
     <div class="footer__main">
       <div class="footer__grid">
         <div class="footer__brand">
           <div class="footer__brand-name">Frameless</div>
-          <p class="footer__brand-desc">Single-file HTML template. Build production websites without setup, dependencies, or build tools.</p>
+          <p class="footer__brand-desc">
+            Single-file HTML template. Build production websites without setup, 
+            dependencies, or build tools.
+          </p>
         </div>
 
-        <section class="footer__section" aria-labelledby="footer-heading-resources">
-          <h3 class="footer__heading" id="footer-heading-resources">Resources</h3>
+        <nav class="footer__section" aria-labelledby="footer-resources">
+          <h3 class="footer__heading" id="footer-resources">Resources</h3>
           <ul class="footer__links">
-            <li><a href="#setup-guide" class="footer__link">Setup Guide</a></li>
-            <li><a href="#documentation" class="footer__link">Documentation</a></li>
-            <li><a href="#professional-help" class="footer__link">Professional Help</a></li>
+            <li><a href="#" class="footer__link">Setup Guide</a></li>
+            <li><a href="#" class="footer__link">Documentation</a></li>
+            <li><a href="#" class="footer__link">Professional Help</a></li>
           </ul>
-        </section>
+        </nav>
 
-        <section class="footer__section" aria-labelledby="footer-heading-connect">
-          <h3 class="footer__heading" id="footer-heading-connect">Connect</h3>
+        <nav class="footer__section" aria-labelledby="footer-connect">
+          <h3 class="footer__heading" id="footer-connect">Connect</h3>
           <ul class="footer__links">
-            <li><a href="#github" class="footer__link">GitHub</a></li>
-            <li><a href="#twitter" class="footer__link">Twitter</a></li>
-            <li><a href="#email" class="footer__link">Email</a></li>
+            <li><a href="#" class="footer__link">GitHub</a></li>
+            <li><a href="#" class="footer__link">Twitter</a></li>
+            <li><a href="#" class="footer__link">Email</a></li>
           </ul>
-        </section>
+        </nav>
       </div>
     </div>
 
@@ -1016,591 +1181,325 @@
     </div>
   </footer>
 
-  <button id="scroll-to-top" class="btn-icon btn-icon--primary scroll-top" aria-label="Scroll to top">
-    <i data-lucide="arrow-up" width="20" height="20" aria-hidden="true"></i>
+  <!-- Scroll to Top -->
+  <button class="btn-icon btn-icon--primary scroll-top" id="scroll-top" aria-label="Scroll to top">
+    <i data-lucide="arrow-up" aria-hidden="true"></i>
   </button>
 
-<script>
-  (() => {
-    'use strict';
+  <!-- Scripts -->
+  <script>
+    (() => {
+      'use strict';
 
-    const DOM = Object.freeze({
-      skipLink: document.getElementById('skip-link'),
-      mainContent: document.getElementById('main-content'),
-      header: document.getElementById('site-header'),
-      nav: document.getElementById('primary-navigation'),
-      scrollBtn: document.getElementById('scroll-to-top'),
-      menuToggle: document.getElementById('mobile-menu-toggle'),
-      closeBtn: document.getElementById('mobile-menu-close'),
-      footer: document.getElementById('site-footer'),
-      dividers: document.querySelectorAll('.divider'),
-      navLinks: document.querySelectorAll('.nav__link'),
-      themeToggle: document.getElementById('theme-toggle'),
-      mobileMenuThemeToggle: document.getElementById('mobile-menu-theme-toggle'),
-    });
-
-    // ============ Configuration ============
-    const THEMES = Object.freeze({ SYSTEM: null, LIGHT: 'light', DARK: 'dark' });
-
-    const CONFIG = Object.freeze({
-      SCROLL_THRESHOLD: 300,
-      ANIMATION_TIMEOUT: 3000,
-      UPDATE_DELAY: 1000,
-      NAV_SECTION_THRESHOLD: 50,
-      MIN_SCROLL_DISTANCE: 50,
-      DEBOUNCE_DELAY: 100,
-      PREFERS_REDUCED_MOTION: globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches,
-    });
-
-    const state = {
-      currentTheme: THEMES.LIGHT,
-      isMobileMenuOpen: false,
-      activeSection: null,
-      focusTrapCleanup: null,
-      lockActiveSection: false,
-      lastScrollY: 0,
-    };
-
-    const controller = new AbortController();
-    const { signal } = controller;
-
-    const publish = (prop, attr, value) => {
-      state[prop] = value;
-      try { document.documentElement.setAttribute(attr, String(value)); } catch (e) { /* ignore */ }
-    };
-
-    const addMQListener = (query, fn) => {
-      const mq = matchMedia(query);
-      const handler = () => fn(mq);
-      if (mq.addEventListener) mq.addEventListener('change', handler);
-      else mq.addListener(handler);
-      signal.addEventListener('abort', () => {
-        try {
-          if (mq.removeEventListener) mq.removeEventListener('change', handler);
-          else mq.removeListener(handler);
-        } catch (e) { /* ignore */ }
-      }, { once: true });
-      return mq;
-    };
-
-    const classifyDevice = () => {
-      let device = 'desktop';
-      try {
-        const mqFineHover = matchMedia('(pointer: fine) and (hover: hover)');
-        const mqCoarseNoHover = matchMedia('(pointer: coarse) and (hover: none)');
-        const mqCoarseHover = matchMedia('(pointer: coarse) and (hover: hover)');
-        const mqFineNoHover = matchMedia('(pointer: fine) and (hover: none)');
-
-        if (mqFineHover.matches) device = 'desktop';
-        else if (mqCoarseNoHover.matches) device = 'mobile';
-        else if (mqCoarseHover.matches) device = 'tablet';
-        else if (mqFineNoHover.matches) device = (innerWidth >= 1024 ? 'desktop' : 'tablet');
-        else device = (innerWidth >= 1240) ? 'desktop' : (innerWidth >= 768 ? 'tablet' : 'mobile');
-      } catch (e) {
-        device = (innerWidth >= 1240) ? 'desktop' : (innerWidth >= 768 ? 'tablet' : 'mobile');
-      }
-      publish('device', 'data-device', device);
-      return device;
-    };
-
-    ['(pointer: fine) and (hover: hover)',
-     '(pointer: coarse) and (hover: none)',
-     '(pointer: coarse) and (hover: hover)',
-     '(pointer: fine) and (hover: none)']
-      .forEach(q => addMQListener(q, () => classifyDevice()));
-
-    const addWindowListener = (type, handler, options) => {
-      window.addEventListener(type, handler, options);
-      signal.addEventListener('abort', () => {
-        try { window.removeEventListener(type, handler, options); } catch (e) { /* ignore */ }
-      }, { once: true });
-    };
-
-    addWindowListener('resize', classifyDevice, { passive: true });
-    classifyDevice();
-
-    const anyFine = addMQListener('(any-pointer: fine)', (mq) => publish('hasMouse', 'data-has-mouse', Boolean(mq.matches)));
-    publish('hasMouse', 'data-has-mouse', Boolean(matchMedia('(any-pointer: fine)').matches));
-
-    let activeInputTimer = null;
-    const setActiveInput = (type) => {
-      publish('activeInput', 'data-active-input', type);
-      clearTimeout(activeInputTimer);
-      if (type !== 'idle') activeInputTimer = setTimeout(() => publish('activeInput', 'data-active-input', 'idle'), 2000);
-    };
-
-    const pointerHandler = (e) => {
-      const type = e && e.pointerType ? e.pointerType : (e.type === 'touchstart' ? 'touch' : 'mouse');
-      setActiveInput(type);
-    };
-
-    addWindowListener('pointerdown', pointerHandler, { passive: true });
-    addWindowListener('pointermove', pointerHandler, { passive: true });
-    addWindowListener('touchstart', pointerHandler, { passive: true });
-
-    setActiveInput(matchMedia('(any-pointer: fine)').matches ? 'mouse' : 'touch');
-
-    let keyboardOnlyTimer = null;
-    const setKeyboardOnly = (isKeyboard) => publish('keyboardOnly', 'data-keyboard-only', Boolean(isKeyboard));
-
-    const keyboardHandler = (e) => {
-      const navKeys = ['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', ' '];
-      if (!navKeys.includes(e.key)) return;
-      setActiveInput('keyboard');
-      setKeyboardOnly(true);
-      clearTimeout(keyboardOnlyTimer);
-      keyboardOnlyTimer = setTimeout(() => setKeyboardOnly(false), 3000);
-    };
-
-    const clearKeyboardOnly = () => { setKeyboardOnly(false); clearTimeout(keyboardOnlyTimer); };
-
-    addWindowListener('keydown', keyboardHandler, { passive: true });
-    addWindowListener('pointerdown', clearKeyboardOnly, { passive: true });
-    addWindowListener('touchstart', clearKeyboardOnly, { passive: true });
-
-    const observers = new Set();
-
-    const safeExecute = (fn, errorMessage = 'Operation failed') => {
-      try {
-        return fn();
-      } catch (error) {
-        console.warn(`${errorMessage}:`, error);
-        return null;
-      }
-    };
-
-    const useLocalStorage = {
-      get: (key, defaultValue) => {
-        try {
-          return globalThis.localStorage.getItem(key) ?? defaultValue;
-        } catch {
-          return defaultValue;
-        }
-      },
-      set: (key, value) => {
-        try {
-          globalThis.localStorage.setItem(key, value);
-        } catch (error) {
-          console.warn('Failed to save to localStorage:', error);
-        }
-      },
-    };
-
-    const createAnnouncer = () => {
-      const announcement = document.createElement('div');
-      announcement.setAttribute('role', 'status');
-      announcement.setAttribute('aria-live', 'polite');
-      announcement.setAttribute('aria-atomic', 'true');
-      announcement.className = 'sr-only';
-      Object.assign(announcement.style, {
-        position: 'absolute',
-        width: '1px',
-        height: '1px',
-        padding: '0',
-        overflow: 'hidden',
-        clip: 'rect(0, 0, 0, 0)',
-        whiteSpace: 'nowrap',
-        border: '0',
+      // =========================================
+      // CONSTANTS & CONFIG
+      // =========================================
+      const THEMES = Object.freeze({
+        SYSTEM: null,
+        LIGHT: 'light',
+        DARK: 'dark'
       });
-      document.body.appendChild(announcement);
 
-      return (message) => {
-        announcement.textContent = message;
-        setTimeout(() => announcement.textContent = '', 1000);
+      const CONFIG = Object.freeze({
+        SCROLL_THRESHOLD: 300,
+        ANIMATION_DURATION: 2000,
+        DEBOUNCE_DELAY: 100,
+        REDUCED_MOTION: matchMedia('(prefers-reduced-motion: reduce)').matches
+      });
+
+      // =========================================
+      // DOM REFERENCES
+      // =========================================
+      const $ = (selector) => document.querySelector(selector);
+      const $$ = (selector) => document.querySelectorAll(selector);
+
+      const DOM = {
+        html: document.documentElement,
+        body: document.body,
+        header: $('#site-header'),
+        nav: $('#primary-navigation'),
+        scrollTop: $('#scroll-top'),
+        themeToggles: $$('[id^="theme-toggle"]'),
+        menuToggle: $('#menu-toggle'),
+        menuClose: $('#menu-close'),
+        navLinks: $$('.nav__link'),
+        sections: $$('.section'),
+        dividers: $$('.divider')
       };
-    };
 
-    const announce = createAnnouncer();
+      // =========================================
+      // STATE MANAGEMENT
+      // =========================================
+      const state = {
+        theme: THEMES.LIGHT,
+        menuOpen: false,
+        currentSection: null,
+        scrollY: 0
+      };
 
-    // ============ Theme Management ============
-    const getTheme = () => {
-      const savedTheme = useLocalStorage.get('theme');
-      
-      if (savedTheme === '') {
+      // =========================================
+      // UTILITIES
+      // =========================================
+      const storage = {
+        get: (key, fallback = null) => {
+          try {
+            return localStorage.getItem(key) ?? fallback;
+          } catch {
+            return fallback;
+          }
+        },
+        set: (key, value) => {
+          try {
+            localStorage.setItem(key, value);
+          } catch (e) {
+            console.warn('Storage failed:', e);
+          }
+        }
+      };
+
+      const throttle = (fn, delay) => {
+        let last = 0;
+        return (...args) => {
+          const now = Date.now();
+          if (now - last >= delay) {
+            last = now;
+            fn(...args);
+          }
+        };
+      };
+
+      const announce = (() => {
+        const el = document.createElement('div');
+        el.className = 'sr-only';
+        el.setAttribute('role', 'status');
+        el.setAttribute('aria-live', 'polite');
+        DOM.body.appendChild(el);
+        return (msg) => {
+          el.textContent = msg;
+          setTimeout(() => el.textContent = '', 1000);
+        };
+      })();
+
+      // =========================================
+      // THEME MANAGEMENT
+      // =========================================
+      const getInitialTheme = () => {
+        const saved = storage.get('theme');
+        if (saved === 'light') return THEMES.LIGHT;
+        if (saved === 'dark') return THEMES.DARK;
         return THEMES.SYSTEM;
-      }
-      
-      return savedTheme ?? THEMES.SYSTEM;
-    };
-
-    const setTheme = (theme) => {
-      if (theme === THEMES.SYSTEM) {
-        document.documentElement.removeAttribute('data-theme');
-        useLocalStorage.set('theme', '');
-        announce('Theme changed to system mode');
-      } else {
-        document.documentElement.setAttribute('data-theme', theme);
-        useLocalStorage.set('theme', theme);
-        announce(`Theme changed to ${theme} mode`);
-      }
-      state.currentTheme = theme;
-    };
-
-    const toggleTheme = () => {
-      const currentTheme = state.currentTheme ?? THEMES.SYSTEM;
-      let newTheme;
-      
-      if (currentTheme === THEMES.SYSTEM) {
-        newTheme = THEMES.LIGHT;
-      } else if (currentTheme === THEMES.LIGHT) {
-        newTheme = THEMES.DARK;
-      } else {
-        newTheme = THEMES.SYSTEM;
-      }
-      
-      setTheme(newTheme);
-    };
-
-    // ============ Mobile Menu ============
-    const trapFocus = (element) => {
-      const focusableElements = element.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      const [firstFocusable] = focusableElements;
-      const lastFocusable = focusableElements[focusableElements.length - 1];
-
-      const handleKeyDown = (e) => {
-        if (e.key !== 'Tab') return;
-
-        const { activeElement } = document;
-        const shouldMoveToFirst = e.shiftKey && activeElement === firstFocusable;
-        const shouldMoveToLast = !e.shiftKey && activeElement === lastFocusable;
-
-        if (shouldMoveToFirst) {
-          e.preventDefault();
-          lastFocusable?.focus();
-        } else if (shouldMoveToLast) {
-          e.preventDefault();
-          firstFocusable?.focus();
-        }
       };
 
-      element.addEventListener('keydown', handleKeyDown, { signal });
+      const applyTheme = (theme) => {
+        state.theme = theme;
+        
+        if (theme === THEMES.SYSTEM) {
+          DOM.html.removeAttribute('data-theme');
+          storage.set('theme', '');
+        } else {
+          DOM.html.setAttribute('data-theme', theme);
+          storage.set('theme', theme);
+        }
+        
+        announce(`Theme: ${theme ?? 'system'}`);
+      };
 
-      return () => element.removeEventListener('keydown', handleKeyDown);
-    };
+      const cycleTheme = () => {
+        const order = [THEMES.SYSTEM, THEMES.LIGHT, THEMES.DARK];
+        const current = order.indexOf(state.theme);
+        const next = order[(current + 1) % order.length];
+        applyTheme(next);
+      };
 
-    const openMobileMenu = () => {
-      DOM.menuToggle?.setAttribute('aria-expanded', 'true');
-      DOM.nav?.setAttribute('aria-expanded', 'true');
-      DOM.header?.classList.add('header--menu-open');
-      document.body.classList.add('menu-open');
+      // =========================================
+      // MOBILE MENU
+      // =========================================
+      const openMenu = () => {
+        DOM.nav.setAttribute('aria-expanded', 'true');
+        DOM.header.classList.add('header--menu-open');
+        state.menuOpen = true;
+        DOM.menuClose?.focus();
+        announce('Menu opened');
+      };
 
-      safeExecute(() => {
-        state.focusTrapCleanup = trapFocus(DOM.nav);
-      }, 'Error setting up focus trap');
+      const closeMenu = () => {
+        DOM.nav.removeAttribute('aria-expanded');
+        DOM.header.classList.remove('header--menu-open');
+        state.menuOpen = false;
+        DOM.menuToggle?.focus();
+        announce('Menu closed');
+      };
 
-      state.isMobileMenuOpen = true;
-      announce('Mobile menu opened');
-    };
+      const toggleMenu = () => state.menuOpen ? closeMenu() : openMenu();
 
-    const closeMobileMenu = () => {
-      DOM.menuToggle?.setAttribute('aria-expanded', 'false');
-      DOM.nav?.removeAttribute('aria-expanded');
-      DOM.header?.classList.remove('header--menu-open');
-      document.body.classList.remove('menu-open');
-      state.focusTrapCleanup?.();
-      state.focusTrapCleanup = null;
-      state.isMobileMenuOpen = false;
-      announce('Mobile menu closed');
-    };
+      // =========================================
+      // SCROLL & NAVIGATION
+      // =========================================
+      const updateScrollTop = () => {
+        const visible = scrollY > CONFIG.SCROLL_THRESHOLD;
+        DOM.scrollTop.classList.toggle('visible', visible);
+      };
 
-    const toggleMobileMenu = () => {
-      DOM.nav?.hasAttribute('aria-expanded') ? closeMobileMenu() : openMobileMenu();
-    };
+      const scrollToSection = (id) => {
+        const target = $(`#${id}`);
+        if (!target) return;
 
-    // ============ Scroll & Navigation ============
-    const updateScrollButtonVisibility = () => {
-      requestAnimationFrame(() => {
-        const isVisible = globalThis.scrollY > CONFIG.SCROLL_THRESHOLD;
-        DOM.scrollBtn?.classList.toggle('visible', isVisible);
-      });
-    };
-
-    const updateNavLinks = (targetId) => {
-      for (const link of DOM.navLinks) {
-        const isActive = targetId ? link.getAttribute('href') === `#${targetId}` : false;
-        if (link.classList.contains('nav__link--active') !== isActive) {
+        const behavior = CONFIG.REDUCED_MOTION ? 'auto' : 'smooth';
+        target.scrollIntoView({ behavior });
+        
+        // Update active state
+        DOM.navLinks.forEach(link => {
+          const isActive = link.getAttribute('href') === `#${id}`;
           link.classList.toggle('nav__link--active', isActive);
           link.setAttribute('aria-current', isActive ? 'page' : 'false');
-        }
-      }
-    };
-
-    const scrollToSection = (sectionOrPosition) => {
-      let section = null;
-      let targetId = null;
-      let scrollPosition = null;
-
-      if (typeof sectionOrPosition === 'number') {
-        scrollPosition = sectionOrPosition;
-        targetId = DOM.navLinks[0]?.getAttribute('href')?.replace('#', '') ?? null;
-        section = null;
-      } else {
-        section = sectionOrPosition;
-        targetId = section.id;
-        scrollPosition = null;
-      }
-
-      const behavior = CONFIG.PREFERS_REDUCED_MOTION ? 'auto' : 'smooth';
-
-      if (scrollPosition !== null) {
-        globalThis.scrollTo({ top: scrollPosition, behavior });
-        state.activeSection = targetId;
-        updateNavLinks(targetId);
-        announce('Scrolled to top');
-      } else if (section) {
-        section.scrollIntoView({ behavior });
-        state.activeSection = targetId;
-        updateNavLinks(targetId);
-        section.focus({ preventScroll: true });
-        announce(`Scrolled to ${section.textContent.trim() || section.id}`);
-      }
-
-      state.lockActiveSection = true;
-      setTimeout(() => { state.lockActiveSection = false; }, CONFIG.UPDATE_DELAY);
-    };
-
-    const handleScrollToTop = () => {
-      scrollToSection(0);
-    };
-
-     // ============ Setup Functions ============
-    const setupDividers = () => {
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px',
-      };
-
-      const handleIntersection = (entries) => {
-        for (const { target, isIntersecting } of entries) {
-          if (isIntersecting) {
-            target.classList.add('in-view');
-            setTimeout(() => observer.unobserve(target), CONFIG.ANIMATION_TIMEOUT);
-          }
-        }
-      };
-
-      const observer = new IntersectionObserver(handleIntersection, observerOptions);
-      observers.add(observer);
-
-      for (const divider of DOM.dividers) {
-        observer.observe(divider);
-      }
-    };
-
-    const setupActiveNavigation = () => {
-      for (const link of DOM.navLinks) {
-        link.addEventListener('click', (e) => {
-          const href = link.getAttribute('href');
-          if (href === '#') return;
-
-          const section = document.querySelector(href);
-          if (!section) return;
-
-          e.preventDefault();
-          e.stopPropagation();
-
-          if (state.isMobileMenuOpen) {
-            closeMobileMenu();
-          }
-
-          scrollToSection(section);
-        }, { signal });
-      }
-
-      const updateActiveSection = () => {
-        if (state.lockActiveSection) return;
-
-        const sections = document.querySelectorAll('.section');
-        if (sections.length === 0) return;
-
-        const currentScrollY = globalThis.scrollY;
-        const scrollDistance = Math.abs(currentScrollY - state.lastScrollY);
-
-        if (scrollDistance < CONFIG.MIN_SCROLL_DISTANCE && state.activeSection) return;
-
-        let activeSection = null;
-        let maxVisiblePercent = 0;
-        const { innerHeight } = globalThis;
-
-        for (const section of sections) {
-          const { top, bottom, height } = section.getBoundingClientRect();
-          const visibleHeight = Math.max(0, Math.min(innerHeight, bottom) - Math.max(0, top));
-
-          if (visibleHeight === 0 || height === 0) continue;
-
-          const visiblePercent = (visibleHeight / height) * 100;
-
-          if (visiblePercent > maxVisiblePercent && visiblePercent >= CONFIG.NAV_SECTION_THRESHOLD) {
-            maxVisiblePercent = visiblePercent;
-            activeSection = section;
-          }
-        }
-
-        const activeId = activeSection?.id ?? null;
-
-        if (activeId !== state.activeSection) {
-          state.activeSection = activeId;
-          updateNavLinks(activeId);
-        }
-
-        state.lastScrollY = currentScrollY;
-      };
-
-      let ticking = false;
-      let scrollTimeout = null;
-
-      const handleScroll = () => {
-        if (state.lockActiveSection) return;
-
-        if (!ticking) {
-          ticking = true;
-          requestAnimationFrame(() => {
-            updateActiveSection();
-            ticking = false;
-          });
-        }
-
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-          if (!state.lockActiveSection) {
-            updateActiveSection();
-          }
-        }, CONFIG.DEBOUNCE_DELAY);
-      };
-
-      globalThis.addEventListener('scroll', handleScroll, { passive: true, signal });
-    };
-
-    // ============ Event Handlers ============
-    const handleClick = (e) => {
-      const target = e.target;
-      const { isMobileMenuOpen } = state;
-
-      const isThemeToggle = target.closest('#theme-toggle') ||
-                            target === DOM.themeToggle ||
-                            target.closest('#mobile-menu-theme-toggle') ||
-                            target === DOM.mobileMenuThemeToggle;
-
-      const isMobileMenuToggle = target.closest('#mobile-menu-toggle') ||
-                                 target === DOM.menuToggle;
-
-      const isMobileMenuClose = target.closest('#mobile-menu-close') ||
-                               target === DOM.closeBtn;
-
-      if (isThemeToggle) toggleTheme();
-      if (isMobileMenuToggle) toggleMobileMenu();
-      if (isMobileMenuClose) closeMobileMenu();
-      if (target.closest('#scroll-to-top')) handleScrollToTop();
-      if (isMobileMenuOpen && target === DOM.nav) closeMobileMenu();
-    };
-
-    const setupSkipLink = () => {
-      const { skipLink, mainContent } = DOM;
-      if (!skipLink) return;
-
-      skipLink.addEventListener('click', (e) => {
-        e.preventDefault();
-
-        const focusableElements = mainContent?.querySelectorAll(
-          'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-
-        const target = focusableElements?.[0] ?? mainContent?.querySelector('h1');
-        target?.focus({ preventScroll: true });
-
-        announce('Skipped to main content');
-      }, { signal });
-
-      skipLink.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          e.preventDefault();
-          skipLink.blur();
-        }
-      }, { signal });
-    };
-
-    const handleKeydown = (e) => {
-      const { key, metaKey, ctrlKey } = e;
-
-      if ((metaKey || ctrlKey) && key === 'k') {
-        e.preventDefault();
-        toggleTheme();
-      }
-
-      if (key === 'Escape' && state.isMobileMenuOpen) {
-        closeMobileMenu();
-      }
-    };
-
-    const setupPerformanceMonitoring = () => {
-      if (!('PerformanceObserver' in globalThis)) return;
-
-      const handlePerformanceEntry = (entry) => {
-        if (entry.duration > 50) {
-          console.warn(`Long task detected: ${entry.name} took ${entry.duration}ms`);
-        }
-      };
-
-      safeExecute(() => {
-        const perfObserver = new PerformanceObserver((list) => {
-          list.getEntries().forEach(handlePerformanceEntry);
         });
+        
+        state.currentSection = id;
+      };
 
-        perfObserver.observe({ entryTypes: ['longtask', 'measure'] });
-        observers.add(perfObserver);
-      }, 'Performance observer setup failed');
-    };
+      const handleNavClick = (e) => {
+        const link = e.target.closest('.nav__link');
+        if (!link) return;
 
-    // ============ Cleanup & Initialization ============
-    const cleanup = () => {
-      controller.abort();
-      for (const observer of observers) {
-        observer.disconnect();
-      }
-      observers.clear();
-    };
+        const href = link.getAttribute('href');
+        if (!href?.startsWith('#')) return;
 
-    const init = () => {
-      lucide.createIcons();
-      const initialTheme = getTheme();
-      state.currentTheme = initialTheme;
-      if (initialTheme === THEMES.SYSTEM) {
-        document.documentElement.removeAttribute('data-theme');
-      } else {
-        document.documentElement.setAttribute('data-theme', initialTheme);
-      }
+        e.preventDefault();
+        const id = href.slice(1);
+        
+        if (state.menuOpen) closeMenu();
+        scrollToSection(id);
+      };
 
-      const { signal } = controller;
-      globalThis.addEventListener('scroll', updateScrollButtonVisibility, { passive: true, signal });
-      document.addEventListener('click', handleClick, { signal });
-      document.addEventListener('keydown', handleKeydown, { signal });
-      globalThis.addEventListener('storage', (e) => {
-        if (e.key === 'theme') {
-          const newTheme = e.newValue === '' ? THEMES.SYSTEM : e.newValue;
-          setTheme(newTheme ?? getTheme());
+      // Intersection Observer for dividers
+      const observeDividers = () => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(({ target, isIntersecting }) => {
+            if (isIntersecting) {
+              target.classList.add('in-view');
+              setTimeout(() => observer.unobserve(target), CONFIG.ANIMATION_DURATION);
+            }
+          });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        DOM.dividers.forEach(div => observer.observe(div));
+      };
+
+      // =========================================
+      // EVENT HANDLERS
+      // =========================================
+      const onClick = (e) => {
+        // Theme toggle
+        if (e.target.closest('[id^="theme-toggle"]')) {
+          cycleTheme();
+          return;
         }
-      }, { signal });
 
-      setupDividers();
-      setupActiveNavigation();
-      setupSkipLink();
-      setupPerformanceMonitoring();
-      globalThis.addEventListener('beforeunload', cleanup, { signal });
-    };
+        // Menu toggle
+        if (e.target.closest('#menu-toggle')) {
+          toggleMenu();
+          return;
+        }
 
-    globalThis.Frameless = {
-      state,
-      setTheme,
-      toggleTheme,
-      openMobileMenu,
-      closeMobileMenu,
-      cleanup,
-    };
+        // Menu close
+        if (e.target.closest('#menu-close')) {
+          closeMenu();
+          return;
+        }
 
-    init();
-  })();
-</script>
+        // Scroll top
+        if (e.target.closest('#scroll-top')) {
+          scrollToSection('overview');
+          return;
+        }
+
+        // Nav links
+        handleNavClick(e);
+
+        // Close menu on backdrop click
+        if (state.menuOpen && e.target === DOM.nav) {
+          closeMenu();
+        }
+      };
+
+      const onKeydown = (e) => {
+        // Escape to close menu
+        if (e.key === 'Escape' && state.menuOpen) {
+          closeMenu();
+        }
+
+        // Cmd/Ctrl + K for theme
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          cycleTheme();
+        }
+      };
+
+      const onScroll = throttle(() => {
+        updateScrollTop();
+        
+        // Update active section based on scroll
+        const scrollPos = scrollY + innerHeight / 3;
+        
+        for (const section of DOM.sections) {
+          const { offsetTop, offsetHeight } = section;
+          if (scrollPos >= offsetTop && scrollPos < offsetTop + offsetHeight) {
+            if (state.currentSection !== section.id) {
+              DOM.navLinks.forEach(link => {
+                const isActive = link.getAttribute('href') === `#${section.id}`;
+                link.classList.toggle('nav__link--active', isActive);
+              });
+              state.currentSection = section.id;
+            }
+            break;
+          }
+        }
+      }, CONFIG.DEBOUNCE_DELAY);
+
+      // Storage sync across tabs
+      const onStorage = (e) => {
+        if (e.key === 'theme') {
+          const theme = e.newValue === '' ? THEMES.SYSTEM : e.newValue;
+          applyTheme(theme ?? getInitialTheme());
+        }
+      };
+
+      // =========================================
+      // INITIALIZATION
+      // =========================================
+      const init = () => {
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Initialize theme
+        applyTheme(getInitialTheme());
+
+        // Event listeners
+        document.addEventListener('click', onClick);
+        document.addEventListener('keydown', onKeydown);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('storage', onStorage);
+
+        // Initial states
+        updateScrollTop();
+        observeDividers();
+
+        // Expose API
+        window.Frameless = {
+          setTheme: applyTheme,
+          toggleMenu,
+          closeMenu,
+          openMenu
+        };
+      };
+
+      // Start
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
 </body>
 </html>
