@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simpati Story - Dialog API Edition</title>
+    <style>
+        :root {
+            --story-primary: #ED0226;
+            --story-radius: 20px;
+            --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, sans-serif; background: #f4f4f4; padding: 40px 20px; }
+
+        /* --- GRID & ITEMS --- */
+        .story-grid {
+            display: flex; gap: 12px; overflow-x: auto; padding-block-end: 20px;
+            scrollbar-width: none; scroll-snap-type: inline mandatory;
+        }
+
+        .story-item {
+            flex: 0 0 110px; cursor: pointer; text-align: center;
+            &[data-story-state="unread"] .story-item__wrapper {
+                border: 3px solid var(--story-primary); padding: 2px; background-clip: content-box;
+            }
+        }
+
+        .story-item__wrapper {
+            aspect-ratio: 9/16; border-radius: var(--story-radius);
+            overflow: hidden; background: #ccc; border: 3px solid transparent;
+        }
+        .story-item__img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- NATIVE DIALOG VIEWER --- */
+        .story-viewer {
+            inline-size: 100vw; block-size: 100vh;
+            max-inline-size: 100%; max-block-size: 100%;
+            border: none; background: #000; color: white;
+            padding: 0; overflow: hidden;
+
+            /* Native Backdrop */
+            &::backdrop {
+                background: rgba(0, 0, 0, 0.9);
+                backdrop-filter: blur(15px);
+            }
+
+            /* Zoom animation when opening */
+            &[open] { animation: zoomIn 0.3s var(--ease-in-out); }
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .story-viewer__container {
+            position: relative; inline-size: 100%; block-size: 100%;
+            max-inline-size: 450px; margin-inline: auto;
+            @media (min-width: 768px) { block-size: 90vh; border-radius: 24px; margin-block: 5vh; }
+        }
+
+        .story-viewer__video { inline-size: 100%; block-size: 100%; object-fit: cover; }
+
+        /* Progress Bars */
+        .story-viewer__progress-group {
+            position: absolute; inset-block-start: 15px; inset-inline: 15px;
+            z-index: 10; display: flex; gap: 4px;
+        }
+        .story-viewer__bar { flex: 1; height: 2px; background: rgba(255,255,255,0.3); border-radius: 4px; overflow: hidden; }
+        .story-viewer__bar-fill { height: 100%; background: #fff; inline-size: 0%; }
+
+        /* Navigation */
+        .story-nav { position: absolute; inset-block: 0; inline-size: 40%; z-index: 5; cursor: pointer; }
+        .story-nav--prev { inset-inline-start: 0; }
+        .story-nav--next { inset-inline-end: 0; }
+
+        .story-viewer__close {
+            position: absolute; inset-block-start: 25px; inset-inline-end: 15px;
+            z-index: 20; background: none; border: none; color: white;
+            font-size: 2.5rem; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="story-grid" data-story-group="main">
+        <div class="story-item" data-story-trigger data-story-src="https://www.w3schools.com/html/mov_bbb.mp4" data-story-state="unread">
+            <div class="story-item__wrapper"><img src="https://picsum.photos/200/350?1" class="story-item__img"></div>
+        </div>
+        <div class="story-item" data-story-trigger data-story-src="https://www.w3schools.com/html/movie.mp4" data-story-state="unread">
+            <div class="story-item__wrapper"><img src="https://picsum.photos/200/350?2" class="story-item__img"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        /**
+         * SIMPATI STORY ENGINE v4.0 - <dialog> API Edition
+         */
+        class StoryPlayer {
+            #instance = null;
+            #ticker = null;
+            #activeGroup = [];
+            #cursor = 0;
+
+            constructor() {
+                this.#setupEvents();
+            }
+
+            #setupEvents() {
+                document.addEventListener('click', (e) => {
+                    const trigger = e.target.closest('[data-story-trigger]');
+                    if (!trigger) return;
+
+                    const group = trigger.closest('[data-story-group]');
+                    this.#activeGroup = group ? Array.from(group.querySelectorAll('[data-story-trigger]')) : [trigger];
+                    this.#cursor = this.#activeGroup.indexOf(trigger);
+
+                    this.#render();
+                });
+            }
+
+            #createDOM() {
+                if (this.#instance) return this.#instance;
+
+                // Create <dialog> instead of <div>
+                const dialog = document.createElement('dialog');
+                dialog.className = 'story-viewer';
+                dialog.innerHTML = `
+                    <div class="story-viewer__container">
+                        <div class="story-viewer__progress-group"></div>
+                        <button class="story-viewer__close" aria-label="Close">&times;</button>
+                        <div class="story-nav story-nav--prev"></div>
+                        <div class="story-nav story-nav--next"></div>
+                        <video id="storyVideo" class="story-viewer__video" playsinline></video>
+                    </div>
+                `;
+
+                document.body.appendChild(dialog);
+
+                this.#instance = {
+                    el: dialog,
+                    video: dialog.querySelector('#storyVideo'),
+                    pGroup: dialog.querySelector('.story-viewer__progress-group'),
+                    navNext: dialog.querySelector('.story-nav--next'),
+                    navPrev: dialog.querySelector('.story-nav--prev')
+                };
+
+                // Native Dialog Close Event (handles Esc key automatically!)
+                dialog.addEventListener('close', () => this.#cleanup());
+                this.#instance.navNext.onclick = () => this.#next();
+                this.#instance.navPrev.onclick = () => this.#prev();
+                dialog.querySelector('.story-viewer__close').onclick = () => dialog.close();
+
+                return this.#instance;
+            }
+
+            #render() {
+                const ui = this.#createDOM();
+                const item = this.#activeGroup[this.#cursor];
+
+                item.setAttribute('data-story-state', 'read');
+
+                // Progress bars UI
+                ui.pGroup.innerHTML = this.#activeGroup.map((_, i) => `
+                    <div class="story-viewer__bar">
+                        <div class="story-viewer__bar-fill" style="inline-size: ${i < this.#cursor ? '100%' : '0%'}"></div>
+                    </div>
+                `).join('');
+
+                ui.video.src = item.dataset.storySrc;
+                
+                // Native showModal() call
+                if (!ui.el.open) ui.el.showModal();
+                
+                ui.video.play()
+                    .then(() => this.#startTicker())
+                    .catch(() => { ui.video.muted = true; ui.video.play(); this.#startTicker(); });
+            }
+
+            #next() {
+                this.#cursor < this.#activeGroup.length - 1 ? (this.#cursor++, this.#render()) : this.#instance.el.close();
+            }
+
+            #prev() {
+                this.#cursor > 0 ? (this.#cursor--, this.#render()) : (this.#instance.video.currentTime = 0);
+            }
+
+            #startTicker() {
+                clearInterval(this.#ticker);
+                this.#ticker = setInterval(() => {
+                    const { video, pGroup } = this.#instance;
+                    const fills = pGroup.querySelectorAll('.story-viewer__bar-fill');
+                    if (video.duration) {
+                        const pc = (video.currentTime / video.duration) * 100;
+                        fills[this.#cursor].style.inlineSize = `${pc}%`;
+                        if (pc >= 100) this.#next();
+                    }
+                }, 16);
+            }
+
+            #cleanup() {
+                clearInterval(this.#ticker);
+                const { video } = this.#instance;
+                video.pause();
+                video.removeAttribute('src');
+                video.load();
+                document.body.style.overflow = '';
+            }
+        }
+
+        new StoryPlayer();
+    </script>
+</body>
+</html>
